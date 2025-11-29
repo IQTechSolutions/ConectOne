@@ -1,0 +1,62 @@
+@page "/dashboard"
+@page "/"
+@page "/home"
+
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using SchoolsEnterprise.Blazor.Shared.Components.Dashboards
+
+@attribute [Authorize]
+<PageTitle>Nelspruit High | Dashboard</PageTitle>
+
+@if (!_isLoaded)
+{
+    <div class="role-dashboard-loading">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body1">Preparing your personalised dashboard...</MudText>
+    </div>
+}
+else
+{
+    <MudContainer MaxWidth="MaxWidth.False" Class="role-dashboard-container">
+        <MudStack Spacing="1" Class="mb-6">
+            <MudText Typo="Typo.h4" Class="mud-primary-text">Hello @_displayName!</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-secondary-text">
+                @CurrentGreeting
+            </MudText>
+
+            @if (_visibleRoleBadges.Any())
+            {
+                <MudChipSet T="string" Filter="false" Class="mt-2">
+                    @foreach (var role in _visibleRoleBadges)
+                    {
+                        <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.VerifiedUser">
+                            @role
+                        </MudChip>
+                    }
+                </MudChipSet>
+            }
+        </MudStack>
+
+        @if (_isAdmin)
+        {
+            <AdminDashboardView />
+        }
+        else if (_isTeacher)
+        {
+            <TeacherDashboardView />
+        }
+        else if (_isParent)
+        {
+            <ParentDashboardView />
+        }
+        else if (_isLearner)
+        {
+            <LearnerDashboardView />
+        }
+        else
+        {
+            <CommunityDashboardView />
+        }
+    </MudContainer>
+}

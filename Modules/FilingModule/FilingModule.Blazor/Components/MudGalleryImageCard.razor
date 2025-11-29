@@ -1,0 +1,10 @@
+﻿@using MudBlazor
+<MudCard Elevation="25" Style="width:370px;">
+    <MudCardContent>
+        <img width="370" height="190" alt="" src="@Image" style="width:100%;" />
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Color="Color.Error" Variant="Variant.Outlined" OnClick="() => RemoveOnUploadedImage(Image)" FullWidth="true" style="z-index:1000">Remove Image</MudButton>
+    </MudCardActions>
+</MudCard>
+}

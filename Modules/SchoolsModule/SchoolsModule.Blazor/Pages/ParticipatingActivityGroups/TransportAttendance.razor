@@ -1,0 +1,19 @@
+@page "/participatingactivitygroups/transportattendance/{ParticipatingActivityGroupId}/{EventId}/{TransportType:int}"
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using SchoolsModule.Blazor.Pages.Attendance
+@using SchoolsModule.Domain.Enums
+
+@attribute [Authorize]
+
+@if (!_loaded)
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+}
+else
+{
+    <DefaultTitle Title="@($"{((AttendanceType)TransportType).GetDescription()} Attendance")" />
+    <AttendanceList GroupId="@ParticipatingActivityGroupId" AttendanceType="@((AttendanceType)TransportType)" Date="@DateTime.Now" GroupName="@(((AttendanceType)TransportType).GetDescription() + " " + _event?.Name + " " + _activityGroupName ?? string.Empty)" />
+}

@@ -1,0 +1,9 @@
+﻿@using ConectOne.Domain.Constants
+@using MudBlazor
+
+<MudMenu Icon="@Icons.Material.Outlined.Translate" Color="Color.Inherit" AnchorOrigin="Origin.BottomLeft" Dense="true">
+    @foreach (var language in LocalizationConstants.SupportedLanguages)
+    {
+        <MudMenuItem OnClick="(()=> ChangeLanguageAsync(language.Code))">@language.DisplayName</MudMenuItem>
+    }
+</MudMenu>

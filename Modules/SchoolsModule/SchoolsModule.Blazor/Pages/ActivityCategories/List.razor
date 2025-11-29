@@ -1,0 +1,24 @@
+﻿@page "/activitycategories"
+
+@attribute [Authorize]
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Activity Categories" Caption="@($"All activity categories offered at {Configuration["ApplicationConfiguration:ApplicationName"]}")" />
+ 
+<SchoolsModule.Blazor.Components.ActivityCategories.ActivityCategoriesTable CreateUrl="/activities/categories/create">
+    <ToolbarButtons>
+		<MudButton Variant="Variant.Filled" OnClick="CreateNewEventForActivityEvent" StartIcon="@Icons.Material.Filled.AddLocation" Color="Color.Primary" Style="margin-left:15px;" IconColor="Color.Surface">Create Event</MudButton>
+    </ToolbarButtons>
+</SchoolsModule.Blazor.Components.ActivityCategories.ActivityCategoriesTable>

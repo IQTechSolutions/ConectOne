@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+
+@typeparam T
+
+<InputCheckbox ValueExpression="@(() => Value)" Value="Value" class="@Class" ValueChanged="OnValueChanged" style="width:20px; height:20px;" />
+
+@code {
+
+    /// <summary>
+    /// Gets or sets the value of the checkbox.
+    /// </summary>
+    [Parameter]
+    public bool Value { get; set; }
+
+    /// <summary>
+    /// Event callback that is triggered when the value of the checkbox changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<CustomCheckValueChangedEventArgs<T>> MyValueChanged { get; set; }
+
+    /// <summary>
+    /// Gets or sets the CSS class for the checkbox.
+    /// </summary>
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets an extra parameter of type <typeparamref name="T"/> that can be passed along with the event.
+    /// </summary>
+    [Parameter]
+    public T? ExtraParameter { get; set; }
+
+    /// <summary>
+    /// Handles the value change event of the checkbox.
+    /// </summary>
+    /// <param name="value">The new value of the checkbox.</param>
+    private async Task OnValueChanged(bool value)
+    {
+        if (MyValueChanged.HasDelegate)
+        {
+            Value = value;
+            await MyValueChanged.InvokeAsync(new CustomCheckValueChangedEventArgs<T>(value, ExtraParameter));
+            StateHasChanged();
+        }
+    }
+
+}

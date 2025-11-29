@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\ConectOne.Blazor\ConectOne.Blazor.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Application\FilingModule.Application.csproj" />
+    <ProjectReference Include="..\MessagingModule.Application\MessagingModule.Application.csproj" />
+    <ProjectReference Include="..\MessagingModule.Domain\MessagingModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

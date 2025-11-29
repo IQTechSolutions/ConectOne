@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CreateNewRoleTitle" xml:space="preserve">
+    <value>Skep nuwe gebruikersrol</value>
+  </data>
+  <data name="RoleName" xml:space="preserve">
+    <value>Rolnaam</value>
+  </data>
+  <data name="RoleNameRequired" xml:space="preserve">
+    <value>Rolnaam is verpligtend.</value>
+  </data>
+  <data name="NotAvailableForRegistrationSelection" xml:space="preserve">
+    <value>Nie beskikbaar vir registrasiekeuse nie</value>
+  </data>
+  <data name="RoleDescription" xml:space="preserve">
+    <value>Rolbeskrywing</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Kanselleer</value>
+  </data>
+  <data name="AddRole" xml:space="preserve">
+    <value>Voeg rol by</value>
+  </data>
+</root>

@@ -1,0 +1,79 @@
+﻿@using MudBlazor
+<style>
+	.mud-table-container {
+		overflow: auto;
+	}
+</style>
+
+<MudTable Elevation="25" ServerData="GetBlogPostsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+    
+    <ToolBarContent>
+        @if (_canCreate)
+        {
+            <MudSpacer/>
+            <MudButton Variant="Variant.Filled" Href="@($"/blog/create/{CategoryId}")" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New</MudButton>
+        }
+    </ToolBarContent>
+    
+
+	<HeaderContent>
+		@if (!_dense)
+		{
+			<MudTh>Cover</MudTh>
+		}
+		<MudTh>Title</MudTh>
+        <MudTh>Featured</MudTh>
+        <MudTh>Created</MudTh>
+        <MudTh>
+            <div style="float:right">
+                <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                    <MudMenuItem @onclick="() => _dense = !_dense">
+                        <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                            Dense
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _striped = !_striped">
+                        <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                            Striped
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _bordered = !_bordered">
+                        <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                            Bordered
+                        </MudSwitch>
+                    </MudMenuItem>
+                </MudMenu>
+            </div>
+        </MudTh>
+	</HeaderContent>
+
+	<RowTemplate>
+		@if (!_dense)
+		{
+			<MudTd><MudImage Width="50" Height="50" Src="@context.CoverImageUrl"/> </MudTd>
+		}
+		<MudTd>@context.Title</MudTd>
+        <MudTd>@context.Featured</MudTd>
+        <MudTd>@context.Created</MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            @if (_canEdit || _canDelete)
+            {
+                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                    @if (_canEdit)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/blog/update/{@context.BlogPostId}/{CategoryId}")">Edit</MudMenuItem>
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteBlogEntry(context.BlogPostId))">Delete</MudMenuItem>
+                    }
+                </MudMenu>
+            }
+        </MudTd>
+	</RowTemplate>
+
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+
+</MudTable>

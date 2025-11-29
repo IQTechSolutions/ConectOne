@@ -1,0 +1,17 @@
+﻿@page "/events/archived"
+
+@attribute [Authorize]
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using SchoolsModule.Blazor.Components.ActivityGroupEvents
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Events" Caption="All available school leeventsarners" />
+
+<ActivityGroupEventTable Archived="true"/>

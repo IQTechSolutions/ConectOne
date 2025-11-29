@@ -1,0 +1,166 @@
+﻿@page "/learners/create"
+
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Enums
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using SchoolsModule.Domain.DataTransferObjects
+@using SchoolsModule.Domain.Entities
+
+@attribute [Authorize]
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="Learners" Caption="All available school learners" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+    </MudItem>
+</MudGrid>
+
+<EditForm Model="_learner" OnSubmit="CreateAsync">
+
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <MudGrid>
+        <MudItem xs="12" sm="12" md="4" lg="3">
+            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@($"{_learner.FirstName} {_learner.LastName}")" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Learner)" ParentId="@_learner.LearnerId"/>
+            <MudDivider/>
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem md="12">
+                            <MudSelect T="Gender" Label="Gender" @bind-Value="@_learner.Gender" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" ToStringFunc="@(contactMomentType => contactMomentType.ToString())" Margin="Margin.Dense">
+                                @foreach (var state in (Gender[])Enum.GetValues(typeof(Gender)))
+                                {
+                                    <MudSelectItem Value="@state">@state.ToString()</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem md="12">
+                            <MudSelect T="SchoolGradeDto" ToStringFunc="@_schoolGradeConverter" Label="Grade" Value="@_learner.SelectedGrade" ValueChanged="SelectedGradeChanged" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                @if (AvailableGrades is not null)
+                                {
+                                    foreach (var state in AvailableGrades)
+                                    {
+                                        <MudSelectItem Value="@state">@state.SchoolGrade</MudSelectItem>
+                                    }
+                                }
+
+
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem md="12">
+                            <MudSelect ToStringFunc="@_availableSchoolConverter" Label="Class" @bind-Value="@_learner.SelectedSchoolClass" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                @if (AvailableSchoolClasses is not null)
+                                {
+                                    foreach (var state in AvailableSchoolClasses)
+                                    {
+                                        <MudSelectItem Value="@state">@state.SchoolClass</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="8" lg="9">
+            <MudTabs>
+                <MudTabPanel Text="Personal Information">
+                    <MudCard Style="padding:15px;">
+                        <MudCardContent>
+                            <MudGrid>
+                                <DataAnnotationsValidator/>
+                                <MudItem md="12">
+                                    <MudTextField Label="First Name" Class="mt-3" @bind-Value="_learner.FirstName" For="@(() => _learner.FirstName)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem md="12">
+                                    <MudTextField Label="Middle Names" Class="mt-3" @bind-Value="_learner.MiddleNames" For="@(() => _learner.MiddleNames)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem md="12">
+                                    <MudTextField Label="Last Name" Class="mt-3" @bind-Value="_learner.LastName" For="@(() => _learner.LastName)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+
+                                <MudItem md="8">
+                                    <MudTextField Label="Identity Nr" Mask="@(new PatternMask("000000 0000 000"))" Class="mt-3" @bind-Value="_learner.IdNumber" For="@(() => _learner.IdNumber)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem md="4">
+                                    <MudTextField Disabled="true" Label="Date Of Birth" Class="mt-3" Value="_learner.DateOfBirth" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField T="string"
+                                                  Mask="@(new PatternMask("00 000 0000"))" Adornment="Adornment.Start" AdornmentText="+27"
+                                                  Label="Phone Number"
+                                                  @bind-Value="_learner.MobileNr"
+                                                  Immediate="true"
+                                                  Margin="Margin.Dense" Variant="Variant.Outlined"
+                                                  For="@(() => _learner.MobileNr)"
+                                                  InputType="InputType.Telephone"/>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField T="string"
+                                                  Label="E-mail"
+                                                  @bind-Value="_learner.EmailAddress"
+                                                  Margin="Margin.Dense" 
+                                                  Variant="Variant.Outlined"
+                                                  For="@(() => _learner.EmailAddress)"
+                                                  InputType="InputType.Email" />
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Medical Information">
+                    <MudCard Style="padding:15px;">
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudAlert Severity="Severity.Info">
+                                        Medical aid details are now captured on the parent's profile. Select the parent whose medical aid should be used for this learner.
+                                    </MudAlert>
+                                </MudItem>
+                                <MudItem xs="12" md="6">
+                                    <MudSelect ToStringFunc="_parentConverter" T="ParentDto" Label="Medical Aid Parent" @bind-Value="_learner.MedicalAidParent" Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomCenter">
+                                        @if (_selectedParents is not null)
+                                        {
+                                            foreach (var parent in _selectedParents)
+                                            {
+                                                <MudSelectItem Value="@parent">@parent.FirstName @parent.LastName</MudSelectItem>
+                                            }
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField Label="Additional Medical Notes" Class="mt-3" @bind-Value="_learner.MedicalNotes" For="@(() => _learner.MedicalNotes)" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="4" TextFieldType="TextFieldType.Multiline" />
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudTabPanel>
+            </MudTabs>
+
+            <MudTabPanel Text="Parents">
+                <MudCard Style="padding:15px;">
+                    <SchoolsModule.Blazor.Components.Parents.ParentsTableV2 MultiSelection="true" LearnerId="@_learner.LearnerId" SelectedParents="_selectedParents" OnSelectionChange="OnValueSelectionChanged" />
+                </MudCard>
+            </MudTabPanel>
+
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+
+    </MudGrid>
+</EditForm>

@@ -1,0 +1,59 @@
+﻿@* @page "/permissions/{RoleId}" *@
+
+@using IdentityModule.Application.ViewModels
+@using MudBlazor
+@* <DefaultTitle Title="Manage Permission" Caption="Manage application users from here." /> *@
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTabs Style="width:100%" Elevation="25" Rounded="true" Centered="false" ApplyEffectsToContainer="true" AlwaysShowScrollButtons="true" Position="Position.Left">
+        @foreach (var group in GroupedRoleClaims.Keys)
+        {
+            var selectedRoleClaimsInGroup = GroupedRoleClaims[group].Where(c => c.Selectede).ToList();
+            var allRoleClaimsInGroup = GroupedRoleClaims[group].ToList();
+
+            <MudTabPanel Text="@group" BadgeData="@($"{selectedRoleClaimsInGroup.Count}/{allRoleClaimsInGroup.Count}")" Style="padding-right: 43px; width:100%" BadgeColor="@GetGroupBadgeColor(selectedRoleClaimsInGroup.Count, allRoleClaimsInGroup.Count)">
+                <MudTable Hover="true" Elevation="25" Items="@allRoleClaimsInGroup" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Filter="new Func<RoleClaimViewModel, bool>(Search)" @bind-roleClaims="_roleClaims"
+                          CommitEditTooltip="Apply" MultiSelection="@_multiSelection" SelectedItems="_selectedActivityGroups">
+                    <ToolBarContent>
+                        @if (_canEditRolePermissions && string.IsNullOrEmpty(UserId))
+                        {
+                            <div class="justify-center mud-text-align-center">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="SaveAsync" ButtonType="ButtonType.Submit">Update Role Permissions</MudButton>
+                            </div>
+                        }
+                        <MudSpacer />
+                        @if (_canSearchRolePermissions)
+                        {
+                            <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth=false Placeholder="Search For Permissions" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="MudBlazor.Size.Medium" Class="mt-0 mb-3"></MudTextField>
+                        }
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortBy="new Func<RoleClaimViewModel, object>(x => x.Description)">Description</MudTableSortLabel></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Description">
+                            <MudHighlighter Text="@context.Description" HighlightedText="@_searchString" />
+                        </MudTd>
+                    </RowTemplate>
+                    <FooterContent>
+                        <MudTd colspan="4">
+                            <div class="d-flex">
+                                <MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+                                <MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                                <MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                            </div>
+                        </MudTd>
+                    </FooterContent>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            </MudTabPanel>
+        }
+    </MudTabs>
+}

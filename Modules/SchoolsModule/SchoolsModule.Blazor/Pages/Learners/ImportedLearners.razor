@@ -1,0 +1,186 @@
+﻿@page "/imported-learners"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@inject NavigationManager Navigation
+
+@attribute [Authorize]
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="Learners" Caption="All available school learners" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+    </MudItem>
+</MudGrid>
+
+<MudTabs>
+    <MudTabPanel Text="Import New Learners">
+        <MudGrid Style="padding-bottom:10px; padding-top:20px;">
+            <MudItem xs="6">
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                    <ActivatorContent>
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary" FullWidth="true"
+                                   StartIcon="@Icons.Material.Filled.CloudUpload">
+                            Upload Files
+                        </MudButton>
+                    </ActivatorContent>
+                </MudFileUpload>
+            </MudItem>
+            <MudItem xs="6">
+                <MudButton OnClick="DownloadTemplate" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Download Template</MudButton>
+            </MudItem>
+        </MudGrid>
+
+
+        <MudTable Items="_learners" Elevation="25">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Surname</MudTh>
+                <MudTh>Id Number</MudTh>
+                <MudTh>Parents</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>@context.Surname</MudTd>
+                <MudTd>@context.IdNumber</MudTd>
+                <MudTd>
+                    @foreach (var parent in context.Parents)
+                    {
+                        <div>@parent.Name @parent.Surname</div>
+                    }
+                </MudTd>
+                <MudTd>
+                    <MudButton OnClick="@(() => ShowParentDetails(@context))" Variant="Variant.Filled" Color="Color.Secondary">@(context.ShowParentDetails ? "Hide" : "Show") Parent Details</MudButton>
+                </MudTd>
+            </RowTemplate>
+            <ChildRowContent>
+                @if (context.ShowParentDetails)
+                {
+                    <td colspan="5" style="padding-bottom:20px;">
+                        <MudCard>
+                            <MudCardHeader>
+                                <MudText Typo="Typo.body1">Parent Details for @context.Name @context.Surname</MudText>
+                            </MudCardHeader>
+                            <MudCardContent Class="pa-0">
+                                <MudTable Items="@context.Parents" Elevation="25" Context="childContext">
+                                    <HeaderContent>
+                                        <MudTh>Name</MudTh>
+                                        <MudTh>Surname</MudTh>
+                                        <MudTh>Id Number</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd>@childContext.Name</MudTd>
+                                        <MudTd>@childContext.Surname</MudTd>
+                                        <MudTd>@childContext.IdNumber</MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </MudCardContent>
+                        </MudCard>
+                    </td>
+                }
+            </ChildRowContent>
+           
+            <FooterContent>
+                @if (_learners.Any())
+                {
+                    <MudTd colspan="5">
+                        <MudButton OnClick="Import" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Import Data</MudButton>
+                    </MudTd>
+                }
+            </FooterContent>
+            
+        </MudTable>
+    </MudTabPanel>
+    <MudTabPanel Text="New Grade Imports">
+        <MudGrid>
+            <MudItem xs="9">
+                <MudTable Items="_learnerGrades" Elevation="25">
+                    <HeaderContent>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Surname</MudTh>
+                        <MudTh>Id Number</MudTh>
+                        <MudTh>Grade</MudTh>
+                        <MudTh>Class</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        @if (string.IsNullOrEmpty(context.Color))
+                        {
+                            <MudTd>@context.Name</MudTd>
+                            <MudTd>@context.Surname</MudTd>
+                            <MudTd>@context.IDNumber</MudTd>
+                            <MudTd>@context.Grade.ToString()</MudTd>
+                            <MudTd>@context.Class.ToString()</MudTd>
+                        }
+                        else
+                        {
+                            <MudTd><strong style="color:red">@context.Name</strong></MudTd>
+                            <MudTd><strong style="color:red">@context.Surname</strong></MudTd>
+                            <MudTd><strong style="color:red">@context.IDNumber</strong></MudTd>
+                            <MudTd><strong style="color:red">@context.Grade.ToString()</strong></MudTd>
+                            <MudTd><strong style="color:red">@context.Class.ToString()</strong></MudTd>
+                        }
+                        
+                    </RowTemplate>
+
+                    <FooterContent>
+                        @if (_learners.Any())
+                        {
+                            <MudTd colspan="5">
+                                <MudButton OnClick="Import" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Import Data</MudButton>
+                            </MudTd>
+                        }
+                    </FooterContent>
+
+                </MudTable>
+            </MudItem>
+            <MudItem xs="3">
+                <div style="padding-bottom:8px;">
+                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadGrades">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary" FullWidth="true"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                Upload Files
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudButton OnClick="DownloadTemplate" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Download Template</MudButton>
+                </div>
+                <div style="padding-bottom:8px;">
+                <MudDivider/>
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudButton OnClick="CheckLearnerCountByNameAndSurname" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">@_checkLearnerButtonText</MudButton>
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudButton OnClick="CheckLearnersByIdNumber" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Check By ID Number</MudButton>
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudButton OnClick="DownloadTemplate" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Check By Reference Nr</MudButton>
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudDivider/>
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Export Unmatched Learners</MudButton>
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudDivider />
+                </div>
+                <div style="padding-bottom:8px;">
+                    <MudButton OnClick="ImportGrades" Variant="Variant.Filled" Color="Color.Error" FullWidth="true">Import Grades</MudButton>
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+</MudTabs>
+
+

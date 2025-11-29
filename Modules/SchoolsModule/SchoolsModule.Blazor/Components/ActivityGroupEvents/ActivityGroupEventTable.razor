@@ -1,0 +1,126 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+@using NeuralTech.Base.Enums
+@using SchoolsModule.Application.ViewModels
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTable T="SchoolEventViewModel" Elevation="25" ServerData="ServerReload" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreate)
+                { 
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateNewEventForActivityEvent" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+                } 
+                <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary" Style="margin-left:15px;">Reload</MudButton>
+                @if (_canExport)
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => ExportToExcel())" StartIcon="@Icons.Material.Filled.ImportExport" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">Export</MudButton>
+                }
+            </div>
+            <MudSpacer />
+            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel T="ParentViewModel" SortLabel="FirstName">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="ParentViewModel" SortLabel="LastName">Description</MudTableSortLabel></MudTh>            
+            <MudTh>Start Date</MudTh>
+            <MudTh>End Date</MudTh>
+            @if (ShowEventStatusChip)
+            {
+                <MudTh>Status</MudTh>
+            }
+            <MudTh>
+                <div style="float:right">
+                    <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                        <MudMenuItem @onclick="() => _dense = !_dense">
+                            <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                Dense
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _striped = !_striped">
+                            <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                Striped
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _bordered = !_bordered">
+                            <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                Bordered
+                            </MudSwitch>
+                        </MudMenuItem>
+                    </MudMenu>
+                </div>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">
+                <MudHighlighter Text="@context.Name" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="First Name">
+                <MudHighlighter Text="@context.Details.HtmlToPlainText().TruncateLongString(150)" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Start Date">
+                @context.StartDate
+            </MudTd>
+            <MudTd DataLabel="End Date">
+                @context.EndDate
+            </MudTd>
+            @if (ShowEventStatusChip)
+            {
+                if (context.Published)
+                {
+                    <MudTd DataLabel="End Date">
+                        <MudChip T="string" Label="true" Color="Color.Primary">Published</MudChip>
+                    </MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="End Date">
+                        <MudChip T="string" Label="true" Color="Color.Error">Un-Published</MudChip>
+                    </MudTd>
+                }
+            }
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                @if (context.TransportPermissionRequired && context.AnyOutstandingTransportConsents || context.AttendanceConsentRequired && context.AnyOutstandingAttendanceConsents)
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ContactMail" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;margin-right:15px;">Resend Requests</MudButton>
+                }
+                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                    @if (_canEdit)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/activities/activitygroups/events/update/{context.EventId}")">Edit</MudMenuItem>
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteEvent(@context.EventId!))">Delete</MudMenuItem>
+                    }
+                    @if (_canCreateMessage)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.Event)}/messages/create/{context.EventId}")">Message</MudMenuItem>
+                    }
+                    @if (_canSendNotification)
+                    {
+                        <MudMenu Variant="Variant.Text" Label="Resend" StartIcon="@Icons.Material.Filled.SendToMobile" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomLeft">
+                            <MudMenuItem @onclick="@(() => OnResendActivityGroupAttendanceRequest(@context.EventId!))">Attendance Requests</MudMenuItem>
+                            <MudMenuItem @onclick="@(() => OnResendActivityGroupTransportRequest(@context.EventId!))">Transport Requests</MudMenuItem>
+                        </MudMenu>
+                    }
+                    @if (_canExport)
+                    {
+                        <MudMenu Variant="Variant.Text" Label="Export" StartIcon="@Icons.Material.Filled.ImportExport" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomLeft">
+                            <MudMenuItem @onclick="@(() => ExportAttendanceToExcel(@context.EventId!))">Attendance Report</MudMenuItem>
+                            <MudMenuItem @onclick="@(() => ExportTransportToExcel(@context.EventId!))">Transport Report</MudMenuItem>
+                        </MudMenu>
+                    }
+                </MudMenu>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+}

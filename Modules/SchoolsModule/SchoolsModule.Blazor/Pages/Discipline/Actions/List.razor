@@ -1,0 +1,66 @@
+@page "/discipline/actions"
+@attribute [Authorize]
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using SchoolsModule.Application.ViewModels
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="Disciplinary Actions" Caption="Manage actions" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right" />
+    </MudItem>
+    @if (_canCreate)
+    {
+        <MudItem md="12">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/discipline/actions/create" StartIcon="@Icons.Material.Filled.Add">Create</MudButton>
+        </MudItem>
+    }
+    <MudItem md="12">
+        <MudTable T="DisciplinaryActionViewModel" ServerData="ServerReload" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Description</MudTh>
+                <MudTh>Scale</MudTh>
+                <MudTh>
+                    <div style="float:right">
+                        <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                            <MudMenuItem @onclick="() => _dense = !_dense">
+                                <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                    Dense
+                                </MudSwitch>
+                            </MudMenuItem>
+                            <MudMenuItem @onclick="() => _striped = !_striped">
+                                <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                    Striped
+                                </MudSwitch>
+                            </MudMenuItem>
+                            <MudMenuItem @onclick="() => _bordered = !_bordered">
+                                <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                    Bordered
+                                </MudSwitch>
+                            </MudMenuItem>
+                        </MudMenu>
+                    </div>
+                </MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="Scale">@_scaleLookup.GetValueOrDefault(context.SeverityScaleId ?? string.Empty)</MudTd>
+                <MudTd DataLabel="Actions" Style="text-align:right">
+                    @if (_canEdit)
+                    {
+                        <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" Href="@($"/discipline/actions/update/{context.DisciplinaryActionId}")">Edit</MudButton>
+                    }
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudItem>
+</MudGrid>

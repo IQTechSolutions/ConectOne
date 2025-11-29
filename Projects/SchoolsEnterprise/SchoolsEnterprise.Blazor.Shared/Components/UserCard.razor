@@ -1,0 +1,23 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudCard Elevation="0" Square="true" Class="@Class">
+    <MudCardHeader>
+        <CardHeaderAvatar>
+            @if (string.IsNullOrEmpty(ImageDataUrl))
+            {
+                <MudAvatar Color="Color.Secondary">@_firstLetterOfName</MudAvatar>
+            }
+            else
+            {
+                <MudAvatar Style="height:50px; width:50px;">
+                    <MudImage Src="@ImageDataUrl"></MudImage>
+                </MudAvatar>
+            }
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="Typo.body2">@_firstName @_lastName</MudText>
+            <MudText Style="font-size:x-small">@_email.TruncateLongString(25)</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+</MudCard>

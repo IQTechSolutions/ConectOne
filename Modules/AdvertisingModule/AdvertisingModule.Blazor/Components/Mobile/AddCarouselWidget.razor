@@ -1,0 +1,76 @@
+@using FilingModule.Domain.Enums
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using Radzen
+@using Radzen.Blazor
+
+@if (_ads.Any())
+{
+    <MudBreakpointProvider>
+        <MudHidden Breakpoint="Breakpoint.MdAndDown">
+            <RadzenCarousel @ref=_carousel @bind-SelectedIndex="@_selectedIndex" Auto="true" Interval="@_interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="height:350px" AllowNavigation="false">
+                <Items>
+
+                    @{
+                        decimal dddd = Convert.ToDecimal(_ads.Count) / 8;
+                        var ceiling = Math.Ceiling(dddd);
+                    }
+                    @for (var i = 0; i < ceiling; i++)
+                    {
+                        <RadzenCarouselItem>
+                            <MudGrid>
+                                @foreach (var group in _ads.Skip(_selectedIndex * 8).Take((_selectedIndex + 1) * 8))
+                                {
+                                    <MudItem xs="3" sm="3" md="3" lg="3" xl="3" Style="text-align:center" @onclick="@(() => { NavigationManager.NavigateTo(@group.Url); })">
+                                        <MudImage Class="ma-2 align-self-center" Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{group.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" Style="height:100px; width:100px;" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </RadzenCarouselItem>
+                    }
+
+                </Items>
+            </RadzenCarousel>
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.LgAndUp">
+            <RadzenCarousel @ref=_carousel2 @bind-SelectedIndex="@_selectedIndex" Auto="true" Interval="@_interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="height:350px" AllowNavigation="false">
+                <Items>
+                    @{
+                        var dddd = Convert.ToDecimal(_ads.Count) / 6;
+                        var ceiling = Math.Ceiling(dddd);
+                    }
+                    @for (var i = 0; i < ceiling; i++)
+                    {
+                        <RadzenCarouselItem>
+                            <MudGrid>
+                                @foreach (var group in _ads.Skip(_selectedIndex * 6).Take((_selectedIndex + 1) * 6))
+                                {
+                                    <MudItem xs="4" sm="4" md="4" lg="4" xl="4" Style="text-align:center" @onclick="@(() => { NavigationManager.NavigateTo(@group.Url); })">
+                                        <MudImage Class="ma-2 align-self-center" Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{group.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" Style="height:100px; width:100px;" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </RadzenCarouselItem>
+                    }
+                </Items>
+            </RadzenCarousel>
+        </MudHidden>
+    </MudBreakpointProvider>
+}
+
+@if (Configuration.GetValue<bool>("ApplicationConfiguration:SellAdvertisements"))
+{
+    <MudCard Elevation="25" Class="mt-5 rounded-lg">
+        <MudCardContent>
+            <div class="d-flex">
+                <MudIconButton Class="align-self-center" Icon="fas fa-check-circle" Color="Color.Success" Size="Size.Large"></MudIconButton>
+                <div class="mx-3">
+                    <MudText Typo="Typo.h6" Style="font-weight: 600;" Color="@Color.Default">Advertise with Us</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Default">If you are intersted in advertising in the above carousel.</MudText>
+                </div>
+            </div>
+            <MudButton FullWidth="true" Class="my-3 rounded-lg px-1" Size="Size.Medium" Variant="MudBlazor.Variant.Filled" OnClick="NavigateToAdvertiseWithUs" Color="Color.Primary">Start Campaign</MudButton>
+        </MudCardContent>
+    </MudCard>
+}
+

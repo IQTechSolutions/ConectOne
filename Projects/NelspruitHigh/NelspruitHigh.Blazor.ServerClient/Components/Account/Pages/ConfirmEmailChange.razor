@@ -1,0 +1,47 @@
+﻿@page "/Account/ConfirmEmailChange"
+@using IdentityModule.Domain.Entities
+@using Microsoft.AspNetCore.Identity
+@using MudBlazor
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityRedirectManager RedirectManager
+@inject IConfiguration Configuration
+
+<PageTitle>Confirm email change</PageTitle>
+<HeadContent>
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div style="text-align:center">
+    <MudGrid Style="max-width:500px; margin-left:50%; transform:translate(-50%)">
+        <MudItem xs="12" md="12" lg="12" xl="12">
+            <div class="justify-center">
+                <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:logoUrl")}")" Style="width: 150px;" />
+            </div>
+        </MudItem>
+        <MudItem xs="12" md="12" lg="12" xl="12">
+            <div class="justify-center">
+                <h2>@($"{Configuration.GetValue<string>("ApplicationConfiguration:ApplicationName")} School Admin")</h2>
+            </div>
+        </MudItem>
+        <MudItem xs="12" md="12" lg="12" xl="12">
+           
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+        </MudItem>
+        <MudItem xs="12" md="12" lg="12" xl="12">            
+            <div class="justify-center">
+                <MudText><strong>Confirm email change</strong></MudText>
+            </div>
+        </MudItem>
+        <MudItem xs="12" md="12" lg="12" xl="12">            
+            <div class="justify-center">
+                <StatusMessage Message="@message" />
+            </div>
+        </MudItem>
+        <MudItem xs="12" md="12" lg="12" xl="12">
+            <a href="/" Class="my-4 py-2 rounded-lg btn btn-block" style="background-color: #1b6ec2; ; width:100%; color:white;">Home</a>
+        </MudItem>
+    </MudGrid>
+</div>

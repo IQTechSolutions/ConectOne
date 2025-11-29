@@ -1,0 +1,29 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<style>
+    .mud-button-text-size-small{
+        font-size:0.7rem;
+    }
+</style>
+
+@if (_schoolEvents.Any())
+{
+    <div style="padding-left:5px;">
+        @if (_schoolEvents.Count() > 1)
+        {
+            <MudLink Href="@_schoolEvents.FirstOrDefault()!.Url"><MudText Typo="Typo.subtitle2" Style="font-size:xx-small"><strong>@_schoolEvents.FirstOrDefault()!.Name.TruncateLongString(17)</strong></MudText></MudLink>
+            <MudDivider Style="margin-top:10px; padding-bottom:5px;"></MudDivider>
+            <MudMenu Label="@($"{_schoolEvents.Count() - 1} More Items")" Dense="true" Size="Size.Small" FullWidth="true">
+                @foreach (var item in _schoolEvents.Skip(1))
+                {
+                    <MudMenuItem Label="@item.Name.TruncateLongString(25)" Href="@item.Url" />
+                }
+            </MudMenu>
+        }
+        else
+        {
+            <MudLink Href="@_schoolEvents.FirstOrDefault()!.Url"><MudText Typo="Typo.subtitle2" Style="font-size:xx-small"><strong>@_schoolEvents.FirstOrDefault()!.Name.TruncateLongString(17)</strong></MudText></MudLink>
+        }
+    </div>
+}

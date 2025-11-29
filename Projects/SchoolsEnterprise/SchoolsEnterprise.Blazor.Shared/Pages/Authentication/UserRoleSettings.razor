@@ -1,0 +1,146 @@
+﻿@page "/userroles/settings/{RoleName}"
+@page "/userroles/settings/{RoleName}/{TabIndex:int}"
+@using ConectOne.Blazor.Components
+@using IdentityModule.Blazor.Components
+@using IdentityModule.Domain.DataTransferObjects
+@using MessagingModule.Blazor.Components.Messages
+@using MudBlazor
+@using NeuralTech.Base.Enums
+@using ProductsModule.Domain.DataTransferObjects
+
+<DefaultTitle Title="@($"Manage Role Settings for {_role?.RoleName}")" Caption="@($"Manage users role settings for {_role?.RoleName} from here.")" />
+
+@if (_role is not null)
+{
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTabs Style="width:100%" @bind-ActivePanelIndex="TabIndex">
+                <MudTabPanel Text="Settings">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudCard Style="width:100%; padding:20px;">
+                                <MudGrid>
+                                    <MudItem xs="12">
+                                        <MudTextField @bind-Value="@_role.RoleName" For="@(() => _role.RoleName)" Label="First Name" Variant="Variant.Outlined" />
+                                    </MudItem>
+                                </MudGrid>
+                                <MudItem xs="12">
+                                    <MudTextField Lines="4" @bind-Value="@_role.RoleDescription" For="@(() => _role.RoleDescription)" Label="First Name" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <div class="align-content-center">
+                                        <MudSwitch T="bool" @bind-Value="_role.AdministrativeRole"  Label="Administrative role and can only be assigned and not selected" Color="Color.Primary" />
+                                        <MudSwitch T="bool" @bind-Value="_role.AdvertiseRegistration" Label="Advertise Registration Tier to users" Color="Color.Primary"/>
+                                        <MudSwitch T="bool" @bind-Value="_role.AdvertiseOnlyToMembers" Label="Upgrades for tier is only available" Color="Color.Primary" />
+                                        <MudSwitch T="bool" @bind-Value="_role.NotAvailableForRegistrationSelection" Label="Should be avalailble as registration option" Color="Color.Primary" />
+                                        <MudSwitch T="bool" @bind-Value="_role.ProductManager" Label="Product Manager" Color="Color.Primary" />
+                                    </div>
+                                </MudItem>
+                            </MudCard>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+                <MudTabPanel Text="Permissions" Style="width:100%">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <PermissionsPage @ref="@permissionsPage" RoleId="@_role.RoleId" RoleName="@RoleName"></PermissionsPage>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+                <MudTabPanel Text="Service Tiers">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudTable Hover="true" Elevation="25" Items="_serviceTiers" @ref="_table">
+                                <ToolBarContent>
+                                    <MudSpacer />
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="CreateServiceTier" ButtonType="ButtonType.Submit">Create New</MudButton>
+                                </ToolBarContent>
+                                <HeaderContent>
+                                    <MudTh><MudTableSortLabel SortBy="new Func<ServiceTierDto, object>(x => x.Name)">Tier</MudTableSortLabel></MudTh>
+                                    <MudTh><MudTableSortLabel SortBy="new Func<ServiceTierDto, object>(x => x.Description)">Description</MudTableSortLabel></MudTh>
+                                    <MudTh></MudTh>
+                                </HeaderContent>
+                                <RowTemplate Context="rowContext">
+                                    <MudTd DataLabel="Name">
+                                            @rowContext.Name"
+                                    </MudTd>
+                                    <MudTd DataLabel="Description">
+                                            @rowContext.Description
+                                    </MudTd>
+                                    <MudTd DataLabel="Role" Style="float:right;">
+                                        <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => EditServiceTier(rowContext))">Update</MudMenuItem>
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteServiceTier(rowContext))">Remove</MudMenuItem>
+                                        </MudMenu>
+                                    </MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+                <MudTabPanel Text="Users">
+                    <UsersList Role="@RoleName"></UsersList>
+                </MudTabPanel>
+                <MudTabPanel Text="Messages">
+                    <MessagesTable MessageType="(int)MessageType.RoleMessage" EntityId="@_role.RoleId"></MessagesTable>
+                </MudTabPanel>
+                @if (string.IsNullOrEmpty(_role.ParentRoleId))
+                {
+                    <MudTabPanel Text="Managed Roles">
+                        <MudTable Hover="true" Elevation="25" Items="_childRoles" Dense="@true" @bind-userRole="_role">
+                            <ToolBarContent>
+
+                                <MudSpacer />
+                                @if (_canAddRolesToBeManaged)
+                                {
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="AddRoleToManage" ButtonType="ButtonType.Submit">Create User Role</MudButton>
+                                }
+                            </ToolBarContent>
+                            <HeaderContent>
+                                <MudTh><MudTableSortLabel SortBy="new Func<RoleDto, object>(x => x.Name)">Role Name</MudTableSortLabel></MudTh>
+                                <MudTh><MudTableSortLabel SortBy="new Func<RoleDto, object>(x => x.Description)">Description</MudTableSortLabel></MudTh>
+                                @if (_canEditRoles || _canRemovetRoles)
+                                {
+                                    <MudTh></MudTh>
+                                }
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Role Name">
+                                    <MudHighlighter Text="@context.Name" />
+                                </MudTd>
+                                <MudTd DataLabel="Description">
+                                    <MudHighlighter Text="@context.Description" />
+                                </MudTd>
+                                @if (_canEditRoles || _canRemovetRoles)
+                                {
+                                    <MudTd DataLabel="Role">
+                                        <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                            <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.RoleMessage)}/messages/create/{context.Id}")">Create Message</MudMenuItem>
+                                            @if (_canEditRoles)
+                                            {
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Security" OnClick="@(() => NavigationManager.NavigateTo($"/userroles/settings/{context.Id}", true))">Settings</MudMenuItem>
+                                            }
+                                        </MudMenu>
+                                    </MudTd>
+                                }
+                            </RowTemplate>
+                            <PagerContent>
+                                <MudTablePager />
+                            </PagerContent>
+                        </MudTable>
+                    </MudTabPanel>
+                }
+            </MudTabs>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+                <MudButton OnClick="UpdateAsync" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>
+                Save
+            </MudButton>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
+                Cancel
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+}

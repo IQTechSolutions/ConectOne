@@ -1,0 +1,127 @@
+﻿@using MudBlazor
+@using SchoolsModule.Application.ViewModels
+@using SchoolsModule.Domain.DataTransferObjects
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTable T="ParentDto" ServerData="ServerReload" Elevation="25" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table" 
+              MultiSelection="@MultiSelection" SelectedItems="_selectedParents" SelectedItemsChanged="@((HashSet<ParentDto> se) => OnParentSelectionChanged(se))">
+
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreate)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/parents/create" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface" 
+                               Style="margin-right:15px;">
+                        Create
+                    </MudButton>
+                }
+
+                <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">
+                    Reload
+                </MudButton>
+
+                @if (_canExport)
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => ExportToExcel())" StartIcon="@Icons.Material.Filled.ImportExport" IconColor="Color.Surface" Color="Color.Info"
+                               Style="margin-left:15px;">
+                        Export
+                    </MudButton>
+                }
+
+                @if (ShowLinkParentsButton)
+                {
+                    @if (_canAddLearners)
+                    {
+                        @if (!MultiSelection)
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="ToggleMultiSelectionModeAsync" StartIcon="@Icons.Material.Filled.Link" IconColor="Color.Surface" Color="Color.Info"
+                                       Style="margin-left:15px;">
+                                Link Learners
+                            </MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="ToggleMultiSelectionModeAsync" StartIcon="@Icons.Material.Filled.PanoramaFishEye" IconColor="Color.Surface"
+                                       Color="Color.Info" Style="margin-left:15px;">
+                                View Learner Parents
+                            </MudButton>
+                        }
+                    }
+                }
+            </div>
+            <MudSpacer />
+
+            <MudTextField T="string" @bind-Text="@_args.SearchText" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Medium" Class="mt-0" />
+            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(_args.SearchText))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">
+                Search
+            </MudButton>
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel T="ParentViewModel" SortLabel="FirstName">First Name</MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="ParentViewModel" SortLabel="LastName">Last Name</MudTableSortLabel>
+            </MudTh>
+            <MudTh>Contact Nr</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Dependants</MudTh>
+            <MudTh>
+                <div style="float:right">
+                    <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                        <MudMenuItem @onclick="() => _dense = !_dense">
+                            <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                Dense
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _striped = !_striped">
+                            <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                Striped
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _bordered = !_bordered">
+                            <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                Bordered
+                            </MudSwitch>
+                        </MudMenuItem>
+                    </MudMenu>
+                </div>
+            </MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="First Name">
+                <MudHighlighter Text="@context.FirstName" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Last Name">
+                <MudHighlighter Text="@context.LastName" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Grade">
+                @(
+                    context.ContactNumbers.FirstOrDefault(c => c.Default) is null
+                    ? context.ContactNumbers.FirstOrDefault()?.Number
+                    : context.ContactNumbers.FirstOrDefault(c => c.Default)!.Number)
+            </MudTd>
+            <MudTd DataLabel="Class">
+                @(
+                context.EmailAddresses.FirstOrDefault(c => c.Default) is null
+                    ? context.EmailAddresses.FirstOrDefault()?.EmailAddress
+                    : context.EmailAddresses.FirstOrDefault(c => c.Default)!.EmailAddress)
+            </MudTd>
+            <MudTd>@context.Learners.Count</MudTd>
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                <ParentsTableActionsMenu ParentId="@context.ParentId" RemoveParent="DeleteParent" DisplayDeleteButton="@(LearnerId is null)" />
+            </MudTd>
+        </RowTemplate>
+
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+}

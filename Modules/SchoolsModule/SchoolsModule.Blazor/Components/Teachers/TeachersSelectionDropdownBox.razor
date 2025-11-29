@@ -1,0 +1,15 @@
+﻿@using MudBlazor
+@using SchoolsModule.Application.ViewModels
+@if (!_loaded)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudSelect ToStringFunc="@teacherConverter" T="TeacherViewModel" Label="Coach (Teacher)" Value="Teacher" ValueChanged="SelectedValueChanged" AnchorOrigin="Origin.BottomCenter" Variant="Variant">
+        @foreach (var state in _teachers)
+        {
+            <MudSelectItem T="TeacherViewModel" Value="@state">@state.FirstName @state.LastName</MudSelectItem>
+        }
+    </MudSelect>
+}

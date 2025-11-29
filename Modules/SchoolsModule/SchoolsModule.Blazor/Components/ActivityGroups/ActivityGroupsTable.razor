@@ -1,0 +1,167 @@
+﻿@using MudBlazor
+@using NeuralTech.Base.Enums
+@using SchoolsModule.Blazor.Components.Learners.Tables
+@using SchoolsModule.Domain.DataTransferObjects
+@using SchoolsModule.Domain.Enums
+
+
+<MudTable ServerData="GetActivityGroupsAsync" @ref="_table" SelectedItemsChanged="@((HashSet<ActivityGroupDto> se) => OnSelectedActivityGroupsChangedAsync(se))"
+		  SelectedItems="SelectedActivityGroups" MultiSelection="@MultiSelection" Elevation="25" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" T="ActivityGroupDto">
+
+    <ToolBarContent>
+        @if (_canSearch)
+        {
+            <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        }
+        @if (_canCreate)
+        {
+            <MudSpacer/>
+            <MudButton Variant="Variant.Filled" Href="@($"/activities/activitygroups/create/{CategoryId}")" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface" Style="margin-left:15px;">New Team</MudButton>
+        }
+        @if (ShowLinkGroupButton && _canLinkGroups)
+        {
+            if (!MultiSelection)
+            {
+                <MudButton Variant="Variant.Filled" OnClick="OnLinkActivityGroups" StartIcon="@Icons.Material.Filled.Link" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">Link Group</MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" OnClick="OnLinkActivityGroups" StartIcon="@Icons.Material.Filled.PanoramaFishEye" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">View Linked Groups</MudButton>
+            }
+        }
+
+        @ToolbarButtons
+
+    </ToolBarContent>
+
+	<HeaderContent>
+		<MudTh>Name</MudTh>
+		<MudTh>Age Group</MudTh>
+        <MudTh>Gender</MudTh>
+        <MudTh>
+            <div style="float:right">
+                <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                    <MudMenuItem @onclick="() => _dense = !_dense">
+                        <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                            Dense
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _striped = !_striped">
+                        <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                            Striped
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _bordered = !_bordered">
+                        <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                            Bordered
+                        </MudSwitch>
+                    </MudMenuItem>
+                </MudMenu>
+            </div>
+        </MudTh>
+	</HeaderContent>
+
+    <RowTemplate>
+        <MudTd>@context.CategoryName <small>@context.AgeGroup?.Name</small> <strong>@context.Name</strong></MudTd>
+        <MudTd>@context.AgeGroup?.Name</MudTd>
+        <MudTd>@context.Gender</MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+			
+            @if (context.AnyAttendanceConsentRequired || context.AnyTransportConsentRequired)
+            {
+                @if (_canSentNotification)
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ContactMail" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;margin-right:15px;">Resend Requests</MudButton>
+                }
+            }
+            @if (!EventStateManager.HasEvent())
+            {
+                @if (_canAddTeamMembers || _canEdit || _canDelete || _canCreateMessage || _canExport || _canSentNotification)
+                {
+                    <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                        @if (_canAddTeamMembers)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Details" @onclick="@(() => ShowTeamMembers(context.ActivityGroupId!))">@ShowTeamMembersText(context.ShowTeamMembers)</MudMenuItem>
+                        }
+                        @if (_canEdit)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => NavigateToUpdateCategory(context.ActivityGroupId!))">Edit</MudMenuItem>
+                        }
+                        @if (_canDelete)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteActivityGroup(context.ActivityGroupId!))">Delete</MudMenuItem>
+                        }
+                        @if (_canCreateMessage)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.ActivityGroup)}/messages/create/{context.ActivityGroupId}")">Message</MudMenuItem>
+                        }
+                        @if (_canExport)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Receipt" @onclick="@(() => ExportActivityGroup(@context.ActivityGroupId!))">Export Activity Groups</MudMenuItem>
+                        }
+                        @if (_canSentNotification)
+                        {
+                            <MudMenu Variant="Variant.Text" Label="Resend" StartIcon="@Icons.Material.Filled.SendToMobile" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomLeft">
+                                <MudMenuItem @onclick="@(() => OnResendActivityGroupAttendanceRequest(context.ActivityGroupId!))">Attendance Requests</MudMenuItem>
+                                <MudMenuItem @onclick="@(() => OnResendActivityGroupTransportRequest(context.ActivityGroupId!))">Transport Requests</MudMenuItem>
+                            </MudMenu>
+                        }
+                        @if (_canExport)
+                        {
+                            <MudMenu Variant="Variant.Text" Label="Attendance" StartIcon="@Icons.Material.Filled.List" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomLeft">
+                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/attendance-form/{context.ActivityGroupId}/{(int)AttendanceType.ActivityGroup}")">Attendance</MudMenuItem>
+                                <MudMenuItem Href="@($"/activities/attendance/history/{context.ActivityGroupId}")">History</MudMenuItem>
+                            </MudMenu>
+                        }
+                    </MudMenu>
+                }
+            }
+            else @* if (SelectedActivityGroups.Any(c => c!.ActivityGroupId!.Equals(context.ActivityGroupId))) *@
+            {
+                @if (_canAddTeamMembers || _canEdit || _canDelete || _canCreateMessage)
+                {
+                    <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft" OpenChanged="OnOpenRowMenu">
+                        @if (_canAddTeamMembers)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Details" @onclick="@(() => ShowTeamMembers(context.ActivityGroupId!))">@ShowTeamMembersText(context.ShowTeamMembers)</MudMenuItem>
+                        }
+                        @if (_canEdit)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => NavigateToUpdateCategory(context.ActivityGroupId!))">Edit</MudMenuItem>
+                        }
+                        @if (_canDelete)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteActivityGroup(context.ActivityGroupId!))">Delete</MudMenuItem>
+                        }
+                        @if (_canCreateMessage)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.ActivityGroup)}/messages/create/{context.ActivityGroupId}/false/true")">Message</MudMenuItem>
+                        }
+                    </MudMenu>
+                }
+            }
+        </MudTd>
+
+    </RowTemplate>
+
+	<ChildRowContent>
+		@if(context.ShowTeamMembers && _canAddTeamMembers)
+		{
+			<td colspan="5" style="padding-bottom:20px;">
+				<MudCard>
+					<MudCardHeader>
+						<MudText Typo="Typo.body1">Team Members for <strong>@context.Name</strong></MudText>
+					</MudCardHeader>
+                    <MudCardContent Class="pa-0">
+                        <LearnersTableV2 ActivityGroupId="@context.ActivityGroupId" ShowLinkLearnersButton="ShowLinkLearnersButton" OnSelectionChange="OnLearnerSelectionSelectionChanged" ResendAttendanceRequest="OnResendAttendanceRequest" ResendTransportRequest="OnResendTransportRequest" RemoveConsent="RemoveConsent"></LearnersTableV2>
+                    </MudCardContent>
+				</MudCard>
+			</td>
+		}			
+	</ChildRowContent>
+
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+
+</MudTable>

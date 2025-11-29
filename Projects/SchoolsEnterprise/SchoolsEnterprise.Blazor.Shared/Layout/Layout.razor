@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+
+@using ConectOne.Blazor.Layouts
+@using Microsoft.AspNetCore.Components.Authorization
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using MudBlazor
+@using Radzen.Blazor
+
+@layout CleanLayout
+
+<RadzenDialog />
+
+<MudRTLProvider RightToLeft="@_rightToLeft">
+
+    <MudThemeProvider Theme="_currentTheme" @rendermode="InteractiveServer" />
+    
+    <RadzenComponents @rendermode="InteractiveServer" />
+
+    <AuthorizeView>
+        <NotAuthorized>
+            <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center" Style="height: 100vh;">
+                <MudPaper Elevation="25" Class="pa-8" Style="width: 500px;">
+                    @Body
+                </MudPaper>
+            </MudContainer>
+        </NotAuthorized>
+        <Authorized>
+            <MudLayout>
+                <MainBody OnDarkModeToggle="@DarkMode" OnRightToLeftToggle="@RightToLeftToggle">
+                    @Body
+                </MainBody>
+            </MudLayout>
+        </Authorized>
+    </AuthorizeView>
+</MudRTLProvider>

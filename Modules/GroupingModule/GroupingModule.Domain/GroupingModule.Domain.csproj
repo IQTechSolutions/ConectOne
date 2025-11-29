@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LinqKit.Core" Version="1.2.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\ConectOne.Domain\ConectOne.Domain.csproj" />
+    <ProjectReference Include="..\..\Base\ConectOne.EntityFrameworkCore.Sql\ConectOne.EntityFrameworkCore.Sql.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Domain\FilingModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

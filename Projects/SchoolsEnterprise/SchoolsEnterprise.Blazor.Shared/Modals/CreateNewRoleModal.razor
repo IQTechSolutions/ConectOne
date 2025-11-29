@@ -1,0 +1,31 @@
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+@inject IStringLocalizer<CreateNewRoleModal> Localizer
+
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                @Localizer["CreateNewRoleTitle"]
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="_userRole.RoleName" Label='@Localizer["RoleName"]' Required="true" RequiredError='@Localizer["RoleNameRequired"]' FullWidth="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudSwitch @bind-Value="_userRole.NotAvailableForRegistrationSelection" Color="Color.Secondary" Label='@Localizer["NotAvailableForRegistrationSelection"]' />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="_userRole.RoleDescription" Label='@Localizer["RoleDescription"]' FullWidth="true" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">@Localizer["Cancel"]</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="Submit" Color="Color.Success">@Localizer["AddRole"]</MudButton>
+    </DialogActions>
+</MudDialog>

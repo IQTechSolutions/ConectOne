@@ -1,0 +1,45 @@
+@page "/discipline/scales"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using SchoolsModule.Application.ViewModels
+@attribute [Authorize]
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="Severity Scales" Caption="Manage severity scales" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right" />
+    </MudItem>
+    @if (_canCreate)
+    {
+        <MudItem md="12">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/discipline/scales/create" StartIcon="@Icons.Material.Filled.Add">Create</MudButton>
+        </MudItem>
+    }
+    <MudItem md="12">
+        <MudTable T="SeverityScaleViewModel" ServerData="ServerReload" Hover="true" @ref="_table">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Score</MudTh>
+                <MudTh>Description</MudTh>
+                @if (_canEdit)
+                {
+                    <MudTh></MudTh>
+                }
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Score">@context.Score</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+                @if (_canEdit)
+                {
+                    <MudTd DataLabel="Actions" Style="text-align:right">
+                        <MudButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" Href="@($"/discipline/scales/update/{context.SeverityScaleId}")">Edit</MudButton>
+                    </MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+    </MudItem>
+</MudGrid>

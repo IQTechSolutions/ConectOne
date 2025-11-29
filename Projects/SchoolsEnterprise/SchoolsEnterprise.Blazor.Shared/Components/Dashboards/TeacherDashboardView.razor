@@ -1,0 +1,99 @@
+@using MudBlazor
+@using NeuralTech.Base.Enums
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.ViewCarousel" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Classes</MudText>
+                <MudText Typo="Typo.h5">@classCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.PanoramaPhotosphereSelect" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Teams</MudText>
+                <MudText Typo="Typo.h5">@teamCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.AttachFile" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Messages</MudText>
+                <MudText Typo="Typo.h5">@messageCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.FileCopy" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Events</MudText>
+                <MudText Typo="Typo.h5">@eventCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<MudGrid Class="role-dashboard-grid" GutterSize="GutterSize.Small">
+    <MudItem xs="12" md="6">
+        <MudPaper Elevation="3" Class="role-dashboard-card">
+            <MudStack Spacing="1">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Secondary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6">Today's priorities</MudText>
+                </MudStack>
+                <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                    Plan lessons, prepare attendance, and keep your class communities connected.
+                </MudText>
+                <MudList T="string" Dense="true" Class="role-dashboard-list">
+                    <MudListItem Icon="@Icons.Material.Outlined.DateRange" Href="/calendar">Review the school calendar</MudListItem>
+                    <MudListItem Icon="@Icons.Material.Outlined.Assignment" Disabled="true" Href="/activities">Update activity schedules (comming soon)</MudListItem>
+                    <MudListItem Icon="@Icons.Material.Outlined.Campaign" Disabled="true" Href="/messages">Send class announcements (comming soon)</MudListItem>
+                </MudList>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <MudPaper Elevation="3" Class="role-dashboard-card">
+            <MudStack Spacing="1">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.AutoStories" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6">Learning resources</MudText>
+                </MudStack>
+                <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                    Curate lesson notes, upload supporting documents, and share news with your learners.
+                </MudText>
+                <MudChipSet T="bool" Filter="false" Class="mt-2" Dense="true">
+                    <MudChip T="bool" Color="Color.Primary" Variant="Variant.Outlined" Disabled="true" StartIcon="@Icons.Material.Filled.UploadFile">Share worksheets (comming soon)</MudChip>
+                    <MudChip T="bool" Color="Color.Secondary" Variant="Variant.Outlined" Disabled="true" StartIcon="@Icons.Material.Filled.VideoLibrary">Link recordings (comming soon)</MudChip>
+                    <MudChip T="bool" Color="Color.Info" Variant="Variant.Outlined" Disabled="true" StartIcon="@Icons.Material.Filled.Newspaper">Post news snippets (comming soon)</MudChip>
+                </MudChipSet>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+    
+    @if (_canCreateMessages)
+    {
+        <MudItem xs="12">
+            <MudPaper Elevation="1" Class="role-dashboard-card highlight">
+                <MudStack Spacing="1" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.ConnectWithoutContact" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle1" Class="text-center">
+                        Need to reach parents quickly? Send a single message that reaches email, push notifications, and the parent portal.
+                    </MudText>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => NavigationManager.NavigateTo($"{(int)MessageType.Parent}/messages/create", true))" StartIcon="@Icons.Material.Filled.Send">
+                        Draft a parent update
+                    </MudButton>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+    }
+    
+</MudGrid>

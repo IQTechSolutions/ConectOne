@@ -1,0 +1,21 @@
+﻿@page "/evers/categories"
+
+@attribute [Authorize]
+
+@inject IConfiguration Configuration
+
+
+@using BloggingModule.Blazor.Components.Categories
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Configuration
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Categories" Caption="@($"All Categories for newsfeeds offered at {Configuration["ApplicationConfiguration:AppliactionName"]}")" />
+ 
+<BlogCategoryTable/>

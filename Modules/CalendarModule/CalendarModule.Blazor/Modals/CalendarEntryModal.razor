@@ -1,0 +1,151 @@
+﻿@using CalendarModule.Domain.Enums
+@using IdentityModule.Domain.DataTransferObjects
+@using MudBlazor
+<MudDialog Class="mud-dialog-width-lg">
+
+    <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Primary">Add/Edit Calendar Entry</MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <MudGrid>
+            <MudItem md="8">
+                <MudGrid>
+                    <MudItem md="12">
+                        <MudTextField Label="Heading" Class="mt-3" T="string" @bind-Value="CalendarEntry.Name" For="@(() => CalendarEntry.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <MudItem md="6">
+                        <MudDatePicker Label="Start Date" Date="CalendarEntry.StartDate" Style="background-color:white" Variant="Variant.Outlined" Adornment="Adornment.End"
+                                       AdornmentIcon="@Icons.Material.Filled.EditCalendar" AdornmentColor="Color.Primary" Margin="Margin.Dense" DateChanged="OnStartDateSelectionChanged" />
+                    </MudItem>
+                    <MudItem md="6">
+                        <MudDatePicker Label="End Date" Date="CalendarEntry.EndDate" Style="background-color:white" Variant="Variant.Outlined" Adornment="Adornment.End"
+                                       AdornmentIcon="@Icons.Material.Filled.EditCalendar" AdornmentColor="Color.Primary" Margin="Margin.Dense" DateChanged="OnEndDateSelectionChanged" />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudSwitch @bind-Value="CalendarEntry.FullDayEvent" Label="FullDayEvent" Color="Color.Info" />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudRadioGroup T="AppointmentAudienceType" Value="CalendarEntry.AudienceType" ValueChanged="OnAudienceTypeChanged" Class="mt-2">
+                            <MudRadio T="AppointmentAudienceType" Value="AppointmentAudienceType.Public">Public appointment</MudRadio>
+                            <MudRadio T="AppointmentAudienceType" Value="AppointmentAudienceType.SpecificUsers">Invite specific users</MudRadio>
+                            <MudRadio T="AppointmentAudienceType" Value="AppointmentAudienceType.SpecificRoles">Invite specific roles</MudRadio>
+                        </MudRadioGroup>
+                    </MudItem>
+
+                    @if (CalendarEntry.AudienceType == AppointmentAudienceType.SpecificUsers)
+                    {
+                        <MudItem xs="12">
+                            <MudSelect ToStringFunc="@_userInfoConverter" T="UserInfoDto" MultiSelection="true" Label="Select users" @bind-SelectedValues="CalendarEntry.InvitedUsers" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
+                                @foreach (var user in _availableUsers)
+                                {
+                                    <MudSelectItem T="UserInfoDto" Value="@user">@(user.DisplayName ?? user.EmailAddress ?? user.UserName ?? user.UserId)</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    }
+                    else if (CalendarEntry.AudienceType == AppointmentAudienceType.SpecificRoles)
+                    {
+                        <MudItem xs="12">
+                            <MudSelect ToStringFunc="@_roleConverter" T="RoleDto" MultiSelection="true" Label="Select roles" @bind-SelectedValues="CalendarEntry.InvitedRoles" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
+                                @foreach (var role in _availableRoles)
+                                {
+                                    <MudSelectItem T="RoleDto" Value="@role">@role.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    }
+
+                    @if (!CalendarEntry.FullDayEvent)
+                    {
+                        <MudItem md="6">
+                            <MudTimePicker Label="Start Time" @bind-Time="CalendarEntry.StartTime" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Timer"
+                                           AdornmentColor="Color.Primary" Margin="Margin.Dense" />
+                        </MudItem>
+                        <MudItem md="6">
+                            <MudTimePicker Label="End Time" @bind-Time="CalendarEntry.EndTime" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Timer"
+                                           AdornmentColor="Color.Primary" Margin="Margin.Dense" />
+                        </MudItem>
+                    }
+
+
+                    
+                </MudGrid>
+            </MudItem>
+            <MudItem md="4">
+                @CalendarEntry.Color
+                <MudColorPicker @bind-Text="CalendarEntry.Color" PickerVariant="PickerVariant.Static" ColorPickerView="ColorPickerView.Palette" Palette="_customPalette"/>
+            </MudItem>
+            @if (ShowDeleteButton)
+            {
+                if (_canUpdate || _canDelete)
+                {
+                    if (_canUpdate)
+                    {
+                        <MudItem xs="4" sm="4" md="4" lg="4">
+                            <MudButton OnClick="CreateAsync" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>
+                                Save
+                            </MudButton>
+                        </MudItem>
+                    }
+
+                    var columnSize = _canUpdate && _canDelete ? 4 : 6;
+
+                    <MudItem xs="@columnSize" sm="@columnSize" md="@columnSize" lg="@columnSize">
+                        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
+                            Cancel
+                        </MudButton>
+                    </MudItem>
+
+
+                    if (_canDelete)
+                    {
+                        <MudItem xs="4" sm="4" md="4" lg="4">
+                            <MudButton OnClick="DeleteCalendarEntry" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" FullWidth>
+                                Delete
+                            </MudButton>
+                        </MudItem>
+                    }
+                }
+                else
+                {
+                    <MudItem xs="12" sm="12" md="12" lg="12">
+                        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
+                            Cancel
+                        </MudButton>
+                    </MudItem>
+                }
+            }
+            else
+            {
+                if (_canUpdate)
+                {
+                    <MudItem xs="6" sm="6" md="6" lg="6">
+                        <MudButton OnClick="CreateAsync" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>
+                            Save
+                        </MudButton>
+                    </MudItem>
+                    <MudItem xs="6" sm="6" md="6" lg="6">
+                        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
+                            Cancel
+                        </MudButton>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12" sm="12" md="12" lg="12">
+                        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
+                            Cancel
+                        </MudButton>
+                    </MudItem>
+                }
+            }
+        </MudGrid>
+
+        
+    </DialogContent>
+</MudDialog>
+

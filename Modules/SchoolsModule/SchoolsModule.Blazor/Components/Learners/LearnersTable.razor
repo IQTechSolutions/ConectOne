@@ -1,0 +1,132 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+@using SchoolsModule.Domain.DataTransferObjects
+<MudTable T="LearnerDto" SelectedItemsChanged="@((HashSet<LearnerDto> se) => OnLearnerSelectionChanged(se))" MultiSelection="@MultiSelection" SelectedItems="SelectedPagedLearners"
+          Elevation="25" ServerData="ServerReload" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table" RowsPerPage="100">
+
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreate)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateNewLearnerAsync" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">
+                        Create
+                    </MudButton>
+                }
+
+                <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary" Style="margin-left:15px;" >
+                    Reload
+                </MudButton>
+
+                @if (ShowLinkLearnersTable)
+                {
+                    @if (_canAddParent)
+                    {
+                        if (!MultiSelection)
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="OnLinkTeamMembers" StartIcon="@Icons.Material.Filled.Link" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">
+                                Link TeamMembers
+                            </MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="OnLinkTeamMembers" StartIcon="@Icons.Material.Filled.PanoramaFishEye" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">
+                                View Learner Parents
+                            </MudButton>
+                        }
+                    } }
+            </div>
+            <MudSpacer/>
+
+            <MudTextField T="string" @bind-Text="@_args.SearchText" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyDown="HandleKeyDown"
+                          KeyDownPreventDefault="_preventDefault"/>
+            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(_args.SearchText))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">
+                Search
+            </MudButton>
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel T="LearnerDto" SortLabel="FirstName">
+                    First Name
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="LearnerDto" SortLabel="LastName">
+                    Last Name
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>Age</MudTh>
+            <MudTh>
+                <MudTableSortLabel T="LearnerDto" SortLabel="Grade">
+                    Grade
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="LearnerDto" SortLabel="Class">
+                    Class
+                </MudTableSortLabel>
+            </MudTh>
+
+            @if (EventStateManager.SchoolEvent is not null && !MultiSelection)
+            {
+                <MudTh>Attendance Consent</MudTh>
+                <MudTh>Transport Consent</MudTh>
+            }
+
+            <MudTh>
+                <div style="float:right">
+                   <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                        <MudMenuItem @onclick="() => _dense = !_dense">
+                            <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                Dense
+                            </MudSwitch>
+                        </MudMenuItem>
+                    <MudMenuItem @onclick="() => _striped = !_striped">
+                            <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                Striped
+                            </MudSwitch>
+                        </MudMenuItem>
+                    <MudMenuItem @onclick="() => _bordered = !_bordered">
+                            <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                Bordered
+                            </MudSwitch>
+                        </MudMenuItem>
+                    </MudMenu>
+                </div>
+            </MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="First Name">
+                <MudHighlighter Text="@context.FirstName" HighlightedText="@_args.SearchText"/>
+            </MudTd>
+            <MudTd DataLabel="Last Name">
+                <MudHighlighter Text="@context.LastName" HighlightedText="@_args.SearchText"/>
+            </MudTd>
+            <MudTd DataLabel="Age">
+                @context.IdNumber?.GetAge()
+            </MudTd>
+            <MudTd DataLabel="Grade">
+                <MudHighlighter Text="@context.Grade?.SchoolGrade" HighlightedText="@_args.SearchText"/>
+            </MudTd>
+            <MudTd DataLabel="Class">
+                <MudHighlighter Text="@context.SchoolClass?.SchoolClass" HighlightedText="@_args.SearchText"/>
+            </MudTd>
+
+            @if (EventStateManager.SchoolEvent is not null && !MultiSelection)
+            {
+                <LearnersTableConsentChipButtons Event="EventStateManager.SchoolEvent" Learner="@context" RemoveConsent="RemoveConsent" ResendAttendanceRequest="ResendAttendanceRequest" ResendTransportRequest="ResendTransportRequest"/>
+            }
+
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                    <LearnersTableActionsMenu LearnerId="@context.LearnerId" RemoveLearner="DeleteLearner" IgnoreRegistration="true" DisplayDeleteButton="@(ActivityGroup == null)"/>
+                </MudMenu>
+            </MudTd>
+        </RowTemplate>
+
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }"/>
+        </PagerContent>
+    </MudTable>
+

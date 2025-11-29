@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="Radzen.Blazor" Version="8.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\Base\ConectOne.Blazor\ConectOne.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Base\ConectOne.Domain\ConectOne.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BloggingModule\BloggingModule.Domain\BloggingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BusinessModule\BusinessModule.Domain\BusinessModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\CalendarModule\CalendarModule.Domain\CalendarModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\FilingModule\FilingModule.Blazor\FilingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\GroupingModule\GroupingModule.Application\GroupingModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Blazor\IdentityModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Domain\IdentityModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\MessagingModule\MessagingModule.Application\MessagingModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\MessagingModule\MessagingModule.Blazor\MessagingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\MessagingModule\MessagingModule.Domain\MessagingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\ProductsModule\ProductsModule.Application\ProductsModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\ProductsModule\ProductsModule.Domain\ProductsModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Blazor\SchoolsModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Domain\SchoolsModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

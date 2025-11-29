@@ -1,0 +1,36 @@
+﻿@page "/advertisements/{userId}/reviews"
+@using Microsoft.AspNetCore.Authorization
+@using AdvertisingModule.Blazor.Components
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Enums
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="Advertisements" Caption="All available advertisements" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+    </MudItem>
+    <MudItem md="12">
+        <MudTabs>
+            <MudTabPanel Text="Pending">
+                <AdvertisementReviewTable UserId="@UserId" ReviewStatus="ReviewStatus.Pending"/>
+            </MudTabPanel>
+            <MudTabPanel Text="Approved">
+                <AdvertisementReviewTable ReviewStatus="ReviewStatus.Approved" />
+            </MudTabPanel>
+            <MudTabPanel Text="Rejected">
+                <AdvertisementReviewTable ReviewStatus="ReviewStatus.Rejected" />
+            </MudTabPanel>
+        </MudTabs>
+    </MudItem>
+</MudGrid>

@@ -1,0 +1,19 @@
+﻿@using CalendarModule.Domain.DataTransferObjects
+@using MudBlazor
+
+<MudDialog Class="mud-dialog-width-lg">
+
+    <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Primary">Items for @ActiveDate.ToLongDateString()</MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <MudList T="CalendarEntryDto" >
+                @foreach (var item in CalendarEntries)
+            {
+                <MudListItem Text="@item.Name" OnClick="() => NavigationManager.NavigateTo(item.Url)" />
+            }
+        </MudList>
+       
+    </DialogContent>
+</MudDialog>

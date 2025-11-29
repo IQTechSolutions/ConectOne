@@ -1,0 +1,35 @@
+@using IdentityModule.Application.ViewModels
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+
+@inject IStringLocalizer<AddRoleToUserModal> Localizer
+
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                @Localizer["AddRoleTitle", _userDisplayName]
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+        @if (!_loaded)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        }
+        else
+        {
+            <MudSelect ToStringFunc="@roleConverter" T="UserRoleViewModel" Label='@Localizer["Roles"]'  @bind-Value="_userRole" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var state in _roles)
+                {
+                    <MudSelectItem T="UserRoleViewModel" Value="@state">@state.RoleName</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">@Localizer["Cancel"]</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SubmitAsync" Color="Color.Success">@Localizer["AddRole"]</MudButton>
+    </DialogActions>
+</MudDialog>

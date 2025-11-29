@@ -1,0 +1,80 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudTable Elevation="25" ServerData="GetCategoriesAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="table">
+	
+    
+    <ToolBarContent>
+        @if(_canCreate)
+        {
+            <MudSpacer/>
+            <MudButton Variant="Variant.Filled" Href="@($"/{ParentDomainUrlPart}/categories/create")" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New</MudButton>
+        }
+    </ToolBarContent>
+    
+
+    <HeaderContent>
+        @if (!_dense)
+        {
+            <MudTh>Cover</MudTh>
+        }
+	
+        <MudTh>Name</MudTh>
+        <MudTh>Short Description</MudTh>
+        <MudTh>
+            <div style="float:right">
+                <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                    <MudMenuItem @onclick="() => { _dense = !_dense; }">
+                        <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                            Dense
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _striped = !_striped">
+                        <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                            Striped
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _bordered = !_bordered">
+                        <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                            Bordered
+                        </MudSwitch>
+                    </MudMenuItem>
+                </MudMenu>
+            </div>
+        </MudTh>
+    </HeaderContent>
+	
+    <RowTemplate>
+		
+        @if (!_dense)
+        {
+            <MudTd><MudImage Width="50" Height="50" Src="@context.CoverImageUrl"/> </MudTd>
+        }
+        <MudTd>@context.Name</MudTd>
+        <MudTd><strong>@context.Description.HtmlToPlainText().TruncateLongString(150)</strong></MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            @if (_canEdit || _canDelete)
+            {
+                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                    @if (_canEdit)
+                    {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/{ParentDomainUrlPart}/categories/update/{@context.CategoryId}")">Edit</MudMenuItem>
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCategory(context.CategoryId))">Delete</MudMenuItem>
+                    }
+                </MudMenu>
+            }
+        </MudTd>
+		
+    </RowTemplate>
+	
+    <PagerContent>
+        @if (table is not null && table.Items is not null && table.Items.Any())
+        {
+            <MudTablePager/>
+        }
+    </PagerContent>
+	
+</MudTable>

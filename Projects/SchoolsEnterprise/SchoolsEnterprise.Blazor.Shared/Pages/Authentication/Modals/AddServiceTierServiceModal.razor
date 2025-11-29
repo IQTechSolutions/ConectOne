@@ -1,0 +1,32 @@
+﻿@using MudBlazor
+@using ProductsModule.Domain.DataTransferObjects
+
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                Add Service To @ServiceTier.Name
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+        @if (!_loaded)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        }
+        else
+        {
+            <MudSelect ToStringFunc="_serviceConverter" T="ServiceDto" Label="Services" @bind-Value="_service" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var state in _services)
+                {
+                    <MudSelectItem T="ServiceDto" Value="@state">@state.Name</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SubmitAsync" Color="Color.Success">Add Service</MudButton>
+    </DialogActions>
+</MudDialog>

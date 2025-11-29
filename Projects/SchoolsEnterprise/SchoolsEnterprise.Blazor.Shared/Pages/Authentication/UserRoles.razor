@@ -1,0 +1,106 @@
+﻿@page "/security/roles"
+@page "/security/roles/{userid}"
+
+@using ConectOne.Blazor.Components
+@using IdentityModule.Application.ViewModels
+@using IdentityModule.Domain.Constants
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using NeuralTech.Base.Enums
+
+@attribute [Authorize(Policy = Permissions.Roles.View)]
+
+@* <PageTitle Title="@Title" Description="@Description"/> *@
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="@($"Roles")" Caption="@($"A list of all the registration roles available")" />
+    </MudItem>
+    <MudItem md="6">
+        <MudBreadcrumbs Items="_items" Style="@("float:right")"></MudBreadcrumbs>
+    </MudItem>
+</MudGrid>
+
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTable Hover="true" Elevation="25" Items="UserRolesList" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @bind-userRole="_role" @ref="_userRoleTable">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreateRoles && string.IsNullOrEmpty(UserId))
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="CreateUserRole" ButtonType="ButtonType.Submit">Create User Role</MudButton>
+                }
+                else if (_canEditUserInfo && !string.IsNullOrEmpty(UserId))
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="InvokeAddRoleToUserModal" ButtonType="ButtonType.Submit">Update User Roles</MudButton>
+                }
+            </div>
+            <MudSpacer />
+            @if (_canSearchRoles)
+            {
+                <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth=false Placeholder="Search For User Roles" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="MudBlazor.Size.Medium" Class="mt-0 mb-3"></MudTextField>
+            }
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserRoleViewModel, object>(x => x.RoleName)">Role Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserRoleViewModel, object>(x => x.RoleDescription)">Description</MudTableSortLabel></MudTh>
+            @if (_canEditRoles || _canRemovetRoles)
+            {
+                <MudTh>
+                    <div style="float:right">
+                        <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                            <MudMenuItem @onclick="() => _dense = !_dense">
+                                <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                    Dense
+                                </MudSwitch>
+                            </MudMenuItem>
+                            <MudMenuItem @onclick="() => _striped = !_striped">
+                                <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                    Striped
+                                </MudSwitch>
+                            </MudMenuItem>
+                            <MudMenuItem @onclick="() => _bordered = !_bordered">
+                                <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                    Bordered
+                                </MudSwitch>
+                            </MudMenuItem>
+                        </MudMenu>
+                    </div>
+                </MudTh>
+            }
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Role Name">
+                <MudHighlighter Text="@context.RoleName" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="Description">
+                <MudHighlighter Text="@context.RoleDescription" HighlightedText="@_searchString" />
+            </MudTd>
+            @if (_canEditRoles || _canRemovetRoles)
+            {
+                <MudTd DataLabel="Role">
+                    <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                        <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.RoleMessage)}/messages/create/{context.RoleId}")">Create Message</MudMenuItem>
+                        @if (_canEditRoles)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Security" OnClick="@(() => NavigateToPermissionsPage(context.RoleId, context.RoleName))">Settings</MudMenuItem>
+                        }
+                        <MudMenuItem Icon="@Icons.Material.Filled.Security" OnClick="@(() => NavigateToPermissionsPage(context.RoleId, context.RoleName,4))">Messages</MudMenuItem>
+                        @if (_canRemovetRoles)
+                        {
+                            <MudMenuItem Icon="@Icons.Material.Filled.Delete" OnClick="@(() => RemoveUserFromRole(context))">Remove Role</MudMenuItem>
+                        }
+                    </MudMenu>
+                </MudTd>
+            }            
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}

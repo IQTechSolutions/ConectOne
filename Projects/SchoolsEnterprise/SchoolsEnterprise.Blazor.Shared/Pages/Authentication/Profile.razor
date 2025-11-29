@@ -1,0 +1,45 @@
+﻿@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+@if (User != null)
+{
+    <MudGrid>
+        <MudItem xs="12" sm="4" md="3">
+            <MudSingleImageCropperUpload style="width:100%;" OnFileAccepted="CoverImageChanged" Caption="@User.DisplayName" Src="@User.CoverImageUrl" ImageType="UploadType.Cover" TEntity="typeof(ApplicationUser)" ParentId="@User.UserId" PlaceHolder="/_content/Identity.Blazor/images/profileImage128x128.png" />
+        </MudItem>
+        <MudItem xs="12" sm="8" md="9">
+            <EditForm Model="@User" OnValidSubmit="Submit">
+                <MudCard Elevation="25">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText>Profile Details</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem xs="12" md="6">
+                                <MudTextField @bind-Value="@User.FirstName" For="@(() => User.FirstName)" Label="First Name" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudTextField @bind-Value="@User.LastName" For="@(() => User.LastName)" Label="Last Name" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudTextField @bind-Value="@User.PhoneNr" For="@(() => User.PhoneNr)" Label="Default Phone Number" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudTextField @bind-Value="@User.EmailAddress" Label="Default Email" For="@(() => User.EmailAddress)" Variant="Variant.Outlined" InputType="InputType.Email" Disabled=true />
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions Class="pb-4 pl-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" ButtonType="ButtonType.Submit">Save Changes</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </EditForm>
+        </MudItem>
+    </MudGrid>
+}
+
+

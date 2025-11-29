@@ -1,0 +1,14 @@
+﻿@using MudBlazor
+
+<MudText Typo="Typo.h4" Color="Color.Primary">@Title</MudText> 
+
+@if(!string.IsNullOrEmpty(Caption))
+{
+    <MudText Color="Color.Surface" Class="mb-2">@Caption</MudText>    
+}
+
+@code
+{
+    [Parameter] public string Title { get; set; } = null!;
+    [Parameter] public string? Caption { get; set; }
+}

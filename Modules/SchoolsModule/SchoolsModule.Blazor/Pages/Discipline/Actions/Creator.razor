@@ -1,0 +1,34 @@
+@page "/discipline/actions/create"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@attribute [Authorize]
+
+<EditForm Model="_action" OnValidSubmit="CreateAsync">
+    <MudGrid>
+        <MudItem md="6">
+            <DefaultTitle Title="Create Action" Caption="Add disciplinary action" />
+        </MudItem>
+        <MudItem md="6" Style="float:right">
+            <MudBreadcrumbs Items="_items" Style="float:right" />
+        </MudItem>
+        <MudItem md="12">
+            <DataAnnotationsValidator />
+            <MudTextField Label="Name" @bind-Value="_action.Name" />
+            <MudTextField Label="Description" @bind-Value="_action.Description" Lines="3" />
+            <MudSelect T="string" Label="Severity Scale" @bind-Value="_action.SeverityScaleId">
+                @foreach (var scale in _scales)
+                {
+                    <MudSelectItem Value="@scale.SeverityScaleId">@scale.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem md="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Save</MudButton>
+        </MudItem>
+        <MudItem md="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" FullWidth="true" Color="Color.Secondary">Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

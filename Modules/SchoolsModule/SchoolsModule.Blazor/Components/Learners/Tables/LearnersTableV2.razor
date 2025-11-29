@@ -1,0 +1,114 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+@using SchoolsModule.Domain.DataTransferObjects
+<MudToolBar>
+    <div class="justify-center mud-text-align-center">
+        <MudButton Variant="Variant.Filled" OnClick="Reload" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary" Style="margin-left:15px;">
+            Reload
+        </MudButton>
+        @if (ShowLinkLearnersButton)
+        {
+            <MudButton Variant="Variant.Filled" OnClick="OnLinkTeamMembers" StartIcon="@Icons.Material.Filled.Link" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">
+                @(_multiselection ? "Hide TeamMembers" : "Link TeamMembers")
+            </MudButton>
+        }
+    </div>
+    <MudSpacer/>
+
+    <MudTextField T="string" @bind-Text="@_args.SearchText" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" 
+                  Class="mt-0" OnKeyDown="HandleKeyDown" KeyDownPreventDefault="_preventDefault" />
+    <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(_args.SearchText))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">
+        Search
+    </MudButton>
+</MudToolBar>
+<table class="table" style="width:100%; padding:25px 25px 0 25px;">
+    <thead>
+    <tr>
+        <td colspan="8"><MudDivider Style="margin-bottom:15px; margin-top:-20px;"></MudDivider></td>
+    </tr>
+    <tr style="text-align:left;">
+        @if (_multiselection)
+        {
+            <th style="padding:15px;">
+                @* <InputCheckbox ValueExpression="@(() => bb)" Value="@bb" ValueChanged="value => bb = value"></InputCheckbox> *@
+            </th>
+        }
+
+        <th style="padding-right:15px;">
+            <strong>Firstname</strong>
+        </th>
+        <th style="padding-right:15px;">
+            <strong>LastName</strong>
+        </th>
+        <th style="padding-right:15px;">
+            <strong>Age</strong>
+        </th>
+        <th style="padding-right:15px;">
+            <strong>Grade</strong>
+        </th>
+        <th style="padding-right:15px;">
+            <strong>Class</strong>
+        </th>
+        @if (EventStateManager.SchoolEvent is not null && !_multiselection)
+        {
+            <th width:30px;></th>
+            <th width:30px;></th>
+        }
+        <th style="padding-right:15px; width:40px;">
+
+        </th>
+    </tr>
+    <tr>
+        <td colspan="8"><MudDivider Style="margin-top : 15px; margin-bottom:5px;"></MudDivider></td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in _learners)
+    {
+        <tr>
+            @if (_multiselection)
+            {
+                <td>
+                    <CustomCheckBox T="LearnerDto" Value="@item.IsChecked" MyValueChanged="OnValueSelectionChanged" ExtraParameter="item.RowItem"></CustomCheckBox>
+                </td>
+            }
+            <td>
+                @item?.RowItem?.FirstName
+            </td>
+            <td>
+                @item.RowItem?.LastName
+            </td>
+            <td>
+                @item.RowItem?.IdNumber?.GetAge()
+            </td>
+            <td>
+                @item.RowItem?.Grade?.SchoolGrade
+            </td>
+            <td>
+                @item.RowItem?.SchoolClass?.SchoolClass
+            </td>
+            @if (EventStateManager.SchoolEvent is not null && !_multiselection)
+            {
+                <LearnersTableConsentChipButtons ActivityGroupId="@ParticipatingActivityGroupId" Event="EventStateManager.SchoolEvent" Learner="@item.RowItem" RemoveConsent="RemoveConsent" ResendAttendanceRequest="ResendAttendanceRequest" ResendTransportRequest="ResendTransportRequest" />
+            }
+            <td>
+                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                    <LearnersTableActionsMenu LearnerId="@item.RowItem?.LearnerId" />
+                </MudMenu>
+            </td>
+        </tr>
+    }
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="8"><MudDivider Style="margin-top : 15px"></MudDivider></td>
+    </tr>
+    <tr>
+        <td colspan="8">
+            <div style="padding-top:15px; padding-bottom:15px; vertical-align:middle">
+                <strong>Total Item Count: @_pageItemCount</strong> <MudPagination Style="list-style-type:none; float:right; margin:-6px;" Rectangular="true" Variant="Variant.Outlined" Count="@_pageCount" MiddleCount="5" SelectedChanged="OnPageChanged" />
+            </div>
+        </td>
+    </tr>
+    </tfoot>
+</table>

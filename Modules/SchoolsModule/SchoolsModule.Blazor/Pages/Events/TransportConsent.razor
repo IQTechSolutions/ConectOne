@@ -1,0 +1,15 @@
+﻿@page "/events/transportConsent/{ActivityGroupTeamMeberId}/{ParentId}"
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+<h3>TransportConsent</h3>
+
+@code {
+
+    [Parameter] public string ActivityGroupTeamMeberId { get; set; }
+    [Parameter] public string ParentId { get; set; }
+
+    private bool _consent;
+
+}

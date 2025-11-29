@@ -1,0 +1,31 @@
+﻿@using GroupingModule.Application.ViewModels
+@using MudBlazor
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                Select the activity category you want to add the event to
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+        @if (!_loaded)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        }
+        else
+        {
+            <MudSelect ToStringFunc="categoryConverter" T="CategoryViewModel" Label="Activity Gtoups" @bind-Value="_selectedCategory" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var state in _categories)
+                {
+                    <MudSelectItem T="CategoryViewModel" Value="@state">@state.Name</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SubmitAsync" Color="Color.Success">Select</MudButton>
+    </DialogActions>
+</MudDialog>

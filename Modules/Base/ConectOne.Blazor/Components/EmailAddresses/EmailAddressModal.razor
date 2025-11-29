@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Create" Class="mr-3 mb-n1" />
+            @Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@EmailAddress.EmailAddress" Label="Email" />
+        <MudCheckBox @bind-Value="@EmailAddress.Default" Label="Default" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="CreateCustomer">@ButtonText</MudButton>
+    </DialogActions>
+</MudDialog>

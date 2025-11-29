@@ -1,0 +1,78 @@
+@page "/advertisement_tiers/update/{AdvertisementTierId}"
+@using AdvertisingModule.Domain.Entities
+@using AdvertisingModule.Domain.Enums
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<EditForm Model="_advertisementTier" OnValidSubmit="@(() => UpdateAsync())">
+    <MudGrid>
+        <MudItem md="6">
+            <DefaultTitle Title="Update Advertisement Tiers" Caption="Complete or change to update advertisement tier information" />
+        </MudItem>
+        <MudItem md="6" Style="float:right">
+            <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+        </MudItem>
+        <MudItem md="12">
+            <MudTabs>
+                <MudTabPanel Text="Details">
+                    <DataAnnotationsValidator />
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="3" lg="3">
+                            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@(_advertisementTier.Name)" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Advertisement)" ParentId="@_advertisementTier.Id" />
+                        </MudItem>
+                        <MudItem xs="12" sm="12" md="9" lg="9">
+                            <MudCard>
+                                <MudCardHeader>
+                                    <MudText Align="Align.Center" Typo="Typo.h6">Advertisement Tier Information</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem md="12">
+                                            <MudTextField Label="Name" Class="mt-3" @bind-Value="_advertisementTier.Name" For="@(() => _advertisementTier.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <MudTextField T="string" Label="Short Description" Class="mt-3" @bind-Value="_advertisementTier.ShortDescription" Margin="Margin.Dense" Variant="Variant.Outlined" Lines="2" />
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <MudTextField T="string" Label="Description" Class="mt-3" @bind-Value="_advertisementTier.Description" Margin="Margin.Dense" Variant="Variant.Outlined" Lines="4" />
+                                        </MudItem>
+                                        <MudItem md="4">
+                                            <MudTextField Label="Availablity Count" Class="mt-3" @bind-Value="_advertisementTier.AvailabilityCount" For="@(() => _advertisementTier.AvailabilityCount)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="4">
+                                            <MudTextField Label="Active Days" Class="mt-3" @bind-Value="_advertisementTier.Days" For="@(() => _advertisementTier.Days)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="4">
+                                            <MudTextField Label="Display Order" Class="mt-3" @bind-Value="_advertisementTier.Order" For="@(() => _advertisementTier.Order)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="6">
+                                            <MudSelect T="AdvertisementType" @bind-Value="_advertisementTier.AdvertisementType" Label="Type" Margin="Margin.Dense" Variant="Variant.Outlined">
+                                                <MudSelectItem Value="AdvertisementType.Website">Web Application</MudSelectItem>
+                                                <MudSelectItem Value="AdvertisementType.Stadium">Sport Stadium</MudSelectItem>
+                                            </MudSelect>
+                                        </MudItem>
+                                        <MudItem md="6">
+                                            <MudTextField Label="Price" Class="mt-3" @bind-Value="_advertisementTier.Price" For="@(() => _advertisementTier.Price)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+            </MudTabs>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

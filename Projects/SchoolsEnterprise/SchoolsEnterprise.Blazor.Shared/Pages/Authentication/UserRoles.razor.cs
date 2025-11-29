@@ -1,0 +1,390 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor;
+using SchoolsEnterprise.Blazor.Shared.Pages.Authentication.Modals;
+using System.Security.Claims;
+using ConectOne.Blazor.Extensions;
+using ConectOne.Blazor.Modals;
+using ConectOne.Domain.Enums;
+using IdentityModule.Application.ViewModels;
+using IdentityModule.Domain.Constants;
+using IdentityModule.Domain.Interfaces;
+using SchoolsEnterprise.Blazor.Shared.Modals;
+
+namespace SchoolsEnterprise.Blazor.Shared.Pages.Authentication
+{
+    /// <summary>
+    /// The UserRoles component manages the assignment and removal of roles for a given user.
+    /// It provides functionality to:
+    /// 1. Fetch and display a list of roles linked to the user.
+    /// 2. Add a new role to the user via a modal dialog.
+    /// 3. Remove an existing role from the user with a confirmation prompt.
+    /// 4. Navigate to a permissions page for more detailed role management.
+    /// 
+    /// The user’s privileges are enforced via the AuthorizationService (e.g., _canEditUsers, _canSearchRoles).
+    /// </summary>
+    public partial class UserRoles
+    {
+        private string _searchString = string.Empty;
+        private bool _dense = false;
+        private bool _striped = true;
+        private bool _bordered = false;
+        private bool _loaded;
+        private ClaimsPrincipal _currentUser = default!;
+        private bool _canCreateRoles;
+        private bool _canEditRoles;
+        private bool _canRemovetRoles;
+        private bool _canSearchRoles;
+        private bool _canEditUserInfo;
+        private UserRoleViewModel _role = new();
+        private MudTable<UserRoleViewModel> _userRoleTable = default!;
+        private readonly List<BreadcrumbItem> _items = new()
+        {
+            new BreadcrumbItem("Dashboard", href: "/dashboard", icon: Icons.Material.Filled.Dashboard),
+            new BreadcrumbItem("Roles", href: null, icon: Icons.Material.Filled.List)
+        };
+
+        /// <summary>
+        /// Gets or sets the service used to manage and query user roles within the application.
+        /// </summary>
+        [Inject] public IRoleService RoleService { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the user service used to manage user-related operations within the component.
+        /// </summary>
+        /// <remarks>This property is typically injected by the dependency injection framework. Assigning
+        /// a value manually is not recommended unless overriding the default service behavior.</remarks>
+        [Inject] public IUserService UserService { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the <see cref="ISnackbar"/> service used to display notifications or messages to the user.
+        /// </summary>
+        [Inject] public ISnackbar SnackBar { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the service used to handle authorization operations.
+        /// </summary>
+        /// <remarks>This property is typically injected by the dependency injection framework and should
+        /// not be set manually in most cases. Ensure that a valid implementation of <see cref="IAuthorizationService"/>
+        /// is configured in the dependency injection container.</remarks>
+        [Inject] public IAuthorizationService AuthorizationService { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the service used to display dialogs in the application.
+        /// </summary>
+        [Inject] public IDialogService DialogService { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the <see cref="NavigationManager"/> instance used for handling navigation in the application.
+        /// </summary>
+        /// <remarks>This property is typically injected by the framework and should not be manually set
+        /// in most scenarios.</remarks>
+        [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+
+        /// <summary>
+        /// The Task that provides the authentication state of the current user.
+        /// </summary>
+        [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
+
+        /// <summary>
+        /// The user ID for whom roles are being managed (passed via query or route parameter).
+        /// </summary>
+        [Parameter] public string? UserId { get; set; }
+
+        /// <summary>
+        /// The title displayed in the UI, often based on the user's name.
+        /// </summary>
+        [Parameter] public string Title { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A short description about the page or user being managed.
+        /// </summary>
+        [Parameter] public string Description { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A list of user roles (wrapped by UserRoleViewModel) that appears in the MudTable.
+        /// </summary>
+        public List<UserRoleViewModel> UserRolesList { get; set; } = new();
+
+        /// <summary>
+        /// Displays a modal dialog that allows adding a new role to the current user.
+        /// After the dialog completes, the user roles table is reloaded to reflect any changes.
+        /// </summary>
+        private async Task InvokeAddRoleToUserModal()
+        {
+            // Prepare parameters for the modal dialog
+            var parameters = new DialogParameters<AddRoleToUserModal>
+            {
+                { x => x.UserId, UserId }
+            };
+
+            // Configure modal options
+            var options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            };
+
+            // Show the modal dialog
+            var dialog = DialogService.Show<AddRoleToUserModal>("Add Role to User", parameters, options);
+
+            // Refresh the list of user roles from the server
+            var response = await RoleService.UserRolesAsync(UserId);
+            response.ProcessResponseForDisplay(SnackBar, () =>
+            {
+                UserRolesList = response.Data.Select(c => new UserRoleViewModel(c, false)).ToList();
+            });
+
+            // Wait for the dialog to close
+            var dialogResult = await dialog.Result;
+            if (!dialogResult.Canceled)
+            {
+                // Reload the table to show newly added roles (if any)
+                await ReloadTable();
+            }
+        }
+
+        /// <summary>
+        /// Displays a modal dialog to create a new user role and handles the creation process based on user input.
+        /// </summary>
+        /// <remarks>This method opens a modal dialog for creating a new user role. If the user confirms
+        /// the creation, the role is submitted to the server. If the creation fails due to an existing deleted role,
+        /// the user is prompted with a secondary dialog to select an action for restoring or recreating the
+        /// role.</remarks>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        private async Task CreateUserRole()
+        {
+            // Configure modal options
+            var options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            };
+
+            // Show the modal dialog
+            var dialog = await DialogService.ShowAsync<CreateNewRoleModal>("Create New User Role", options);
+
+            // Wait for the dialog to close
+            var dialogResult = await dialog.Result;
+            if (!dialogResult!.Canceled)
+            {
+                var vm = (UserRoleViewModel)dialogResult.Data;
+                var model = vm.ToDto();
+                var creationResult = await RoleService.CreateApplicationRole(model);
+                if (creationResult.Succeeded)
+                {
+                    await ReloadTable();
+                    await InvokeAsync(StateHasChanged);
+                }
+                else
+                {
+                    if (creationResult.Messages.Contains(RoleCreationMessages.DeletedRoleExists))
+                    {
+                        // Show the confirmation dialog
+                        var reCreationDialog = await DialogService.ShowAsync<RoleRestorationModal>("Select Action");
+                        var reCreationModalResult = await reCreationDialog.Result;
+
+                        // If user confirms
+                        if (!reCreationModalResult!.Canceled)
+                        {
+                            var resultItem = (RoleCreationAction)reCreationModalResult.Data;
+
+                            model.CreationAction = resultItem;
+                            var reCreationResult = await RoleService.CreateApplicationRole(model);
+                            if (reCreationResult.Succeeded)
+                            {
+                                await ReloadTable();
+                                await InvokeAsync(StateHasChanged);
+                            }
+                            else
+                            {
+                                SnackBar.AddErrors(reCreationResult.Messages);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        SnackBar.AddErrors(creationResult.Messages);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Re-fetches the user's roles from the server and updates the UserRolesList.
+        /// </summary>
+        private async Task ReloadTable()
+        {
+            if (!string.IsNullOrEmpty(UserId))
+            {
+                var response = await RoleService.UserRolesAsync(UserId);
+                response.ProcessResponseForDisplay(SnackBar, () =>
+                {
+                    UserRolesList = response.Data.Select(c => new UserRoleViewModel(c, false)).ToList();
+                });
+            }
+            else
+            {
+                var response = await RoleService.AllRoles();
+                if (response.Succeeded)
+                {
+                    UserRolesList = response.Data.Select(c => new UserRoleViewModel(c, false)).ToList();
+                }
+            }
+
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Opens a confirmation dialog before removing the user from the specified role.
+        /// If confirmed, the user is removed from the role on the server, and the local table is updated.
+        /// </summary>
+        /// <param name="role">The name/ID of the role to remove from the user.</param>
+        private async Task RemoveUserFromRole(UserRoleViewModel role)
+        {
+            // Dialog parameters for confirmation
+            var parameters = new DialogParameters<ConformtaionModal>
+            {
+                { x => x.ContentText, "Are you sure you want to remove this user from this role?" },
+                { x => x.ButtonText, "Yes" },
+                { x => x.Color, Color.Success }
+            };
+
+            // Show the confirmation dialog
+            var dialog = await DialogService.ShowAsync<ConformtaionModal>("Confirm", parameters);
+            var result = await dialog.Result;
+
+            // If user confirms
+            if (!result!.Canceled)
+            {
+                if (!string.IsNullOrEmpty(UserId))
+                {
+                    // Remove role from user on the server
+                    var deletionResult = await RoleService.DeleteApplicationRole(role.RoleName);
+                    if (!deletionResult.Succeeded) SnackBar.AddErrors(deletionResult.Messages);
+                    else
+                    {
+                        SnackBar.AddSuccess("Role Successfully Removed");
+                        UserRolesList.Remove(role);
+                    }
+                        
+                }
+                else
+                {
+                    // Remove role from user on the server
+                    var deletionResult = await RoleService.DeleteApplicationRole(role.RoleId);
+                    if (!deletionResult.Succeeded)
+                        SnackBar.AddErrors(deletionResult.Messages);
+                    else
+                    {
+                        SnackBar.AddSuccess("Role Successfully Removed");
+                        UserRolesList.Remove(role);
+                    }
+                       
+                }
+            }
+        }
+
+        /// <summary>
+        /// Filters the user roles table based on the search string (_searchString),
+        /// checking if the role name or description contains the query.
+        /// </summary>
+        private bool Search(UserRoleViewModel userRole)
+        {
+            if (string.IsNullOrWhiteSpace(_searchString)) return true;
+
+            if (userRole.RoleName?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return true;
+            }
+
+            if (userRole.RoleDescription?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Navigates to a permissions page for the specified role, passing both 
+        /// the roleId and the userId as part of the route.
+        /// </summary>
+        private void NavigateToPermissionsPage(string roleId, string roleName, int tabIndex = 0)
+        {
+            NavigationManager.NavigateTo($"/userroles/settings/{roleName}/{tabIndex}");
+        }
+
+        /// <summary>
+        /// Called on component initialization. Retrieves the current user (to check authorization),
+        /// loads user info (like name), then fetches the assigned roles for that user.
+        /// </summary>
+        protected override async Task OnInitializedAsync()
+        {
+            // Call base to complete Blazor’s standard initialization tasks
+            await base.OnInitializedAsync();
+
+            // Retrieve the authentication state (and thus the current user)
+            var authState = await AuthenticationStateTask;
+            _currentUser = authState.User;
+
+            // Check if the current user can edit or search roles
+            _canCreateRoles = (await AuthorizationService.AuthorizeAsync(_currentUser, Permissions.Roles.Create)).Succeeded;
+            _canEditRoles = (await AuthorizationService.AuthorizeAsync(_currentUser, Permissions.Roles.Edit)).Succeeded;
+            _canRemovetRoles = (await AuthorizationService.AuthorizeAsync(_currentUser, Permissions.Roles.Delete)).Succeeded;
+            _canSearchRoles = (await AuthorizationService.AuthorizeAsync(_currentUser, Permissions.Roles.Search)).Succeeded;
+            _canSearchRoles = (await AuthorizationService.AuthorizeAsync(_currentUser, Permissions.Users.Search)).Succeeded;
+            _canEditUserInfo = (await AuthorizationService.AuthorizeAsync(_currentUser, Permissions.Users.Edit)).Succeeded;
+
+            if (!string.IsNullOrEmpty(UserId))
+            {
+                var result = await UserService.GetUserInfoAsync(UserId);
+                if (result.Succeeded)
+                {
+                    var user = result.Data;
+                    if (user != null)
+                    {
+                        // Set up the Title and Description based on the retrieved user’s name
+                        Title = $"{user.FirstName} {user.LastName}";
+                        Description = $"Manage {user.FirstName} {user.LastName}'s Roles";
+
+                        // Fetch roles assigned to this user
+                        var response = await RoleService.UserRolesAsync(UserId);
+                        if (response.Succeeded)
+                        {
+                            UserRolesList = response.Data
+                                .Select(c => new UserRoleViewModel(c, false))
+                                .ToList();
+                        }
+                        else
+                        {
+                            SnackBar.AddErrors(response.Messages);
+                        }
+                    }
+                    // Mark the component as fully loaded
+                    _loaded = true;
+                }
+                else
+                {
+                    // If user info retrieval fails, display error messages
+                    SnackBar.AddErrors(result.Messages);
+                }
+            }
+            else
+            {
+                var response = await RoleService.AllRoles();
+                if (response.Succeeded)
+                {
+                    UserRolesList = response.Data.Select(c => new UserRoleViewModel(c, false)).ToList();
+                    _loaded = true;
+                }
+                else
+                {
+                    SnackBar.AddErrors(response.Messages);
+                }
+            }
+        }
+    }
+}

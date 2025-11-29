@@ -1,0 +1,95 @@
+﻿@page "/register"
+@using IdentityModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@attribute [AllowAnonymous]
+
+<div class="d-flex justify-center pa-5">
+    <EditForm Model="@userRegistration" OnValidSubmit="RegisterAsync" class="card card-body bg-light mt-5">   
+        <MudGrid Style="max-width:800px;">
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:logoUrl")}")" Style="width: 150px;" />
+                </div>
+            </MudItem>
+            <DataAnnotationsValidator /> 
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <MudText>Please enter your details to register for a new account</MudText>
+                </div>
+            </MudItem>
+            <MudItem xs="12">
+                @if (_errors != null && _errors.Any())
+                {
+                    <MudItem xs="12">
+                        @foreach (var item in _errors)
+                        {
+                            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Style="width:100%" Class="mb-3" Icon="Icons.Material.Filled.Error"> @item </MudAlert>
+                        }
+                    </MudItem>
+                }
+            </MudItem>
+            <MudItem xs="12" sm="6" md="6">
+                <MudTextField For="@(() => userRegistration.FirstName)" OnKeyUp="OnKeyUpEvent" @bind-Value="userRegistration.FirstName" Label="First Name" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="6">
+                <MudTextField For="@(() => userRegistration.LastName)" OnKeyUp="OnKeyUpEvent" @bind-Value="userRegistration.LastName" Label="Last Name" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="6">
+                <MudTextField T="string"
+                              Label="E-mail"
+                              @bind-Value="userRegistration.Email"
+                              OnKeyUp="OnKeyUpEvent"
+                              For="@(() => userRegistration.Email)"
+                              InputType="InputType.Email"
+                              Validation="ValidateEmail" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="6">
+                <MudTextField T="string"
+                              Mask="@(new PatternMask("00 000 0000"))" Adornment="Adornment.Start" AdornmentText="+27"
+                              Label="Phone Number"
+                              @bind-Value="userRegistration.PhoneNumber"
+                              Immediate="true"
+                              OnKeyUp="OnKeyUpEvent"
+                              For="@(() => userRegistration.PhoneNumber)"
+                              InputType="InputType.Telephone"
+                              Validation="ValidatePhoneNumber" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudSelect ToStringFunc="@_roleConverter" T="RoleDto" Label="User Role" @bind-Value="SelectedOption" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Text">
+                    @foreach (var state in _availableRoles)
+                {
+                        <MudSelectItem T="RoleDto" Value="@state">@state.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem> 
+            <MudItem xs="12" sm="6" md="6">
+                <MudTextField OnKeyUp="OnKeyUpEvent" For="@(() => userRegistration.Password)" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" @bind-Value="userRegistration.Password" Label="Password" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="6">
+                <MudTextField OnKeyUp="OnKeyUpEvent" For="@(() => userRegistration.ConfirmPassword)" InputType="InputType.Password" @bind-Value="userRegistration.ConfirmPassword" Label="Confirm Password" />
+            </MudItem>
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <MudText>Already have an account? <MudLink Href="/login">Sign In</MudLink></MudText>
+                </div>
+            </MudItem>
+            <MudItem xs="12" Class="d-flex justify-center">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Style="width: 100%;">Register Now</MudButton>
+            </MudItem>
+
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:caption")}")" Style="width: 100px;" />
+                </div>
+            </MudItem>
+        </MudGrid> 
+    </EditForm>
+</div>

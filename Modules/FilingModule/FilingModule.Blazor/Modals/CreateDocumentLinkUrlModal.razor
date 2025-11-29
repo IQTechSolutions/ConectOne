@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                Please enter or browse for the link you want to add
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+       <MudGrid>
+           <MudItem md="12">
+               <MudTextField T="string" Label="Enter the url of the link you would like to add" Class="mt-3" @bind-Value="_model.Url" Margin="Margin.Dense" Variant="Variant.Outlined" />
+           </MudItem>
+           <MudItem md="12">
+               @foreach (var file in _model.Documents)
+               {
+                   <MudListItem T="string" Icon="@Icons.Material.Filled.AttachFile" @key="@file">
+                       @file.FileName <code>@file.Size bytes</code><MudLink OnClick="() => _model.Documents.Remove(file)" Style="float:right">Remove</MudLink>
+                   </MudListItem>
+               }
+           </MudItem>
+            <MudItem md="12">
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                    <ActivatorContent>
+                        <MudButton HtmlTag="label" FullWidth Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Upload">
+                            Upload File
+                        </MudButton>
+                    </ActivatorContent>
+                </MudFileUpload>
+           </MudItem>
+       </MudGrid>
+       <MudDivider></MudDivider>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SubmitAsync" Color="Color.Success">Add Link</MudButton>
+    </DialogActions>
+</MudDialog>

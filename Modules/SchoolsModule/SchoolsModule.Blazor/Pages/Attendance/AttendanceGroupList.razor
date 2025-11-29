@@ -1,0 +1,82 @@
+﻿@using MudBlazor
+@using SchoolsModule.Domain.Enums
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<MudTable Items="_learners">
+    <HeaderContent>
+        <MudTh>
+            Group Name
+        </MudTh>
+        <MudTh>
+            Present
+        </MudTh>
+        <MudTh>
+            Late
+        </MudTh>
+        <MudTh>
+            <strong>Absent</strong>
+        </MudTh>
+        <MudTh>
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" Href="@($"/attendance-form/{GroupId}/{(int)AttendanceType}")">New</MudButton>
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Date.Value.ToLongDateString()</MudTd>
+        <MudTd>
+            @context.Results.Count(c => c.SelectedStatus == AttendanceStatus.Present)
+        </MudTd>
+        <MudTd>
+            @context.Results.Count(c => c.SelectedStatus == AttendanceStatus.Late)
+        </MudTd>
+        <MudTd>
+            @context.Results.Count(c => c.SelectedStatus == AttendanceStatus.Absent)
+        </MudTd>
+        <MudTd>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => { _learners.FirstOrDefault(c => c.ShowDetails == !context.ShowDetails); })">Show Details</MudButton>
+            @if(context.Results.Any())
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => ExportActivityGroup(context.Results.FirstOrDefault().GroupId, context.Date.Value))">Export</MudButton>
+            })
+            
+        </MudTd>
+    </RowTemplate>
+        <ChildRowContent>
+        @if(context.ShowDetails)
+        {
+            <td colspan="5" style="padding-bottom:20px;">
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.body1">Attendance Results for <strong>@context.Date</strong></MudText>
+                        <MudSpacer/>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => { _learners.FirstOrDefault(c => c.ShowDetails = !context.ShowDetails); })">Edit</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => { _learners.FirstOrDefault(c => c.ShowDetails = !context.ShowDetails); })">Print</MudButton>
+                    </MudCardHeader>
+                    <MudCardContent Class="pa-0">
+                        <MudTable Items="context.Results" Context="context2" Dense="true">
+                            <HeaderContent>
+                                <MudTh>Learner</MudTh>
+                                <MudTh>Status</MudTh>
+                                <MudTh>Notes</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>
+                                    @context2.FullName
+                                </MudTd>
+                                <MudTd>
+                                    @context2.SelectedStatus
+                                </MudTd>
+                                <MudTd>
+                                    @context2.Notes
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudCardContent>
+                </MudCard>
+            </td>
+        }			
+    </ChildRowContent>
+
+</MudTable>

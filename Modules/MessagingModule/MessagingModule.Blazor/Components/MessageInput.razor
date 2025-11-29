@@ -1,0 +1,52 @@
+﻿@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+
+<MudGrid>
+    @if(_carouselImages.Any())
+    {
+        <MudItem md="12">
+            <div id="lodgingImageCarouselSmallImages" class="d-flex justify-content-center" style="width:100%; overflow:scroll; overflow-x:hidden; overflow-y:hidden; padding-top:20px; padding-left:15px;">
+                @foreach (var item in _carouselImages)
+                {
+                    <div style="padding-right:10px">
+                        <a @onclick="() => SetImageIndex(item)">
+                            <img id="img_@_carouselImages.IndexOf(item)" class="Myimg" alt="100%x280" style="width:81.5px;height:70px;" src="@(item)" />
+                        </a>
+                    </div>
+                }
+
+            </div>
+        </MudItem>
+    }
+    @if (_message.Files.Any())
+    {
+        <MudItem md="12" >
+            <MudList T="string">
+                @foreach (var file in _message.Files)
+                {
+                    <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                        @file.Name <code>@file.Size bytes</code>
+                    </MudListItem>
+                }
+            </MudList>
+        </MudItem>
+    }
+
+    <MudItem md="12">
+        <MudPaper Elevation="25" Class="d-flex flex-row px-2 mx-4" Style="padding-bottom:15px;">
+            @* <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                <ActivatorContent>
+                    <MudIconButton Icon="@Icons.Material.Outlined.AttachFile" Color="Color.Secondary"></MudIconButton>
+                </ActivatorContent>
+            </MudFileUpload> *@
+            <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadImages">
+                <ActivatorContent>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Image" Color="Color.Secondary"></MudIconButton>
+                </ActivatorContent>
+            </MudFileUpload>
+            <MudTextField T="string" Placeholder="Enter your message..." @onkeypress="OnKeyPressInChat" Variant="Variant.Outlined" Class="mt-n2 mx-4" @bind-Value="_message.Message" For="@(() => _message.Message)" />
+            <MudButton Disabled="BusySending" OnClick="SendMessageAsync" StartIcon="@Icons.Material.Outlined.Send" Color="Color.Secondary" ButtonType="ButtonType.Button">Send</MudButton>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+

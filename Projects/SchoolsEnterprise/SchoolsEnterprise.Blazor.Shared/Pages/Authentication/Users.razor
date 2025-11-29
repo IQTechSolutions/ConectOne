@@ -1,0 +1,29 @@
+﻿@page "/registrations/users"
+@using ConectOne.Blazor.Components
+@using IdentityModule.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<DefaultTitle Title="Approved Registrations" Caption="A list of all the approved registrations by role." />
+
+<MudTabs>
+    
+    @if (!_loaded)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    }
+    else
+    {
+        <MudTabPanel Text="All Users">
+            <UsersList></UsersList>
+        </MudTabPanel>
+        @foreach (var role in _roles)
+        {
+            <MudTabPanel Text="@role.Name">
+                <UsersList Role="@role.Name"></UsersList>
+            </MudTabPanel>
+        }
+    }
+</MudTabs>

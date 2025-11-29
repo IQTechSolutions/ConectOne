@@ -1,0 +1,43 @@
+@using MudBlazor
+@inject Microsoft.Extensions.Localization.IStringLocalizer<LanguageSelector2> _localizer
+
+<div class="language-selector" title="@_localizer["Language"]">
+    <label class="visually-hidden" for="language-selector">@_localizer["Language"]</label>
+    <select id="language-selector" class="language-selector__select" value="@_currentCulture" aria-label="@_localizer["Language"]" @onchange="OnCultureChanged">
+        <option value="en-ZA">@_localizer["English"]</option>
+        <option value="af-ZA">@_localizer["Afrikaans"]</option>
+    </select>
+</div>
+
+<style>
+    .language-selector {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .language-selector__select {
+        min-width: 140px;
+        padding: 0.35rem 0.75rem;
+        border-radius: 0.75rem;
+        border: 1px solid var(--mud-palette-primary, #1976d2);
+        background-color: transparent;
+        color: inherit;
+    }
+
+    .language-selector__select:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.15rem rgba(25, 118, 210, 0.25);
+    }
+
+    .language-selector .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+</style>

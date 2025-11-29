@@ -1,0 +1,15 @@
+﻿@using MudBlazor
+@using SchoolsModule.Application.ViewModels
+@if (!_loaded)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudSelect ToStringFunc="@_ageGroupConverter" T="AgeGroupViewModel" Label="Age Groups" ValueChanged="SelectedValuesChanged" Value="AgeGroup" AnchorOrigin="Origin.BottomCenter" Variant="Variant" For="() => AgeGroup">
+        @foreach (var state in _ageGroups)
+        {
+            <MudSelectItem T="AgeGroupViewModel" Value="@state">@state.Name</MudSelectItem>
+        }
+    </MudSelect>
+}

@@ -1,0 +1,103 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using SchoolsModule.Blazor.Components.Learners.Tables
+@using SchoolsModule.Domain.DataTransferObjects
+
+<MudToolBar>
+    <div class="justify-center mud-text-align-center">
+        <MudButton Variant="Variant.Filled" OnClick="Reload" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary" Style="margin-left:15px;">
+            Reload
+        </MudButton>
+        @if (ShowLinkParentsButton)
+        {
+            <MudButton Variant="Variant.Filled" OnClick="OnLinkParents" StartIcon="@Icons.Material.Filled.Link" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">
+                @(MultiSelection ? "Show Parents" : "Link Parents")
+            </MudButton>
+        }
+    </div>
+    <MudSpacer/>
+
+    <MudTextField T="string" @bind-Text="@_args.SearchText" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyDown="HandleKeyDown"
+    KeyDownPreventDefault="_preventDefault" />
+    <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(_args.SearchText))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">
+        Search
+    </MudButton>
+</MudToolBar>
+<table class="table" style="width:100%; padding:25px 25px 0 25px;">
+    <thead>
+    <tr>
+        <td colspan="8"><MudDivider Style="margin-bottom:15px; margin-top:-20px;"></MudDivider></td>
+    </tr>
+    <tr style="text-align:left;">
+        @if (MultiSelection)
+        {
+            <th style="padding:15px;">
+                <InputCheckbox ValueExpression="@(() => _allSelected)" Value="@_allSelected" ValueChanged="OnAllSelectedChanged"/>
+            </th>
+        }
+
+        <th style="padding-right:15px;">
+            <strong>Firstname</strong>
+        </th>
+        <th style="padding-right:15px;">
+            <strong>LastName</strong>
+        </th>
+        <th style="padding-right:15px;">
+            <strong>Contact Nr</strong>
+        </th>
+        <th style="padding-right:15px;">
+            <strong>Email Address</strong>
+        </th>
+        <th style="padding-right:15px; width:40px;">
+
+        </th>
+    </tr>
+    <tr>
+        <td colspan="8"><MudDivider Style="margin-top : 15px; margin-bottom:5px;"></MudDivider></td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in _parents)
+    {
+        <tr>
+            @if (MultiSelection)
+            {
+                <td>
+                    <CustomCheckBox T="ParentDto" Value="@item.IsChecked" MyValueChanged="OnValueSelectionChanged" ExtraParameter="item.RowItem"></CustomCheckBox>
+                </td>
+            }
+            <td>
+                @item?.RowItem?.FirstName
+            </td>
+            <td>
+                @item?.RowItem?.LastName
+            </td>
+            <td>
+                @(
+                    item?.RowItem?.ContactNumbers.FirstOrDefault(c => c.Default) is null ? item.RowItem.ContactNumbers.FirstOrDefault()?.Number : item.RowItem.ContactNumbers.FirstOrDefault(c => c.Default)!.Number
+                )
+            </td>
+            <td>
+                @(
+                        item?.RowItem?.EmailAddresses.FirstOrDefault(c => c.Default) is null ? item.RowItem.EmailAddresses.FirstOrDefault()?.EmailAddress : item.RowItem.EmailAddresses.FirstOrDefault(c => c.Default)!.EmailAddress
+                )
+            </td>
+            <td>
+                <ParentsTableActionsMenu RemoveParent="DeleteParent" ParentId="@item.RowItem.ParentId" />
+            </td>
+        </tr>
+    }
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="8"><MudDivider Style="margin-top : 15px"></MudDivider></td>
+    </tr>
+    <tr>
+        <td colspan="8">
+            <div style="padding-top:15px; padding-bottom:15px; vertical-align:middle">
+                <strong>Total Item Count: @_pageItemCount</strong> <MudPagination Style="list-style-type:none; float:right; margin:-6px;" Rectangular="true" Variant="Variant.Outlined" Count="@_pageCount" MiddleCount="5" SelectedChanged="OnPageChanged" />
+            </div>
+        </td>
+    </tr>
+    </tfoot>
+</table>

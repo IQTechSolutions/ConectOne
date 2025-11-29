@@ -1,0 +1,230 @@
+@using MudBlazor
+@using NeuralTech.Base.Enums
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<CommunityDashboardView> _localizer
+
+<MudStack Spacing="2" Class="pb-6">
+    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <div>
+            <MudText Typo="Typo.h5" Class="font-weight-bold">Club Dashboard</MudText>
+            <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                Snapshot of your members, sales, and business community.
+            </MudText>
+        </div>
+        <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Event" Class="font-weight-bold">
+            Click through Calendar – same as the school
+        </MudChip>
+    </MudStack>
+
+    <MudGrid GutterSize="GutterSize.Small">
+        <MudItem xs="12" md="5" lg="4">
+            <MudStack Spacing="1">
+                <MudPaper Elevation="3" Class="pa-4" Style="border-left:6px solid #0f7173;">
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <div>
+                            <MudText Typo="Typo.overline" Class="mud-secondary-text">Total members</MudText>
+                            <MudText Typo="Typo.h4">@DisplayTotalMembers</MudText>
+                        </div>
+                        <MudAvatar Icon="@Icons.Material.Filled.Groups" Color="Color.Primary" Size="Size.Large" />
+                    </MudStack>
+                </MudPaper>
+
+                <MudPaper Elevation="3" Class="pa-4" Style="border-left:6px solid #2667ff;">
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <div>
+                            <MudText Typo="Typo.overline" Class="mud-secondary-text">Total paying members</MudText>
+                            <MudText Typo="Typo.h4">@DisplayPayingMembers</MudText>
+                        </div>
+                        <MudAvatar Icon="@Icons.Material.Filled.CreditScore" Color="Color.Info" Size="Size.Large" />
+                    </MudStack>
+                </MudPaper>
+
+                <MudGrid GutterSize="GutterSize.Small">
+                    <MudItem xs="12" sm="6">
+                        <MudPaper Elevation="1" Class="pa-4" Style="border-left:4px solid #f2545b;">
+                            <MudStack>
+                                <MudText Typo="Typo.overline" Class="mud-secondary-text">Business directory clients</MudText>
+                                <MudText Typo="Typo.h5">@BusinessDirectoryClients</MudText>
+                                <MudText Typo="Typo.caption" Class="mud-secondary-text">Active advertisers and partners.</MudText>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudPaper Elevation="1" Class="pa-4" Style="border-left:4px solid #f2c94c;">
+                            <MudStack>
+                                <MudText Typo="Typo.overline" Class="mud-secondary-text">Business directory profit</MudText>
+                                <MudText Typo="Typo.h5">@BusinessDirectoryProfit</MudText>
+                                <MudText Typo="Typo.caption" Class="mud-secondary-text">Net of expenses this month.</MudText>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+
+                @if (ManagedRoleSummaries.Any())
+                {
+                    <MudPaper Elevation="0" Outlined="true" Class="pa-4">
+                        <MudStack Spacing="1">
+                            <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.AccountTree" Color="Color.Info" />
+                                <MudText Typo="Typo.subtitle2">Managed roles overview</MudText>
+                            </MudStack>
+                            <MudChipSet T="string" Dense="true" Class="mt-1">
+                                <MudChip Color="Color.Info" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AccountTree">Managed roles: @TotalManagedRoleCount</MudChip>
+                                <MudChip Color="Color.Primary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Groups">Users: @TotalManagedUserCount</MudChip>
+                                <MudChip Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Layers">Registration tiers: @TotalManagedRegistrationTierCount</MudChip>
+                                <MudChip Color="Color.Success" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.MiscellaneousServices">Services: @TotalManagedServiceCount</MudChip>
+                            </MudChipSet>
+
+                            <MudSimpleTable Dense="true" Class="mt-2">
+                                <thead>
+                                <tr>
+                                    <th class="mud-typography mud-typography-caption mud-secondary-text">Role</th>
+                                    <th class="mud-typography mud-typography-caption mud-secondary-text text-right">Users</th>
+                                    <th class="mud-typography mud-typography-caption mud-secondary-text text-right">Tiers</th>
+                                    <th class="mud-typography mud-typography-caption mud-secondary-text text-right">Services</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var summary in ManagedRoleSummaries.OrderBy(s => s.RoleName, System.StringComparer.OrdinalIgnoreCase))
+                                {
+                                    <tr>
+                                        <td class="mud-typography mud-typography-body2">@summary.RoleName</td>
+                                        <td class="mud-typography mud-typography-body2 text-right">@summary.UserCount</td>
+                                        <td class="mud-typography mud-typography-body2 text-right">@summary.RegistrationTierCount</td>
+                                        <td class="mud-typography mud-typography-body2 text-right">@summary.ServiceCount</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </MudSimpleTable>
+                        </MudStack>
+                    </MudPaper>
+                }
+            </MudStack>
+        </MudItem>
+
+        <MudItem xs="12" md="7" lg="8">
+            <MudGrid GutterSize="GutterSize.Small">
+                <MudItem xs="12" lg="8">
+                    <MudPaper Elevation="3" Class="pa-4" Style="min-height:340px;">
+                        <MudStack Spacing="1">
+                            <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.ShowChart" Color="Color.Primary" />
+                                <MudText Typo="Typo.subtitle1">Total Sales</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.caption" Class="mud-secondary-text">Business listing – total sales/income per month for each business.</MudText>
+                            <MudGrid>
+                                <MudItem xs="12" sm="6" md="6" lg="6" xl="6">
+                                    <MudChart ChartType="ChartType.Donut" Labels="@SalesLabels" InputData="@SalesSeries" MaxRadius="0.8" Class="mb-2" />
+                                    <tab Dense="true">
+                                        <tbody>
+                                        <tr>
+                                            <td class="mud-typography mud-typography-caption mud-secondary-text">Supporters Gear Shop – turnover per year</td>
+                                            <td class="mud-typography mud-typography-body2 text-right">R25,000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mud-typography mud-typography-caption mud-secondary-text">Supporters Shop – gross profit per year</td>
+                                            <td class="mud-typography mud-typography-body2 text-right">R12,000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mud-typography mud-typography-caption mud-secondary-text">Business directory – gross profit per year</td>
+                                            <td class="mud-typography mud-typography-body2 text-right">R7,500</td>
+                                        </tr>
+                                        </tbody>
+                                    </tab>
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="6" lg="6" xl="6">
+                                    <MudPaper Elevation="0" Outlined="true" Class="pa-3">
+                                        <MudStack Spacing="1">
+                                            <MudText Typo="Typo.overline" Class="mud-secondary-text">Show me sales per store</MudText>
+                                            <MudProgressLinear Color="Color.Primary" Value="62" Style="height:8px; border-radius:10px;" />
+                                            <MudText Typo="Typo.caption">Supporters gear shop – turnover per month</MudText>
+                                            <MudDivider Class="my-2" />
+                                            <MudProgressLinear Color="Color.Info" Value="48" Style="height:8px; border-radius:10px;" />
+                                            <MudText Typo="Typo.caption">Show me income by product category</MudText>
+                                            <MudDivider Class="my-2" />
+                                            <MudProgressLinear Color="Color.Success" Value="32" Style="height:8px; border-radius:10px;" />
+                                            <MudText Typo="Typo.caption">Show by expense per category</MudText>
+                                        </MudStack>
+                                    </MudPaper>
+                                </MudItem>
+                            </MudGrid>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12" lg="4">
+                    <MudPaper Elevation="3" Class="pa-4" Style="min-height:340px;">
+                        <MudStack Spacing="1">
+                            <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.Store" Color="Color.Secondary" />
+                                <MudText Typo="Typo.subtitle1">Businesses on directory, by category</MudText>
+                            </MudStack>
+                            <MudChart ChartType="ChartType.Donut" Labels="@BusinessCategoryLabels" InputData="@BusinessCategorySeries" MaxRadius="0.85" Class="mb-1" />
+                            <MudSimpleTable Dense="true">
+                                <tbody>
+                                <tr>
+                                    <td class="mud-typography mud-typography-caption mud-secondary-text">Total</td>
+                                    <td class="mud-typography mud-typography-body2 text-right">@BusinessDirectoryClients businesses</td>
+                                </tr>
+                                <tr>
+                                    <td class="mud-typography mud-typography-caption mud-secondary-text">Business directory – gross profit per year</td>
+                                    <td class="mud-typography mud-typography-body2 text-right">R30,000</td>
+                                </tr>
+                                </tbody>
+                            </MudSimpleTable>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+           
+        </MudItem>
+    </MudGrid>
+     <MudGrid>
+         <MudItem xs="12" lg="12">
+             <MudPaper Elevation="1" Class="pa-4">
+                 <MudStack Spacing="1">
+                     <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                         <MudAvatar Icon="@Icons.Material.Filled.List" Color="Color.Tertiary" />
+                         <MudText Typo="Typo.subtitle1">Member profile &amp; attendance</MudText>
+                         <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary">Able to be at events; same as the individual</MudChip>
+                     </MudStack>
+                     <MudTable Items="@MemberRoster" Hover="true" Dense="true">
+                         <HeaderContent>
+                             <MudTh>First name</MudTh>
+                             <MudTh>Last name</MudTh>
+                             <MudTh>Gender</MudTh>
+                             <MudTh>How long a member</MudTh>
+                             <MudTh>Contributions</MudTh>
+                             <MudTh>Total time &amp; money contributed</MudTh>
+                             <MudTh>Notes</MudTh>
+                         </HeaderContent>
+                         <RowTemplate>
+                             <MudTd DataLabel="First name">@context.FirstName</MudTd>
+                             <MudTd DataLabel="Last name">@context.LastName</MudTd>
+                             <MudTd DataLabel="Gender">@context.Gender</MudTd>
+                             <MudTd DataLabel="How long a member">@context.MembershipLength</MudTd>
+                             <MudTd DataLabel="Contributions">@context.Contribution</MudTd>
+                             <MudTd DataLabel="Total time &amp; money contributed">@context.TotalContribution</MudTd>
+                             <MudTd DataLabel="Notes">@context.Notes</MudTd>
+                         </RowTemplate>
+                     </MudTable>
+                 </MudStack>
+             </MudPaper>
+         </MudItem>
+     
+         <MudItem xs="12" lg="12">
+             <MudPaper Elevation="0" Class="pa-4" Outlined="true">
+                 <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                     <MudIcon Icon="@Icons.Material.Filled.Campaign" Color="Color.Info" />
+                     <MudText Typo="Typo.subtitle2">Stay connected</MudText>
+                 </MudStack>
+                 <MudText Typo="Typo.body2" Class="mud-secondary-text">Browse events, activities &amp; clubs, and read announcements just like in the school calendar.</MudText>
+                 <MudStack Row Spacing="1" Class="mt-2">
+                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/calendar" StartIcon="@Icons.Material.Filled.Event">Browse the calendar</MudButton>
+                     <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Href="/events" StartIcon="@Icons.Material.Filled.Celebration">Activities &amp; clubs</MudButton>
+                     <MudButton Variant="Variant.Text" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo($"messages/bytype/{(int)MessageType.Global}", true))" StartIcon="@Icons.Material.Filled.Campaign">Announcements</MudButton>
+                 </MudStack>
+             </MudPaper>
+         </MudItem>
+     </MudGrid>
+</MudStack>

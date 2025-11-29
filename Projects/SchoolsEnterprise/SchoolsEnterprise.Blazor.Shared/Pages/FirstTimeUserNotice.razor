@@ -1,0 +1,91 @@
+﻿@page "/privacyNotice"
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+
+@inject IConfiguration Configuration
+
+<MudGrid Style="padding-bottom:30px;">
+    <MudItem xs="12" sm="12" md="12">
+        <MudCard Elevation="1" Class="rounded-lg py-1">
+            <MudCardContent Class="d-flex flex-column px-3 py-2">
+
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 800;" Class="align-self-center">Privacy Notice for @Configuration["ApplicationConfiguration:AppliactionName"] @Configuration["CompanyConfiguration:SchoolTypeNameRight"] App</MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    At <strong>@Configuration["ApplicationConfiguration:AppliactionName"] @Configuration["CompanyConfiguration:SchoolTypeNameRight"]</strong> we are committed to protecting your privacy. This Privacy Notice explains how we collect, use, and share your personal information when you use our app, in compliance with relevant
+                    privacy laws.
+                </MudText>
+                <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    1. Data Collection and Usage
+                </MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500" Class="mt-auto mud-text-secondary">
+                    We collect the following types of personal information:
+                    <ul>
+                        <li>
+                            <strong>Personal Identifiable Information (PII):</strong> This may include your name, email address, address, contact number, id numbers and other information necessary to facilitate communication within the school community.
+                        </li>
+                        <li>
+                            <strong>Student and Parent Data:</strong> : Information related to students and parents may be collected to enhance communication between the school, parents, and students.
+                        </li>
+                    </ul>
+                </MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    The data collected is solely used to:
+                    <ul>
+                        <li>
+                            Enable effective communication between the school, parents, teachers, and students.
+                        </li>
+                        <li>
+                            Improve the user experience and functionality of the app.
+                        </li>
+                    </ul>
+                </MudText>
+                <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    2. Data Storage
+                </MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    All personal data is securely stored on our servers. We take reasonable steps to protect your data from unauthorized access, alteration, or loss.
+                </MudText>
+                <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    3. Data Sharing
+                </MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    Your personal data is shared exclusively with © 2023 Connect-One Solutions for the purposes of app development and updates. No personal information will be sold, shared, or disclosed to third parties for any other purposes without your consent,
+                    unless required by law.
+                </MudText>
+                <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    4. Data Retention
+                </MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    We retain your data for as long as it is necessary to provide the communication services and meet legal obligations. You can request the deletion of your data by contacting (@Configuration["ApplicationConfiguration:InfoEmailAddress" +
+                                                                                                                                                                                                                 ""]).
+                </MudText>
+                <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    5. Your Rights
+                </MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    You have the right to:
+                    <ul>
+                        <li>
+                            Access the personal data we hold about you.
+                        </li>
+                        <li>
+                            Request corrections to any inaccurate information.
+                        </li>
+                        <li>
+                            Request deletion of your personal data.
+                        </li>
+                    </ul>
+                </MudText>
+                <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    6. Contact Information
+                </MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 500;" Class="mt-auto mud-text-secondary">
+                    If you have any questions or concerns regarding this Privacy Notice or your data, please contact us at (@Configuration["ApplicationConfiguration:InfoEmailAddress"]).
+                </MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="12">
+        <MudButton FullWidth="true" Variant="Variant.Filled" OnClick="AcceptNotice" Color="Color.Primary">Accept & Continue</MudButton>
+    </MudItem>
+</MudGrid>

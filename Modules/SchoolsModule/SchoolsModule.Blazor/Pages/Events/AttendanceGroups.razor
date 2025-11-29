@@ -1,0 +1,16 @@
+﻿@page "/events/attendance/groups/{ParticipatingActivityGroupId}/{TransportType:int}"
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using SchoolsModule.Blazor.Pages.Attendance
+@using SchoolsModule.Domain.Enums
+
+@attribute [Authorize]
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<DefaultTitle Title="Event Transport Attendance" Caption="Transport attendance submissions" />
+
+<AttendanceGroupList GroupId="@ParticipatingActivityGroupId" AttendanceType="@((AttendanceType)TransportType)" />

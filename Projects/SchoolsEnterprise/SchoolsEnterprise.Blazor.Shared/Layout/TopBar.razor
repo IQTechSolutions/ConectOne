@@ -1,0 +1,80 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+@using SchoolsEnterprise.Blazor.Shared.Components
+@inject IStringLocalizer<MainBody> Localizer
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<MudImage Src="/ConnectLogoWhite.png" Style="height:60%;"></MudImage>
+<MudToolBar DisableGutters="true">
+    <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3" />
+</MudToolBar>
+<MudSpacer />
+
+<MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+    <div Class="d-flex justify-space-around flex-wrap mt-4">
+
+
+
+    </div>
+    <LanguageSelector />
+    <MudTooltip Text='@Localizer["ToggleDirection"]'>
+        <MudIconButton Icon="@Icons.Material.Filled.FormatTextdirectionRToL" Color="Color.Inherit" OnClick="@((e) => RightToLeftToggle())" />
+    </MudTooltip>
+    <MudTooltip Text='@Localizer["ToggleDarkMode"]'>
+        <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@((e) => ToggleDarkMode())"/>
+    </MudTooltip>
+</MudHidden>
+<MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+    <LanguageSelector />
+    <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" Dense="true" AnchorOrigin="Origin.TopRight">
+        <div class="px-2">
+                <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@((e) => ToggleDarkMode())" />
+                <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/blazorhero/CleanArchitecture" Target="_blank" />
+        </div>
+    </MudMenu>
+</MudHidden>
+<MudMenu AnchorOrigin="_rightToLeft ? Origin.TopRight : Origin.TopLeft" Dense="true" Class="mt-1 ml-4">
+    <ActivatorContent>
+        @if (string.IsNullOrEmpty(_imageUrl))
+        {
+            <MudAvatar Color="Color.Secondary">@FirstLetterOfName</MudAvatar>
+        }
+        else
+        {
+            <MudAvatar Style="height:50px; width:50px;">
+                <MudImage Src="@_imageUrl"/>
+            </MudAvatar>
+        }
+    </ActivatorContent>
+    <ChildContent>
+        <UserCard Class="mt-n2" />
+        <MudDivider Class="mb-2" />
+        <MudListItem T="string" Text='@Localizer["Account"]' Href="@($"registrations/users/{_userId}")" Icon="@Icons.Material.Outlined.Person" />
+        <form id="logoutForm" @ref="_logoutForm" action="Account/Logout" method="post">
+            <AntiforgeryToken />
+            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+            <MudListItem T="string" Text='@Localizer["Logout"]' Icon="@Icons.Material.Filled.Logout"  OnClick="Logout" />
+        </form>
+    </ChildContent>
+</MudMenu>
+
+<script>
+    // Helper to submit a form ElementReference passed from Blazor.
+    window.submitLogoutForm = (form) => {
+        try {
+            if (!form) return;
+            // Prefer requestSubmit when available (will run validation); fallback to submit.
+            if (typeof form.requestSubmit === "function") {
+                form.requestSubmit();
+            } else if (typeof form.submit === "function") {
+                form.submit();
+            }
+        } catch (e) {
+            console.error("submitLogoutForm error:", e);
+        }
+    };
+</script>

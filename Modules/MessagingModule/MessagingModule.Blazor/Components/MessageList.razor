@@ -1,0 +1,75 @@
+﻿@using MudBlazor
+
+<div @ref="_container" style="flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; height:65vh">
+    @foreach (var message in Messages)
+    {      
+
+        <div class="chat-message-wrapper @(message.SenderId == CurrentUserId ? "receiver" : "sender")">
+            <div class="chat-message @(message.SenderId == CurrentUserId ? "receiver" : "sender")"
+                 style="padding: 8px 12px; border-radius: 8px; max-width: 80%; word-break: break-word; @(message.SenderId == CurrentUserId ? "float:left" : "float:right");
+                                align-self:@(message.SenderId == CurrentUserId ? "flex-end" : "flex-start");
+                                background-color:@(message.SenderId == CurrentUserId ? Colors.LightBlue.Default : "#e0e0e0");
+                                color:@(message.SenderId == CurrentUserId ? "white" : "black");">
+                <MudGrid>
+                    @if (message.Images.Any())
+                    {
+                        <MudItem xs="12">
+                            @foreach(var image in message.Images)
+                            {
+                                <MudImage Src="@(image.Contains("StaticFiles") ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}/{image.Replace("\\", "/")}" : image)" style="width:280px; height:220px;" Alt="Swedish Farm House" Elevation="25" Class="rounded-lg ma-4" />
+                            }
+                        </MudItem>
+                    }
+
+                    @if (message.Videos.Any())
+                    {
+                        <MudItem xs="12">
+                            @foreach (var image in message.Images)
+                            {
+                                <MudLink Src="@image" style="width:280px; height:220px;" Alt="Swedish Farm House" Elevation="25" Class="rounded-lg ma-4" />
+                            }
+                        </MudItem>
+                    }
+
+                    @if (message.Documents.Any())
+                    {
+                        <MudItem xs="12">
+                            <MudList T="string">
+                                @foreach (var file in message.Documents.Take(2))
+                                {
+                                    <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                                        @file
+                                    </MudListItem>
+                                }
+                                @if(message.Documents.Count() > 2)
+                                {
+                                    <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                                        +@(message.Documents.Count() - 2) more files
+                                    </MudListItem>
+                                }
+                            </MudList>
+                        </MudItem>
+                    }
+                    <MudItem xs="12">
+                        <small>@(message.SenderId == CurrentUserId ? CurrentUserName : message.SenderDisplayName)</small><br />
+                        @message.Content<br />
+                        <small>@message.Timestamp.ToShortTimeString()</small>
+                        @if (!string.IsNullOrEmpty(message.Id) && ReadTimes.TryGetValue(message.Id, out var read))
+                        {
+                            @if (read is not null)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.DoneAll" Class="ml-1" Color="Color.Primary" />
+                                <small class="ml-1">@read.Value.ToShortTimeString()</small>
+                            }
+                            else
+                            {
+                                <small class="ml-1 text-secondary">Not read</small>
+                            }
+                        }
+                    </MudItem>
+                </MudGrid>
+                
+            </div>
+        </div>
+    }
+</div>

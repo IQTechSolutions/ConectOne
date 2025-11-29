@@ -1,0 +1,42 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+@using SchoolsModule.Domain.Enums
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<MudPaper Class="pa-4">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudText Typo="Typo.h6" Color="Color.Primary">@AttendanceType.GetDescription() Attendance Form for @Date.Value.ToLongDateString()</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudDatePicker Label="Date" @bind-Date="Date"/>
+        </MudItem>
+        <MudItem xs="12">
+            <MudTable Items="_learners" Dense="true">
+                <HeaderContent>
+                    <MudTh>Learner</MudTh>
+                    <MudTh>Status</MudTh>
+                    <MudTh>Notes</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.FullName</MudTd>
+                    <MudTd>
+                        <MudSelect T="AttendanceStatus" @bind-Value="@context.SelectedStatus">
+                            <MudSelectItem Value="AttendanceStatus.Present">Present</MudSelectItem>
+                            <MudSelectItem Value="AttendanceStatus.Absent">Absent</MudSelectItem>
+                            <MudSelectItem Value="AttendanceStatus.Late">Late</MudSelectItem>
+                        </MudSelect>
+                    </MudTd>
+                    <MudTd>
+                        <MudTextField @bind-Value="@context.Notes"/>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton Color="Color.Primary" OnClick="SaveAttendance" FullWidth="true" Variant="Variant.Filled">Save Attendance</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>

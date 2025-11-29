@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddressPrompt" xml:space="preserve">
+    <value>Voer asseblief u adres hier in</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Eenheid</value>
+  </data>
+  <data name="Complex" xml:space="preserve">
+    <value>Kompleks</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Nommer</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Straat</value>
+  </data>
+  <data name="Suburb" xml:space="preserve">
+    <value>Voorstad</value>
+  </data>
+  <data name="PostalCode" xml:space="preserve">
+    <value>Poskode</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Stad</value>
+  </data>
+  <data name="Province" xml:space="preserve">
+    <value>Provinsie</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Terug</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Kanselleer</value>
+  </data>
+  <data name="NoResultsAvailableFor" xml:space="preserve">
+    <value>Geen resultate beskikbaar vir {0} nie</value>
+  </data>
+  <data name="DisplayingResultFor" xml:space="preserve">
+    <value>Wys resultate vir {0}</value>
+  </data>
+</root>

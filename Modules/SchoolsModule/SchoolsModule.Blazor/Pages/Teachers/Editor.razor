@@ -1,0 +1,137 @@
+﻿@page "/teachers/update/{TeacherId}"
+@using ConectOne.Blazor.Components
+@using ConectOne.Blazor.Components.ContactNumbers
+@using ConectOne.Blazor.Components.EmailAddresses
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using MessagingModule.Blazor.Components.Messages
+@using MessagingModule.Blazor.Components.Notifications
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using NeuralTech.Base.Enums
+@using SchoolsModule.Application.ViewModels
+@using SchoolsModule.Domain.Entities
+
+@attribute [Authorize]
+
+<EditForm Model="_teacher" OnValidSubmit="UpdateAsync">
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="@($"Update {_teacher?.FirstName} {_teacher?.LastName}")" Caption="Complete or change to update learner information" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+    </MudItem>
+
+    <MudItem md="12">
+
+        <MudTabs>
+            <MudTabPanel Text="Details">
+                
+                    <DataAnnotationsValidator />
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="3" lg="3">
+                            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@($"{_teacher.FirstName} {_teacher.LastName}")" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Teacher)" ParentId="@_teacher.TeacherId" />
+
+                        </MudItem>
+                        <MudItem xs="12" sm="12" md="9" lg="9">
+                            <MudCard>
+                                <MudCardHeader>
+                                    <MudText Align="Align.Center" Typo="Typo.h6">Personal Information</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem md="6">
+                                            <MudTextField Label="First Name" Class="mt-3" @bind-Value="_teacher.FirstName" For="@(() => _teacher.FirstName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="6">
+                                            <MudTextField Label="Last Name" Class="mt-3" @bind-Value="_teacher.LastName" For="@(() => _teacher.LastName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        
+                                        <MudDivider/>
+
+                                        <MudItem md="6">
+                                            <MudSelect T="SchoolGradeViewModel" ToStringFunc="@_schoolGradeConverter" Label="Grade" Value="@_teacher.Grade" ValueChanged="SelectedGradeChanged" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                                @if (AvailableGrades is not null)
+                                                {
+                                                    foreach (var state in AvailableGrades)
+                                                    {
+                                                        <MudSelectItem Value="@state">@state.SchoolGrade</MudSelectItem>
+                                                    }
+                                                }
+
+
+                                            </MudSelect>
+                                        </MudItem>
+
+                                        <MudItem md="6">
+                                            <MudSelect ToStringFunc="@_availableSchoolConverter" Label="Class" @bind-Value="@_teacher.Class" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                                @if (AvailableSchoolClasses is not null)
+                                                {
+                                                    foreach (var state in AvailableSchoolClasses)
+                                                    {
+                                                        <MudSelectItem Value="@state">@state.SchoolClass</MudSelectItem>
+                                                    }
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+
+                                        <MudDivider />
+
+                                        <MudItem xs="12" sm="12" md="6" lg="6">
+                                            @if (_teacher.TeacherId is not null)
+                                            {
+                                                <MudCard>
+                                                        <ContactNumberList TContactNumberOwner="Teacher" ParentId="@_teacher.TeacherId" ControllerUrlPart="teachers" />
+                                                </MudCard>
+                                            }
+                                            else
+                                            {
+                                                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                                            }
+
+                                        </MudItem>
+                                        <MudItem xs="12" sm="12" md="6" lg="6">
+                                            @if (_teacher.TeacherId is not null)
+                                            {
+                                                <MudCard>
+                                                    <EmailAddressList TEmailAddressOwner="Teacher" ParentId="@_teacher.TeacherId" ControllerPartUrl="teachers" />
+                                                </MudCard>
+                                            }
+                                            else
+                                            {
+                                                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                                            }
+                                        </MudItem>
+
+                                    </MudGrid>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+
+                    </MudGrid>
+                
+            </MudTabPanel>
+            
+            @if (_userInfo is not null)
+            {
+                <MudTabPanel Text="Notifications">
+                    <NotificationsTable ReceiverId="@TeacherId"/>
+                </MudTabPanel>
+            
+                <MudTabPanel Text="Messages">
+                    <MessagesTable MessageType="(int)MessageType.Parent" EntityId="@TeacherId"/>
+                </MudTabPanel>
+            }
+        </MudTabs>
+    </MudItem>
+    <MudItem xs="6" sm="6" md="6" lg="6">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+    </MudItem>
+
+    <MudItem xs="6" sm="6" md="6" lg="6">
+        <MudButton OnClick="CancelAsync" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+    </MudItem>
+</MudGrid>
+</EditForm>

@@ -1,0 +1,13 @@
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+@inject IStringLocalizer<BlogCategoriesDynamicMenu> Localizer
+
+<MudNavGroup Title='@Localizer["QuickAccess"]' Expanded="false">
+    <MudNavLink @onclick="CreateNewBlogEntry">@Localizer["CreateNewEntry"]</MudNavLink>
+    @foreach (var menuItem in _categories)
+    {
+
+        <MudNavLink @onclick="@(() => NavigateToCategory(menuItem.CategoryId))" >@menuItem.Name</MudNavLink>
+    }
+</MudNavGroup>
+

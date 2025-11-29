@@ -1,0 +1,63 @@
+﻿@using ConectOne.Domain.Extensions
+@using MessagingModule.Application.ViewModels
+@using MudBlazor
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTable Elevation="25" ServerData="ServerReload" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @* @if (_canCreate)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/learners/create" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>         
+                } *@
+                <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+            </div>
+            <MudSpacer />
+            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel T="NotificationViewModel" SortLabel="Title">Title</MudTableSortLabel></MudTh>
+            <MudTh>Created</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Link Count</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Title">
+                <MudHighlighter Text="@context.Title" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Date Created">
+                @context.Created
+            </MudTd>
+            <MudTd DataLabel="First Name">
+                <MudHighlighter Text="@context.Message.HtmlToPlainText().TruncateLongString(255)" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd>
+                
+            </MudTd>
+            <MudTd>
+                @if (context.Read)
+                {
+                    <MudChip T="string" Color="Color.Success">Read</MudChip>
+                }
+                else
+                {
+                    <MudChip T="string" Color="Color.Error">Unread</MudChip>
+                }
+            </MudTd>
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                <MudButton Color="Color.Error" Icon="@Icons.Material.Filled.Details" OnClick="@(() => DeleteNotification(context.NotificationId))">Delete</MudButton>
+                <MudButton Color="Color.Success" Icon="@Icons.Material.Filled.Details" OnClick="@(() => ShowNotificationDetails(context.NotificationId))">View</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+}

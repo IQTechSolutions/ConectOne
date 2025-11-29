@@ -1,0 +1,16 @@
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+@inject IStringLocalizer<MainBody> Localizer
+
+
+<MudAppBar Elevation="25">
+    <TopBar OnDarkModeToggle="OnDarkModeToggle" OnRightToLeftToggle="OnRightToLeftToggle"/>
+</MudAppBar>
+<MudDrawer @bind-Open="_drawerOpen" Elevation="25" ClipMode="DrawerClipMode.Always">
+    <NavMenu ConnectsText="@Configuration["ApplicationConfiguration:ConnectsText"]"/>
+</MudDrawer>
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+        @ChildContent
+    </MudContainer>
+</MudMainContent>

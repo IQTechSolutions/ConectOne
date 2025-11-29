@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\ConectOne.Domain\ConectOne.Domain.csproj" />
+    <ProjectReference Include="..\..\CalendarModule\CalendarModule.Domain\CalendarModule.Domain.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Domain\FilingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\GroupingModule\GroupingModule.Domain\GroupingModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

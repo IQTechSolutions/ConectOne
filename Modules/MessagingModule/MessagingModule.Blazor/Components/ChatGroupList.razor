@@ -1,0 +1,28 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudHidden Breakpoint="Breakpoint.SmAndDown">
+    <MudPaper Elevation="25" Class="pa-3 ml-6" MinWidth="350px">
+        <MudToolBar Dense="true">
+            <MudText Typo="Typo.h6" Inline="true" Class="mr-2">#</MudText>
+            <MudText Typo="Typo.h6">Contacts</MudText>
+        </MudToolBar>
+        <div class="d-flex flex-column px-4" style="max-height:70vh;min-height:70vh; overflow:scroll;">
+            <MudList T="string" Clickable="true">
+                @foreach (var group in ChatGroups)
+                {
+                    <MudListItem T="string" Class="pa-0 px-2" OnClick="@(() => GroupMemberSelected(group))">
+                        <div class="d-flex flex-row mt-n1 mb-n1">
+                            <div class="mr-4">
+                                <MudAvatar Color="Color.Dark" Style="height: 50px; width: 50px;">@group.Name.GetInitials()</MudAvatar>
+                            </div>
+                            <div>
+                                <MudText Typo="Typo.body2" Class="mt-3 mb-n2">@group.Name</MudText>
+                            </div>
+                        </div>
+                    </MudListItem>
+                }
+            </MudList>
+        </div>
+    </MudPaper>
+</MudHidden>

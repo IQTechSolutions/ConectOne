@@ -1,0 +1,91 @@
+﻿@using MessagingModule.Application.ViewModels
+@using MudBlazor
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTable Elevation="25" ServerData="ServerReload" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+            @if (_canCreate)
+            {
+                @if (MessageType == (int)NeuralTech.Base.Enums.MessageType.Global)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"{MessageType}/messages/create")" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+                }
+                else if (MessageType == 0)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"{MessageType}/messages/create")" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"{MessageType}/messages/create/{EntityId}")" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+                }
+            }
+            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+            </div>
+            <MudSpacer />
+            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel T="NotificationViewModel" SortLabel="Title">Title</MudTableSortLabel></MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Created</MudTh>
+            <MudTh>Sent</MudTh>
+            <MudTh>
+                <div style="float:right">
+                    <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                        <MudMenuItem @onclick="() => _dense = !_dense">
+                            <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                Dense
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _striped = !_striped">
+                            <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                Striped
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _bordered = !_bordered">
+                            <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                Bordered
+                            </MudSwitch>
+                        </MudMenuItem>
+                    </MudMenu>
+                </div>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Title">
+                <MudHighlighter Text="@context.Subject" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Description">
+                <MudHighlighter Text="@context.ShortDescription" HighlightedText="@_args.SearchText" />
+            </MudTd>
+            <MudTd>
+                @context.CreatedTime?.ToLongDateString()
+            </MudTd>
+            <MudTd>
+                @context.CreatedTime?.ToLongDateString()
+            </MudTd>
+            <MudTd DataLabel="Actions" Style="text-align: right">
+               <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                    <MudMenuItem Icon="@Icons.Material.Filled.Details" OnClick="@(() => ShowMessageDetails(context.MessageId, context.NotificationId))">View</MudMenuItem>                            
+                    @if (_canEdit)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"messages/{context.MessageId}")">Edit</MudMenuItem>                            
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" OnClick="@(() => Delete(context.MessageId))">Delete</MudMenuItem>
+                    }
+                </MudMenu>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+}

@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@RegisterUserModel" OnValidSubmit="Submit" @ref="@RegistrationFormReference">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <TitleContent>
+            @{
+                <MudText Typo="Typo.h6">
+                    <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                    @TitleText
+                </MudText>
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudTextField For="@(() => RegisterUserModel.CompanyName)" @bind-Value="RegisterUserModel.CompanyName" Label="Company Name" Disabled="IsCompanyInputDisabled" />
+            <MudTextField For="@(() => RegisterUserModel.FirstName)" @bind-Value="RegisterUserModel.FirstName" Label="First Name" />
+            <MudTextField For="@(() => RegisterUserModel.LastName)" @bind-Value="RegisterUserModel.LastName" Label="Last Name" />
+            <MudTextField For="@(() => RegisterUserModel.PhoneNumber)" @bind-Value="RegisterUserModel.PhoneNumber" Label="Phone Number" />
+            @ChildContent
+            <MudTextField For="@(() => RegisterUserModel.Email)" InputType="InputType.Email" @bind-Value="RegisterUserModel.Email" Label="Email" />     
+            <MudTextField For="@(() => RegisterUserModel.Password)" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" @bind-Value="RegisterUserModel.Password" Label="Password" />
+            <MudTextField For="@(() => RegisterUserModel.ConfirmPassword)" InputType="InputType.Password" @bind-Value="RegisterUserModel.ConfirmPassword" Label="Confirm Password" />
+            <MudCheckBox T="bool" @bind-Checked="@RegisterUserModel.ActivateUser" Label="Activate User?" Color="Color.Primary"></MudCheckBox>
+            <MudCheckBox T="bool" @bind-Checked="@RegisterUserModel.AutoConfirmEmail" Label="Auto Confirm Email?" Color="Color.Primary"></MudCheckBox>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Submit">Cancel</MudButton>
+            @{
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success">@SubmitButtonText</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>

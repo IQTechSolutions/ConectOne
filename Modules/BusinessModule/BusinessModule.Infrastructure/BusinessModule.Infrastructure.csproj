@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GroupingModule\GroupingModule.Infrastructure\GroupingModule.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\MessagingModule\MessagingModule.Domain\MessagingModule.Domain.csproj" />
+    <ProjectReference Include="..\BusinessModule.Domain\BusinessModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

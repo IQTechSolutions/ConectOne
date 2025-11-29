@@ -1,0 +1,248 @@
+﻿@page "/evers/categories/update/{CategoryId}"
+
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Constants
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    @@import url('https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css');
+
+    .iconDropDown .mud-input > input.mud-input-root,
+    div.mud-input-slot.mud-input-root {
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #424242;
+        color: #ffffff;
+        object-fit: contain;
+    }
+
+    .icon-option__preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    .icon-option__preview i {
+        font-size: 1.8rem;
+        line-height: 1;
+    }
+
+    .icon-option__preview--value {
+        width: 40px;
+        height: 40px;
+    }
+
+    .icon-placeholder {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .icon-select {
+        position: relative;
+    }
+
+    .icon-select__input .mud-input-slot {
+        padding-left: 64px;
+    }
+
+    .icon-select__value {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background-color: #424242;
+        color: #ffffff;
+        pointer-events: none;
+        transition: background-color 0.2s ease;
+    }
+
+        .icon-select__value img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .icon-select__value i {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+    .icon-select__value--placeholder {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+        background-color: transparent;
+    }
+
+    .iconDropDown .mud-input-slot .mud-input-root {
+        color: transparent;
+        caret-color: transparent;
+    }
+
+    .iconDropDown .mud-input-slot {
+        color: transparent;
+    }
+
+        .iconDropDown .mud-input-slot .mud-input-root::selection {
+            background: transparent;
+        }
+
+    .icon-option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .icon-option__preview {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #424242;
+        color: #ffffff;
+        object-fit: contain;
+    }
+
+        .icon-option__preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .icon-option__preview i {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+</style>
+
+<EditForm Model="_category" OnValidSubmit="UpdateAsync" class="card card-body bg-light mt-5">
+
+    <DefaultTitle Title="Update Blog Category" Caption="Please change the following information to update an existing category" />
+
+    <DataAnnotationsValidator />
+
+    <MudGrid>
+
+        <MudItem xs="12" sm="12" md="4" lg="3">
+            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_category.Name" Src="@_imageSource" ImageType="UploadType.Cover" TEntity="typeof(Category<BlogPost>)" ParentId="@_category.CategoryId" />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="8" lg="9">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudTextField Label="Category Name" Class="mt-3" @bind-Value="_category.Name" For="@(() => _category.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem sm="12" md="3" lg="2" xl="1">
+                            <div class="icon-select">
+                                <MudSelect T="string" Class="iconDropDown icon-select__input" Value="_category.IconImageUrl" ValueChanged="IconChanged" Label="Icon" Dense="false" FitContent="true">
+                                    @foreach (var icon in CustomIcons.IconOptions)
+                                    {
+                                        <MudSelectItem Value="icon.Value">
+                                            <div class="icon-option">
+                                                @if (CustomIcons.IsFontIcon(icon.Value))
+                                                {
+                                                    <span class="icon-option__preview">
+                                                        <i class="@CustomIcons.GetCssClass(icon.Value)" aria-hidden="true"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="icon-option__preview">
+                                                        <img src="@icon.Value" alt="@icon.DisplayName" />
+                                                    </span>
+                                                }
+                                            </div>
+                                        </MudSelectItem>
+                                    }
+                                </MudSelect>
+                                @if (string.IsNullOrWhiteSpace(_category.IconImageUrl))
+                                {
+                                    <span class="icon-select__value icon-select__value--placeholder">Select Icon</span>
+                                }
+                                else if (CustomIcons.IsFontIcon(_category.IconImageUrl))
+                                {
+                                    <span class="icon-select__value" title="@CustomIcons.GetDisplayName(_category.IconImageUrl)">
+                                        <i class="@CustomIcons.GetCssClass(_category.IconImageUrl)" aria-hidden="true"></i>
+                                        <span class="visually-hidden">@CustomIcons.GetDisplayName(_category.IconImageUrl)</span>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="icon-select__value">
+                                        <img src="@_category.IconImageUrl" alt="@CustomIcons.GetDisplayName(_category.IconImageUrl)" title="@CustomIcons.GetDisplayName(_category.IconImageUrl)" />
+                                    </span>
+                                }
+                            </div>
+                        </MudItem>
+                        <MudItem sm="12" md="9" lg="10" xl="11">
+                            <MudTextField T="string" Label="Short Description" Text="@_category.Description" Lines="3" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" md="12">
+                            <div class="d-flex">
+                                <MudSwitch @bind-Value="@_category.Active" Color="Color.Warning" Style="margin-left: 5px;">Active</MudSwitch>
+                                <MudSwitch @bind-Value="@_category.Featured" Color="Color.Warning" Style="margin-left: 5px;">Featured</MudSwitch>
+                                <MudSwitch @bind-Value="@_category.DisplayAsMenuItem" Color="Color.Warning" Style="margin-left: 5px;">Menu Item</MudSwitch>
+                                <MudSwitch @bind-Value="@_category.DisplayAsSliderItem" Color="Color.Warning" Style="margin-left: 5px;">Slider Item</MudSwitch>
+                            </div>
+                        </MudItem>
+
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>

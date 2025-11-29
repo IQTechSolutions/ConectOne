@@ -1,0 +1,63 @@
+﻿@page "/schoolclasses/create/{GradeId}"
+
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using SchoolsModule.Domain.Entities
+
+@attribute [Authorize]
+
+<EditForm Model="_schoolClass" OnValidSubmit="CreateAsync">
+    <MudGrid>
+        <MudItem md="6">
+            <DefaultTitle Title="Create Class" Caption="Complete information to create new class" />
+        </MudItem>
+        <MudItem md="6" Style="float:right">
+            <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+        </MudItem>
+        <MudItem md="12">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="12" md="3" lg="3">
+                    <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@($"{_schoolClass.SchoolClass}")" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(SchoolClass)" ParentId="@_schoolClass.SchoolClassId" />                            
+                </MudItem>
+                <MudItem xs="12" sm="12" md="9" lg="9">
+                    <MudCard>
+                        <MudCardHeader>
+                            <MudText Align="Align.Center" Typo="Typo.h6">School Class Information</MudText>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem md="12">
+                                    <MudTextField Label="School Class" Class="mt-3" @bind-Value="_schoolClass.SchoolClass" For="@(() => _schoolClass.SchoolClass)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudSwitch @bind-Value="@_schoolClass.AutoCreateChatGroup"
+                                               Color="Color.Secondary"
+                                               Style="margin-left: 5px;">
+                                        Auto Create Chat Group
+                                    </MudSwitch>
+                                </MudItem>
+                                <MudItem xs="4">
+                                </MudItem>
+                                <MudItem xs="4">
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+    
+            </MudGrid>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+    
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

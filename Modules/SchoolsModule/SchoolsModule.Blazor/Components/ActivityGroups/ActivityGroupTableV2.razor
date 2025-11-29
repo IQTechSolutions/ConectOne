@@ -1,0 +1,140 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using NeuralTech.Base.Enums
+@using SchoolsModule.Blazor.Components.Learners.Tables
+@using SchoolsModule.Domain.DataTransferObjects
+@using SchoolsModule.Domain.Enums
+
+<MudToolBar>
+    <div class="justify-center mud-text-align-center">
+        <MudButton Variant="Variant.Filled" OnClick="Reload" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary" Style="margin-left:15px;">
+            Reload
+        </MudButton>
+        @if (ShowLinkActivityGroupButtons)
+        {
+            <MudButton Variant="Variant.Filled" OnClick="OnLinkActivityGroups" StartIcon="@Icons.Material.Filled.Link" IconColor="Color.Surface" Color="Color.Info" Style="margin-left:15px;">
+                @(_multiselection ? "Show Teams" : "Link Teams")
+            </MudButton>
+        }
+    </div>
+    <MudSpacer/>
+
+    <MudTextField T="string" @bind-Text="@_args.SearchText" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyDown="HandleKeyDown"
+            KeyDownPreventDefault="_preventDefault" />
+    <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(_args.SearchText))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">
+        Search
+    </MudButton>
+</MudToolBar>
+<table class="table" style="width:100%; padding:25px 25px 0 25px;">
+    <thead>
+        <tr>
+            <td colspan="8"><MudDivider Style="margin-bottom:15px; margin-top:-20px;"></MudDivider></td>
+        </tr>
+        <tr style="text-align:left;">
+            @if (_multiselection)
+            {
+                <th style="padding:15px;">
+                    <InputCheckbox ValueExpression="@(() => _allSelected)" Value="@_allSelected" ValueChanged="OnAllSelectedChanged" style="width:20px; height:20px;"></InputCheckbox>
+                </th>
+            }
+
+            <th style="padding-right:15px;">
+                <strong>Team</strong>
+            </th>
+            <th style="padding-right:15px;">
+                <strong>Age Group</strong>
+            </th>
+            <th style="padding-right:15px;">
+                <strong>Gender</strong>
+            </th>
+            <th style="padding-right:15px; width:40px;">
+
+            </th>
+        </tr>
+        <tr>
+            <td colspan="8"><MudDivider Style="margin-top : 15px; margin-bottom:5px;"></MudDivider></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in _activityGroups)
+        {
+            <tr>
+                @if (_multiselection)
+                {
+                    <td>
+                        <CustomCheckBox T="ActivityGroupDto" Value="@item.IsChecked" MyValueChanged="OnValueSelectionChanged" ExtraParameter="item.RowItem"></CustomCheckBox>
+                    </td>
+                }
+                <td>
+                    @item?.RowItem?.CategoryName <small>@item?.RowItem?.AgeGroup?.Name</small> @item?.RowItem?.Name
+                </td>
+                <td>
+                    @item?.RowItem?.AgeGroup?.Name
+                </td>
+                <td>
+                    @item?.RowItem?.Gender
+                </td>
+                <td>
+                    @if (item is not null && item.IsChecked)
+                    {
+                        <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                            <MudMenuItem Icon="@Icons.Material.Filled.Details" @onclick="@(() => ShowTeamMembers(item?.RowItem?.ActivityGroupId!))">@(item.RowItem.ShowTeamMembers ? "Hide Team Members" : "Show Team Members")</MudMenuItem>
+                            
+                            @if (EventStateManager.HasEvent())
+                            {
+                                
+                                <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.ParticipatingActivityGroup)}/messages/create/{item.RowItem.ParticipatingActivityGroupId}")">Message</MudMenuItem>
+                                <MudMenu Variant="Variant.Text" Label="Resend" StartIcon="@Icons.Material.Filled.SendToMobile" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomLeft">
+                                    <MudMenuItem @onclick="@(() => OnResendActivityGroupAttendanceRequest(item.RowItem.ActivityGroupId!))">Attendance Requests</MudMenuItem>
+                                    <MudMenuItem @onclick="@(() => OnResendActivityGroupTransportRequest(item.RowItem.ActivityGroupId!))">Transport Requests</MudMenuItem>
+                                </MudMenu>
+                                
+
+                                <MudMenu Variant="Variant.Text" Label="Attendance" StartIcon="@Icons.Material.Filled.List" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomLeft">
+                                    <MudMenuItem Href="@($"/participatingactivitygroups/attendance/{item.RowItem.ParticipatingActivityGroupId}/{EventStateManager.SchoolEvent.EventId}")">Event Attendance</MudMenuItem>
+                                    <MudMenuItem Href="@($"/participatingactivitygroups/transportattendance/{item.RowItem.ParticipatingActivityGroupId}/{EventStateManager.SchoolEvent.EventId}/{(int)AttendanceType.EventTransportTo}")">Transport To</MudMenuItem>
+                                    <MudMenuItem Href="@($"/participatingactivitygroups/transportattendance/{item.RowItem.ParticipatingActivityGroupId}/{EventStateManager.SchoolEvent.EventId}/{(int)AttendanceType.EventTransportFrom}")">Transport From</MudMenuItem>
+                                </MudMenu>
+                            }
+                            else
+                            {
+                                <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.ActivityGroup)}/messages/create/{item.RowItem.ActivityGroupId}")">Message</MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/attendance-form/{item.RowItem.ParticipatingActivityGroupId}/{(int)AttendanceType.ActivityGroup}")">Attendance</MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => NavigateToUpdateCategory(item.RowItem.ActivityGroupId!))">Edit</MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteActivityGroup(item.RowItem.ActivityGroupId!))">Delete</MudMenuItem>
+                            }
+                            
+                        </MudMenu>
+                    }
+                </td>
+            </tr>
+            @if (item is not null && item.RowItem.ShowTeamMembers)
+            {
+                <tr>
+                    <td colspan="5" style="padding-bottom:20px;">
+                        <MudCard>
+                            <MudCardHeader>
+                                <MudText Typo="Typo.body1">Team Members for <strong>@item.RowItem.Name</strong></MudText>
+                            </MudCardHeader>
+                            <MudCardContent Class="pa-0">
+                                <LearnersTableV2 ParticipatingActivityGroupId="@item.RowItem.ParticipatingActivityGroupId" ActivityGroupId="@item.RowItem.ActivityGroupId" ShowLinkLearnersButton="ShowLinkActivityGroupTeamMembersButton" OnSelectionChange="(value) => OnLearnerSelectionSelectionChanged(value, item.RowItem)" ResendAttendanceRequest="OnResendAttendanceRequest" ResendTransportRequest="OnResendTransportRequest" RemoveConsent="RemoveConsent"></LearnersTableV2>
+                            </MudCardContent>
+                        </MudCard>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="8"><MudDivider Style="margin-top : 15px"></MudDivider></td>
+        </tr>
+        <tr>
+            <td colspan="8">
+                <div style="padding-top:15px; padding-bottom:15px; vertical-align:middle">
+                    <strong>Total Item Count: @_pageItemCount</strong> <MudPagination Style="list-style-type:none; float:right; margin:-6px;" Rectangular="true" Variant="Variant.Outlined" Count="@_pageCount" MiddleCount="5" SelectedChanged="OnPageChanged" />
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

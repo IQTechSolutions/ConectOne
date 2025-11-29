@@ -1,0 +1,93 @@
+@using Cropper.Blazor.Components
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+
+<MudDialog>
+    <DialogContent>
+        <div class="mud-p-4">
+            <MudStack Spacing="2">
+                @if (!string.IsNullOrWhiteSpace(_submitErrorMessage))
+                {
+                    <MudAlert Severity="Severity.Error"
+                              Variant="Variant.Filled"
+                              Elevation="0">
+                        @_submitErrorMessage
+                    </MudAlert>
+                }
+
+                <MudPaper Elevation="1" Class="docs-demo mud-border-radius-lg mud-p-2">
+                    <div class="mud-width-full"
+                         @ref="_modalContentRef">
+                        @if (_renderCropper)
+                        {
+                            <CropperComponent @ref="_cropperComponent"
+                                              @key="_cropperRenderVersion"
+                                              Class="mud-width-full mud-border-radius-lg"
+                                              Src="@_currentSrc"
+                                              Options="_options"
+                                              OnCropEvent="OnCropChanged"
+                                              OnReadyEvent="OnCropperReady" />
+                        }
+                        else
+                        {
+                            <div class="mud-width-full"
+                                 style="min-height: 320px; display: flex; align-items: center; justify-content: center;">
+                                <MudProgressCircular Indeterminate="true"
+                                                     Color="Color.Primary"
+                                                     Class="mud-m-4" />
+                            </div>
+                        }
+                    </div>
+                </MudPaper>
+            </MudStack>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <div class="mud-px-4 mud-pb-4">
+            <MudStack Row="true"
+                      AlignItems="AlignItems.Center"
+                      Spacing="2"
+                      Class="docs-buttons"
+                      Style="flex-wrap: wrap;">
+                <MudTooltip Text="Reset Image">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Disabled="@(!CanReset)"
+                               OnClick="ResetAsync">
+                        Reset
+                    </MudButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Import image with Blob URLs">
+                    <label class="cropper-upload-button mud-button-root mud-button mud-button-filled mud-button-filled-secondary"
+                           title="Upload image file"
+                           for="inputImage">
+                        <InputFile class="cropper-upload-input"
+                                   id="inputImage"
+                                   name="file"
+                                   accept="image/*"
+                                   OnChange="OnFileChangedAsync" />
+                        Choose Image
+                    </label>
+                </MudTooltip>
+
+                <MudTooltip Text="Submit the Image">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Success"
+                               Disabled="@(!CanSubmit)"
+                               OnClick="SubmitAsync">
+                        Submit
+                    </MudButton>
+                </MudTooltip>
+
+                <MudSpacer />
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Error"
+                           OnClick="Close">
+                    Cancel
+                </MudButton>
+            </MudStack>
+        </div>
+    </DialogActions>
+</MudDialog>

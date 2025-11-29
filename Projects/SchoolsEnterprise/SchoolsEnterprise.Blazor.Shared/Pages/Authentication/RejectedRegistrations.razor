@@ -1,0 +1,92 @@
+﻿@page "/registrations/rejected"
+
+@using ConectOne.Blazor.Components
+@using IdentityModule.Application.ViewModels
+@using IdentityModule.Domain.Constants
+@using IdentityModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize(Roles = RoleConstants.SuperUser)]
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Registrations" Description="Manage application users from here." />
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTable Hover="true" Elevation="25" ServerData="GetPendingRegistrationsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @bind-user="_registration" @ref="_pendingRegistrationTable">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreateUsers)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Register New User</MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="ReloadTable" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+                    @if (_canExportUsers)
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="ExportToExcel" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">Export</MudButton>
+                    }
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="ReloadTable" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+                    @if (_canExportUsers)
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="ExportToExcel" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">Export</MudButton>
+                    }
+                }
+            </div>
+            <MudSpacer />
+
+            <MudTextField HelperText="Filter by name and surname" @bind-Value:get="_searchString" @bind-Value:set="SetSearchString" Placeholder="Search" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
+
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.FirstName)">Company Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.EmailAddress)">Email</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.PhoneNr)">PhoneNumber</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.ReasonForRejection)">Reason For Rejection</MudTableSortLabel></MudTh>
+            <MudTh Style="text-align:right">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="FirstName">
+                <MudHighlighter Text="@context.CompanyName" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="Email">
+                <MudHighlighter Text="@context.EmailAddress" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="PhoneNumber">
+                <MudHighlighter Text="@context.PhoneNr" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="Reason for Rejection"><MudCheckBox T="bool" @bind-Checked="@context.ReasonForRejection" ReadOnly Color="Color.Secondary"></MudCheckBox></MudTd>
+             <MudTd DataLabel="Actions" Style="text-align:right">
+                 <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.CenterLeft">
+                     @if (_canApproveRegistrations)
+                    {
+                        <MudButton OnClick="(()=>ChangeRegistrationStatusRegistration(context.UserId, RegistrationStatus.Accepted))">Approve</MudButton>
+                    }
+                </MudMenu>
+            </MudTd>
+        </RowTemplate>
+        <FooterContent>
+            <MudTd colspan="7">
+                <div class="d-flex">
+                    <MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+                    <MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                    <MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                </div>
+            </MudTd>
+        </FooterContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}

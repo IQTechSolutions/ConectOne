@@ -1,0 +1,154 @@
+﻿ @page "/calendar"
+ 
+ @using CalendarModule.Domain.DataTransferObjects 
+@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+ @rendermode InteractiveServer
+ @using Radzen.Blazor
+
+ <style>
+    .second-card
+    {
+        background: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+<MudText Typo="Typo.h4" Color="Color.Primary">Calendar Manager</MudText>
+<MudText Color="Color.Surface" Class="mb-2">Manager available school events calendar</MudText>
+
+<MudGrid>
+    <MudItem xs="9">
+        @if (!_loaded)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
+        }
+        else
+        {
+            <MudGrid Class="mb-5 mt-3" Spacing="2">
+                <MudItem xs="12" sm="12" md="12">
+                    <RadzenScheduler @ref=@_scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="CalendarEntryDto" Data=@appointments StartProperty="StartDate" 
+                        EndProperty="EndDate" ShowHeader="true" TextProperty="Name" SelectedIndex="2" SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect
+                        AppointmentRender=@OnAppointmentRender DaySelect="@OnDaySelect" AppointmentMove=@OnAppointmentMove MoreSelect="OnMoreSelectAsyncTask" LoadData="OnLoadData">
+                        <RadzenDayView />
+                        <RadzenWeekView />
+                        <RadzenMonthView />
+                    </RadzenScheduler>
+                </MudItem>
+            </MudGrid>
+        }
+    </MudItem>
+    <MudItem xs="3">
+        <MudPaper Style="padding:10px;">
+            <MudGrid>
+                @if (_canCreate)
+                {
+                    <MudItem xs="12">
+                        <MudButton Variant="Variant.Filled" FullWidth="true" OnClick="ShowCalendarModal">Create New Item</MudButton>
+                    </MudItem>
+                }
+
+                @if (_activeDayAppointments.Any())
+                {
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h6" Color="Color.Primary">Today</MudText>
+                        <MudDivider/>
+                        <MudTable Dense="true" Items="@_activeDayAppointments" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                            <RowTemplate>
+                            <MudTd DataLabel="Nr">@context.Name</MudTd>
+                            <MudTd DataLabel="Actions">
+                                    @if (context.Url == "javascript:null")
+                                    {
+                                        <MudIconButton OnClick="@(() => ShowCalendarModal(context.Id))" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" aria-label="edit" />
+                                    }
+                                    else
+                                    {
+                                        <MudIconButton OnClick="@(() => NavigationManager.NavigateTo(context.Url))" Icon="@Icons.Material.Filled.Details" Color="Color.Primary" aria-label="edit" />
+                                    }
+                                
+                                <MudIconButton OnClick="@(() => DeleteCalendarEntryGroup(context.Id))" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" aria-label="add"/>
+                            </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudItem>
+                }
+
+
+
+                @if (appointments.Any(c => c.StartDate.Value.Date >= DateTime.Now.Date))
+                {
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h6" Color="Color.Primary">Upcoming</MudText>
+                        <MudDivider/>
+
+                        <MudTable Dense="true" Items="@_upcommingAppointments.Items" Hover="true" Breakpoint="Breakpoint.Sm">
+                        <ColGroup>
+                            <col />
+                            <col style="width:50px;" />
+                        </ColGroup>
+                        <RowTemplate>
+                            <div style="float:right">
+                            <MudTd @onclick="() => { context.FirstOrDefault(c => c.StartDate?.Date == context.Key.Date).Expanded = !context.FirstOrDefault(c => c.StartDate?.Date == context.Key.Date).Expanded; }" DataLabel="Nr">@context.Key.ToString("D")</MudTd>
+                            <MudTd @onclick="() => { context.FirstOrDefault(c => c.StartDate?.Date == context.Key.Date).Expanded = !context.FirstOrDefault(c => c.StartDate?.Date == context.Key.Date).Expanded; }"><MudIconButton Icon="@Icons.Material.Filled.ArrowCircleDown" OnClick="() => { context.FirstOrDefault(c => c.StartDate?.Date == context.Key.Date).Expanded = !context.FirstOrDefault(c => c.StartDate?.Date == context.Key.Date).Expanded; }" Color="Color.Primary" aria-label="github"/></MudTd>
+                            </div>
+                        </RowTemplate>
+                        <ChildRowContent>
+                            @if (context.FirstOrDefault(c => c.StartDate?.Date == context.Key.Date).Expanded)
+                            {
+                                <MudTr>
+                                    <td colspan="2">
+                                        <MudCard Elevation="0">
+                                            <MudCardContent Class="pa-0">
+                                                    <MudTable Items="@context.Where(c => c.StartDate?.Date == context.Key.Date)" Context="AppointmentContext" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
+                                                        <ColGroup>
+                                                            <col />
+                                                            <col style="width:100px;" />
+                                                        </ColGroup>
+                                                        <RowTemplate>
+                                                            <MudTd DataLabel="Appointment Heading">@AppointmentContext.Name</MudTd>
+                                                            <MudTd DataLabel="Appointment Action Buttons">
+                                                                <div class="d-flex align-content-right">
+                                                                    @if (AppointmentContext.Url == "javascript:null")
+                                                                {
+                                                                    <MudIconButton OnClick="@(() => ShowCalendarModal(AppointmentContext.Id))" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" aria-label="edit"/>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <MudIconButton OnClick="@(() => NavigationManager.NavigateTo(AppointmentContext.Url))" Icon="@Icons.Material.Filled.Details" Color="Color.Primary" aria-label="edit" />
+                                                                }
+                                                                <MudIconButton OnClick="@(() => DeleteCalendarEntryGroup(AppointmentContext.Id))" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" aria-label="add"/>
+                                                                </div>
+                                                            </MudTd>
+                                                            
+                                                        </RowTemplate>
+                                                    </MudTable>
+                                            </MudCardContent>
+                                        </MudCard>
+                                    </td>
+                                </MudTr>
+                            }
+                        </ChildRowContent>
+                        </MudTable>@* 
+                        
+
+                        <MudList T="CalendarEntryDto">
+                            @foreach (var item in _upcommingAppointments.Items)
+                            {
+                                <MudListItem Icon="@Icons.Material.Filled.DateRange" Text="@item.Key.ToString("D")" @bind-Expanded="_upcommingAppointments.Expanded">
+                                    <NestedList>
+                                        @foreach (var bb in item)
+                                        {
+                                            <MudListItem Text="@bb.Name" OnClick="() => NavigationManager.NavigateTo(bb.Url)"/>
+                                        }
+                                    </NestedList>
+                                </MudListItem>
+                            }
+                        </MudList> *@
+                    </MudItem>
+                }
+            </MudGrid>
+
+        </MudPaper>
+    </MudItem>
+</MudGrid>

@@ -1,0 +1,5 @@
+﻿@using IdentityModule.Blazor.Components
+@using MudBlazor
+<EmailRegistrationEditForm RegisterUserModel="_registerUserModel" OnCancel="Cancel" OnSubmit="SubmitAsync" TitleText="Title" SubmitButtonText="ButtonText" IsCompanyInputDisabled="false">
+    <MudTextField For="@(() => _registerUserModel.UniqueUrl)" @bind-Value="_registerUserModel.UniqueUrl" Label="Unique Url" />
+</EmailRegistrationEditForm>

@@ -1,0 +1,26 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Create" Class="mr-3 mb-n1" />
+            @Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField T="string"
+                      Mask="@(new PatternMask("00 000 0000"))" Adornment="Adornment.Start" AdornmentText="+27"
+                      Label="Phone Number"
+                      @bind-Value="ContactNumber.Number"
+                      Immediate="true"
+                      Variant="Variant.Outlined"
+                      For="@(() => ContactNumber.Number)"
+                      InputType="InputType.Telephone"
+                      Margin="Margin.Dense" />
+        <MudCheckBox @bind-Value="@ContactNumber.Default" Label="Default" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="CreateCustomer">@ButtonText</MudButton>
+    </DialogActions>
+</MudDialog>

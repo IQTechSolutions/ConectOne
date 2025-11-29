@@ -1,0 +1,92 @@
+﻿@page "/service-tiers/create/{RoleId}/{RoleName}"
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="@($"Create {RoleName} Services")" Caption="@($"Complete the following info to create new {RoleName} service")" />
+    </MudItem>
+    <MudItem md="6">
+        <MudBreadcrumbs Items="_items" Style="@("float:right")"></MudBreadcrumbs>
+    </MudItem>
+</MudGrid>
+
+<EditForm Model="_serviceTier" OnValidSubmit="CreateAsync">
+    
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTabs>
+                    <MudTabPanel Text="Details">
+                        <MudPaper Class="pa-8 ma-2">
+                            <MudGrid>
+                                <MudItem xs="7">
+                                    <MudTextField @bind-Value="@_serviceTier.Name" For="@(() => _serviceTier.Name)" Label="Name" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="3">
+                                    <MudTextField T="double" @bind-Value="@_serviceTier.Price" For="@(() => _serviceTier.Price)" Label="Price" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="2">
+                                    <MudSwitch @bind-Value="_serviceTier.Active" Color="Color.Primary" Label="Active"/>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField Lines="4" @bind-Value="@_serviceTier.Description" For="@(() => _serviceTier.Description)" Label="Description" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="12">
+
+                                </MudItem>
+                            </MudGrid>
+                        </MudPaper>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Services">
+                        <MudPaper Class="pa-8 ma-2">
+                            <MudTable Elevation="25" Items="_serviceTier.Services" Hover="true" RowsPerPage="100">
+                                <ToolBarContent>
+                                    <MudSpacer/>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddServiceTierService" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">
+                                        Create
+                                    </MudButton>
+                                </ToolBarContent>
+                                <HeaderContent>
+                                    <MudTh>
+                                        Name
+                                    </MudTh>
+                                    <MudTh>
+                                        Description
+                                    </MudTh>
+                                    <MudTh>
+                                        Actions
+                                    </MudTh>
+                                </HeaderContent>
+                                <RowTemplate Context="abc">
+                                    <MudTd DataLabel="Name">
+                                        @abc.Name
+                                    </MudTd>
+                                    <MudTd DataLabel="Description">
+                                        @abc.Description
+                                    </MudTd>
+                                    <MudTd Style="float:right;">
+                                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="AddServiceTierService" StartIcon="@Icons.Material.Filled.Delete" IconColor="Color.Surface">
+                                            Remove
+                                        </MudButton>
+                                    </MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                    </MudPaper>
+                    </MudTabPanel>
+                </MudTabs>
+            </MudItem>
+            <MudItem xs="6" sm="6" md="6" lg="6">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>
+                    Save
+                </MudButton>
+            </MudItem>
+            <MudItem xs="6" sm="6" md="6" lg="6">
+                <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
+                    Cancel
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+ 
+</EditForm>

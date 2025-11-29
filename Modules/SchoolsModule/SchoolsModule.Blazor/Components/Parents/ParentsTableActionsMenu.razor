@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+@using NeuralTech.Base.Enums
+
+<MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+    @if (_canEdit)
+    {  
+        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/parents/update/{ParentId}")">Edit</MudMenuItem>
+    }
+    @if (_canDelete && DisplayDeleteButton)
+    {  
+        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="OnRemoveParent">Delete</MudMenuItem>
+    }
+    @if (_canSendMessage)
+    {
+        <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{MessageType.Parent}/messages/create/{ParentId}")">Send Message</MudMenuItem>
+    }
+    @if (_canCreateChat)
+    {
+        <MudMenuItem Icon="@Icons.Material.Filled.Chat" OnClick="CreateChatGroup">Create Chat</MudMenuItem>
+    }
+</MudMenu>
+

@@ -1,0 +1,109 @@
+﻿@page "/activities/activitygroups/update/{ActivityGroupId}"
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Enums
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using MessagingModule.Blazor.Components.Messages
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using NeuralTech.Base.Enums
+@using SchoolsModule.Application.ViewModels
+@using SchoolsModule.Blazor.Components.AgeGroups
+@using SchoolsModule.Blazor.Components.Learners.Tables
+@using SchoolsModule.Blazor.Pages.Attendance
+@using SchoolsModule.Domain.Enums
+
+@attribute [Authorize]
+
+<EditForm Model="_activityGroup" OnValidSubmit="@(() => UpdateAsync())" class="card card-body bg-light mt-5">
+
+    <DefaultTitle Title="@($"Update {@_activityGroup.Name}")" Caption="Please complete the following information to update this team" />
+
+    <DataAnnotationsValidator />
+    
+    <MudGrid>
+        
+    <MudItem xs="12" sm="12" md="12" lg="12">
+
+    <MudTabs>
+        <MudTabPanel Text="Event Details">
+            <MudGrid>
+
+                <MudItem xs="12" sm="12" md="4" lg="3">
+                    <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_activityGroup.Name" Src="@_imageSource" ImageType="UploadType.Cover" TEntity="typeof(ActivityGroup)" ParentId="@_activityGroup.CategoryId"/>
+                </MudItem>
+
+                <MudItem xs="12" sm="12" md="8" lg="9">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudTextField Label="Team Name" Class="mt-3" @bind-Value="_activityGroup.Name" For="@(() => _activityGroup.Name)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="12" md="12">
+                                    <AgeGroupSelectionDropdownBox Variant="Variant.Outlined" AgeGroup="@_activityGroup.SelectedAgeGroup" AgeGroupChanged="AgeGroupChanged"/>
+                                </MudItem>
+                                <MudItem xs="12" md="12">
+                                    <MudSelect T="Gender" Label="Gender" Value="@_activityGroup.Gender" ValueChanged="GenderChanged" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" ToStringFunc="@(contactMomentType => contactMomentType.ToString())" Margin="Margin.Dense">
+                                        @foreach (var state in (Gender[])Enum.GetValues(typeof(Gender)))
+                                        {
+                                            <MudSelectItem Value="@state">@state.ToString()</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="12" md="12">
+                                    <MudAutocomplete OpenOnFocus="@(_activityGroup.SelectedTeacher == null)" MaxItems="Int32.MaxValue" T="TeacherViewModel" Label="Select the coach" @bind-Value="_activityGroup.SelectedTeacher"
+                                                     SearchFunc="@AutoCompleteSearch" ToStringFunc="@teacherConverter" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+
+            </MudGrid>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Team Members">
+            <LearnersTableV2 ActivityGroupId="@ActivityGroupId" OnSelectionChange="LearnerTableSelectedItemsChanged"></LearnersTableV2>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Attendance Reports">
+                    <AttendanceGroupList GroupId="@ActivityGroupId" AttendanceType="AttendanceType.ActivityGroup"></AttendanceGroupList>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Messages">
+            <MessagesTable MessageType="(int)MessageType.ActivityGroup" EntityId="@ActivityGroupId" SendPushNotification="SendPushNotification"></MessagesTable>
+        </MudTabPanel>
+
+                <MudTabPanel Text="Info">
+                    <MessagesTable MessageType="(int)MessageType.ActivityGroup" PublicMessage="true" EntityId="@ActivityGroupId" SendPushNotification="SendPushNotification"></MessagesTable>
+                </MudTabPanel>
+
+        <MudTabPanel Text="Settings">
+            <MudGrid>
+                <MudItem xs="4">
+                    <MudSwitch @bind-Value="@_activityGroup.AutoCreateChatGroup"
+                               Color="Color.Secondary"
+                               Style="margin-left: 5px;">
+                        Auto Create Chat Group
+                    </MudSwitch>
+                </MudItem>
+                <MudItem xs="4">
+                </MudItem>
+                <MudItem xs="4">
+                </MudItem>
+            </MudGrid>
+        </MudTabPanel>
+
+    </MudTabs>
+     </MudItem>
+    <MudItem xs="6" sm="6" md="6" lg="6">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+    </MudItem>
+
+    <MudItem xs="6" sm="6" md="6" lg="6">
+        <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+    </MudItem>
+    </MudGrid>
+</EditForm>

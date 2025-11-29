@@ -1,0 +1,20 @@
+﻿@page "/events"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using SchoolsModule.Blazor.Components.ActivityGroupEvents
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Events" Caption="All available school events" />
+
+<ActivityGroupEventTable ResendEventAttendanceRequest="ResendActivityGroupAttendanceRequest" ResendEventTransportRequest="ResendActivityGroupTransportRequest" />

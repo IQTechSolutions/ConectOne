@@ -1,0 +1,29 @@
+﻿@using FilingModule.Domain.Enums
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using Radzen
+@using Radzen.Blazor
+
+@inject IConfiguration Configuration
+@inject NavigationManager NavigationManager
+
+<RadzenCarousel @bind-SelectedIndex="@_selectedIndex" Auto="true" Interval="@_interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="height:280px" AllowNavigation="false" AllowPaging="false">
+    <Items>
+
+        @for (int i = 0; i < AddGroupingCount; i++)
+        {
+            <RadzenCarouselItem>
+                <MudGrid>
+                    @foreach (var group in _ads?.Skip(_selectedIndex * 4)?.Take((_selectedIndex + 1) * 4))
+                    {
+                        <MudItem xs="6" sm="6" md="6" lg="6" xl="6" Style="text-align:center" @onclick="@(() => { NavigationManager.NavigateTo(@group.Url); })">
+                            <MudImage Class="ma-2 align-self-center" Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{group.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" 
+                                      Style="height:100px; width:100px;" @onclick="@(() => NavigateToAdd(Configuration.GetValue<string>("Add1:Url")))" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            </RadzenCarouselItem>
+        }
+
+    </Items>
+</RadzenCarousel>

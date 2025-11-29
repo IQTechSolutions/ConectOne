@@ -1,0 +1,110 @@
+﻿@page "/schoolgrades"
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using NeuralTech.Base.Enums
+@using SchoolsModule.Domain.DataTransferObjects
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="School Grades" Caption="All available school grades" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+    </MudItem>
+    <MudItem md="12">
+        @if (!_loaded)
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        }
+        else
+        {
+             <MudTable Elevation="25" ServerData="ServerReload" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table">
+                <ToolBarContent>
+                    <div class="justify-center mud-text-align-center">
+                        @if (_canCreate)
+                        { 
+                            <MudSpacer />
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/schoolgrades/create" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+                            <MudButton Variant="Variant.Filled" OnClick="@(async() => await Reload())" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>                    
+                        }
+                        else
+                        {
+                            <MudSpacer />
+                            <MudButton Variant="Variant.Filled" OnClick="@(async() => await Reload())" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+                        } 
+                    </div>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel T="SchoolGradeDto" SortLabel="Name">Grade</MudTableSortLabel></MudTh>
+                    <MudTh>
+                        <div style="float:right">
+                            <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                                <MudMenuItem @onclick="() => _dense = !_dense">
+                                    <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                        Dense
+                                    </MudSwitch>
+                                </MudMenuItem>
+                                <MudMenuItem @onclick="() => _striped = !_striped">
+                                    <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                        Striped
+                                    </MudSwitch>
+                                </MudMenuItem>
+                                <MudMenuItem @onclick="() => _bordered = !_bordered">
+                                    <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                        Bordered
+                                    </MudSwitch>
+                                </MudMenuItem>
+                            </MudMenu>
+                        </div>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Start Date">
+                        @context.SchoolGrade
+                    </MudTd>
+                    <MudTd DataLabel="Actions" Style="text-align: right">
+                        @if (_canEdit || _canDelete || _canCreateChat || _canSendMessage)
+                        { 
+                            <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                @if (_canEdit)
+                                { 
+                                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/schoolgrades/update/{context.SchoolGradeId}")">Edit</MudMenuItem>
+                                }
+                                @if (_canDelete)
+                                { 
+                                    <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteSchoolGrade(@context.SchoolGradeId!))">Delete</MudMenuItem>
+                                } 
+                                @if (_canCreateChat)
+                                {
+                                    <MudMenuItem Icon="@Icons.Material.Filled.Message" Href="#">Create Chat</MudMenuItem>                                    
+                                }
+                                @if (_canSendMessage)
+                                {
+                                    <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.Grade)}/messages/create/{context.SchoolGradeId}")">Message</MudMenuItem>                                    
+                                }
+                            </MudMenu>
+                        }
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        }
+        
+    </MudItem>
+</MudGrid>

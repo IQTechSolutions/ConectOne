@@ -1,0 +1,55 @@
+@page "/affiliates/create"
+@using AdvertisingModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<EditForm Model="_affiliate" OnValidSubmit="CreateAsync">
+    <MudGrid>
+        <MudItem md="6">
+            <DefaultTitle Title="Create Advertisement" Caption="Complete information to create new advertisement" />
+        </MudItem>
+        <MudItem md="6" Style="float:right">
+            <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+        </MudItem>
+        <MudItem md="12">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="12" md="3" lg="3">
+                    <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@(_affiliate.Title)" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Advertisement)" ParentId="@_affiliate.Id" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="9" lg="9">
+                    <MudCard>
+                        <MudCardHeader>
+                            <MudText Align="Align.Center" Typo="Typo.h6">Advertisement Information</MudText>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem md="12">
+                                    <MudTextField Label="Title" Class="mt-3" @bind-Value="_affiliate.Title" For="@(() => _affiliate.Title)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem md="12">
+                                    <MudTextField T="string" Label="Description" Class="mt-3" @bind-Value="_affiliate.Description" Margin="Margin.Dense" Variant="Variant.Outlined" Lines="3" />
+                                </MudItem>
+                                <MudItem md="12">
+                                    <MudTextField Label="Url" Class="mt-3" @bind-Value="_affiliate.Url" For="@(() => _affiliate.Url)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

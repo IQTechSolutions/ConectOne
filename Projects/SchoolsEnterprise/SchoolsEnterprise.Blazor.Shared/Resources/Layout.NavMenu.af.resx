@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActiveEvents" xml:space="preserve">
+    <value>Aktiewe Gebeurtenisse</value>
+  </data>
+  <data name="Activities" xml:space="preserve">
+    <value>Aktiwiteite</value>
+  </data>
+  <data name="Advertising" xml:space="preserve">
+    <value>Advertering</value>
+  </data>
+  <data name="Affiliates" xml:space="preserve">
+    <value>Geaffilieerdes</value>
+  </data>
+  <data name="AgeGroups" xml:space="preserve">
+    <value>Ouderdomsgroepe</value>
+  </data>
+  <data name="AllLearners" xml:space="preserve">
+    <value>Alle Leerders</value>
+  </data>
+  <data name="AdminUsers" xml:space="preserve">
+    <value>Administrateurgebruikers</value>
+  </data>
+  <data name="ArchivedEvents" xml:space="preserve">
+    <value>Gearchiveerde Gebeurtenisse</value>
+  </data>
+  <data name="Business" xml:space="preserve">
+    <value>Besigheid</value>
+  </data>
+  <data name="BusinessListings" xml:space="preserve">
+    <value>Besigheidslyste</value>
+  </data>
+  <data name="Calendar" xml:space="preserve">
+    <value>Kalender</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Kategorieë</value>
+  </data>
+  <data name="Commerce" xml:space="preserve">
+    <value>Handel</value>
+  </data>
+  <data name="Communication" xml:space="preserve">
+    <value>Kommunikasie</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Beheerpaneel</value>
+  </data>
+  <data name="DiciplinarySetup" xml:space="preserve">
+    <value>Dissiplinêre Opstelling</value>
+  </data>
+  <data name="DisciplinaryActions" xml:space="preserve">
+    <value>Dissiplinêre Aksies</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Gebeurtenisse</value>
+  </data>
+  <data name="Feeds" xml:space="preserve">
+    <value>Nuusvoere</value>
+  </data>
+  <data name="GlobalMessage" xml:space="preserve">
+    <value>Globale Boodskap</value>
+  </data>
+  <data name="Learners" xml:space="preserve">
+    <value>Leerders</value>
+  </data>
+  <data name="Listings" xml:space="preserve">
+    <value>Lyste</value>
+  </data>
+  <data name="LiveChats" xml:space="preserve">
+    <value>Regstreekse Kletse</value>
+  </data>
+  <data name="MainMenu" xml:space="preserve">
+    <value>Hoofkieslys</value>
+  </data>
+  <data name="ManageUsers" xml:space="preserve">
+    <value>Bestuur Gebruikers</value>
+  </data>
+  <data name="OpenEvents" xml:space="preserve">
+    <value>Oop Gebeurtenisse</value>
+  </data>
+  <data name="Parents" xml:space="preserve">
+    <value>Ouers</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Produkte</value>
+  </data>
+  <data name="QuickAccess" xml:space="preserve">
+    <value>Vinnige Toegang</value>
+  </data>
+  <data name="Reviews" xml:space="preserve">
+    <value>Resensies</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rolle</value>
+  </data>
+  <data name="SchoolGrades" xml:space="preserve">
+    <value>Skoolgrade</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Dienste</value>
+  </data>
+  <data name="SeverityScales" xml:space="preserve">
+    <value>Ernstigheidskale</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Personeel</value>
+  </data>
+  <data name="SystemInfo" xml:space="preserve">
+    <value>Stelselinligting</value>
+  </data>
+  <data name="Tiers" xml:space="preserve">
+    <value>Vlakke</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Gebruikers</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Skep</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Lys</value>
+  </data>
+  <data name="Shops" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+</root>

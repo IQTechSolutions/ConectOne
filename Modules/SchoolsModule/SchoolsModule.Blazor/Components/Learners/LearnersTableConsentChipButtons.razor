@@ -1,0 +1,64 @@
+﻿@using MessagingModule.Domain.Enums
+@using MudBlazor
+@if (!_loaded)
+{
+    <td>
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    </td>
+    <td>
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    </td>
+}
+else
+{
+   @*  Attendance Consent Chip *@
+   <td>
+       @if (Event.AttendanceConsentRequired)
+       {
+           if (Learner.FirstName == "Liney")
+           {
+               var b = 0;
+           }
+
+           if (_schoolEventPermissions.RequireAttendanceConsent)
+           {
+                <MudChip T="string" Icon="@Icons.Material.Filled.Send" Color="Color.Primary" OnClick="@(() => OnResendAttendanceRequest(Learner.LearnerId, Learner.FirstName + " " + Learner.LastName, Event.EventId, Event.Name, Event.StartDate))">Resend Requests</MudChip>
+                
+           }
+           else
+           {
+               if (_schoolEventPermissions.AttendanceConsent)
+               {
+                   <MudChip T="string" Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="@(() => OnRemoveConsent(Learner.LearnerId, Event.EventId, ConsentTypes.Attendance))">Consent Given</MudChip>
+               }
+               else
+               {
+                    <MudChip T="string" Icon="@Icons.Material.Filled.Error" Color="Color.Error" OnClick="@(() => OnRemoveConsent(Learner.LearnerId, Event.EventId, ConsentTypes.Attendance))">Consent Denied</MudChip>
+               }
+           }
+       }
+   </td>
+
+   @* Transport Constent Chip *@
+   <td>
+       
+       @if (Event.TransportPermissionRequired && _schoolEventPermissions.AttendanceConsent)
+       {
+           if (_schoolEventPermissions.RequireTransportConsent)
+           {
+               <MudChip T="string" Icon="@Icons.Material.Filled.Send" Color="Color.Primary" OnClick="@(() => OnResendTransportRequest(Learner.LearnerId, Learner.FirstName + " " + Learner.LastName, Event.EventId, Event.Name, Event.StartDate))">Resend Requests</MudChip>
+           }
+           else
+           {
+               if (_schoolEventPermissions.TransportConsent)
+               {
+                   <MudChip T="string" Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="@(() => OnRemoveConsent(Learner.LearnerId, Event.EventId, ConsentTypes.Transport))">Consent Given</MudChip>
+               }
+               else
+               {
+                   <MudChip T="string" Icon="@Icons.Material.Filled.Error" Color="Color.Error" OnClick="@(() => OnRemoveConsent(Learner.LearnerId, Event.EventId, ConsentTypes.Transport))">Consent Denied</MudChip>
+               }
+           }
+       }
+   </td>
+}

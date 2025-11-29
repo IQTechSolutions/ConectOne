@@ -1,0 +1,220 @@
+@using SchoolsEnterprise.Blazor.Shared.Components
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@inject IStringLocalizer<NavMenu> Localizer
+
+<UserCard />
+
+<MudNavMenu>
+
+    <MudListSubheader Icon="@Icons.Material.Outlined.Event" Class="mt-2 mb-n2"><strong>@Localizer["MainMenu"]</strong></MudListSubheader>
+
+    <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/dashboard", true))" Icon="@Icons.Material.Outlined.Dashboard">@Localizer["Dashboard"]</MudNavLink>
+    
+    @if (_canViewMessages || _canViewChats)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.Notifications" Title="@Localizer["Communication"]" Expanded="false">
+            @if (_canViewMessages)
+            {
+                <MudNavLink OnClick="NavigateToGlobalMessages">@Localizer["GlobalMessage"]</MudNavLink>
+            }
+            @if (_canViewChats)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/chats", true))">@Localizer["LiveChats"]</MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+    @if (_canViewCalendar)
+    {
+        <MudNavLink Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => NavigationManager.NavigateTo("/calendar", true))">@Localizer["Calendar"]</MudNavLink>
+    }
+
+    @if (_canViewCalendar)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.EventAvailable" Title="@Localizer["Events"]" Expanded="false">
+            <MudNavLink Match="NavLinkMatch.All" OnClick="@(() => NavigationManager.NavigateTo("/events", true))">@Localizer["OpenEvents"]</MudNavLink>
+            <MudNavLink Match="NavLinkMatch.All" OnClick="@(() => NavigationManager.NavigateTo("/events/active", true))">@Localizer["ActiveEvents"]</MudNavLink>
+            <MudNavLink Match="NavLinkMatch.All" OnClick="@(() => NavigationManager.NavigateTo("/events/archived", true))">@Localizer["ArchivedEvents"]</MudNavLink>
+        </MudNavGroup>        
+    }
+
+    <MudListSubheader Class="mt-2 mb-n2"><strong>@Localizer["SystemInfo"]</strong></MudListSubheader>
+    
+    @if (_canViewLearners || _canViewAgeGroups || _canViewschoolGrades || _canViewDisciplinaryActions || _canViewDisciplinaryActions || _canViewDiciplanarySeverityScale)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.EventAvailable" Title="@Localizer["Learners"]" Expanded="false">
+            @if (_canViewLearners)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/learners", true))">@Localizer["AllLearners"]</MudNavLink>
+            }
+            @if (_canViewAgeGroups)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/agegroups", true))">@Localizer["AgeGroups"]</MudNavLink>
+            }
+            @if (_canViewschoolGrades)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/schoolgrades", true))">@Localizer["SchoolGrades"]</MudNavLink>
+            }
+            @if (_canViewDisciplinaryActions || _canViewDiciplanarySeverityScale)
+            {
+                <MudNavGroup Title="@Localizer["DiciplinarySetup"]" Expanded="false">
+                    @if (_canViewDisciplinaryActions)
+                    {
+                        <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/discipline/actions", true))">@Localizer["DisciplinaryActions"]</MudNavLink>
+                    }
+                    @if (_canViewDiciplanarySeverityScale)
+                    {
+                        <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/discipline/scales", true))">@Localizer["SeverityScales"]</MudNavLink>
+                    }
+                </MudNavGroup>
+            }
+        </MudNavGroup>
+    }
+    
+    @if (_canViewParents)
+    {
+        <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/parents", true))" Icon="@Icons.Material.Outlined.People">@Localizer["Parents"]</MudNavLink>
+    }
+    
+    @if (_canViewStaff)
+    {
+        <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/teachers", true))" Icon="@Icons.Material.Outlined.PeopleAlt">@Localizer["Staff"]</MudNavLink>
+    }
+    
+    @if (_canViewActivities || _canViewActivityCategories)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.LocalActivity" Title="@Localizer["Activities"]" Expanded="false">
+            @if (_canViewActivities)
+            {
+                <ActivityGroupsDynamicMenu/>
+            }
+            @if (_canViewActivityCategories)
+            {
+                <MudNavLink OnClick="NavigateToAllCategories">@Localizer["Categories"]</MudNavLink>
+            }
+        </MudNavGroup>
+    }
+    else
+    {
+        <ActivityGroupsDynamicMenu />
+    }
+    
+    <ManagementRoleMenuPartial/>
+    
+    @if (_canViewBlogEntries || _canViewBlogEntryCategories)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.List" Title="@($"{@ConnectsText} & {Localizer["Feeds"]}")" Expanded="false">
+            @if (_canViewBlogEntryCategories)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/evers/categories", true))">@Localizer["Categories"]</MudNavLink>
+            }
+            @if (_canViewBlogEntries)
+            {
+                <BlogCategoriesDynamicMenu />
+            }
+        </MudNavGroup>
+    }
+
+    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseEcommerceModule") && (_canViewProducts || _canViewProductCatgories || _canViewServices))
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.PointOfSale" Title="@Localizer["Commerce"]" Expanded="false">
+            @* <MudNavLink Href="/brands">Brands</MudNavLink> *@
+            @if (_canViewProductCatgories)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/products/categories", true))">@Localizer["Categories"]</MudNavLink>
+            }
+            @if (_canViewProducts)
+            {
+                if (_shopOwners.Any())
+                {
+                    <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/products", true))">@Localizer["Shops"]</MudNavLink>
+                }
+                else
+                {
+                    <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/products", true))">@Localizer["Products"]</MudNavLink>
+                }
+            }
+            @if (_canViewServices)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/services", true))">@Localizer["Services"]</MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseBusinessListingModule") == true)
+    {
+        @if (CanViewAdvertisingMenu || CanViewBusinessListingMenu || _canViewAffiliates)
+        {
+            <MudNavGroup Icon="@Icons.Material.Outlined.Business" Title="@Localizer["Business"]" Expanded="false">
+                @if (CanViewAdvertisingMenu)
+                {
+                    <MudNavGroup Title="@Localizer["Advertising"]" Expanded="false">
+                        @if (_canViewAdvertisements)
+                        {
+                            <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/advertisements", true))">@Localizer["Advertisements"]</MudNavLink>
+                        }
+                        @* @if (_canViewAdvertisementReviews)
+                        {
+                            <MudNavLink OnClick="@(() => { NavigationManager.NavigateTo($"/advertisements/{_userId}/reviews"); })">@Localizer["Reviews"]</MudNavLink>
+                        } *@
+                        @if (_canViewAdvertisementTiers)
+                        {
+                            <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/advertisement_tiers", true))">@Localizer["Tiers"]</MudNavLink>
+                        }
+                    </MudNavGroup>
+                }
+                @if (CanViewBusinessListingMenu)
+                {
+                    <MudNavGroup Title="@Localizer["BusinessListings"]" Expanded="false">
+                        @if (_canViewBusinessListings)
+                        {
+                            <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/businesslistings", true))">@Localizer["Listings"]</MudNavLink>
+                        }
+                        @* @if (_canViewBusinessListingReviews)
+                        {
+                            <MudNavLink OnClick="@(() => { NavigationManager.NavigateTo($"/businesslistings/{_userId}/reviews"); })">@Localizer["Reviews"]</MudNavLink>                            
+                        } *@
+                        @if (_canViewBusinessListingTiers)
+                        {
+                            <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/listing_tiers", true))" >@Localizer["Tiers"]</MudNavLink>
+                        }
+                        @if (_canViewBusinessListingCategories)
+                        {
+                            <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/businessdirectory/categories", true))">@Localizer["Categories"]</MudNavLink>
+                        }
+                    </MudNavGroup>
+                }
+                @if (_canViewAffiliates)
+                {
+                    <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/affiliates", true))">@Localizer["Affiliates"]</MudNavLink>
+                }
+            </MudNavGroup>
+        }
+    }
+    else if (_canViewAdvertisements)
+    {
+        <MudNavLink Icon="@Icons.Material.Outlined.FolderSpecial" OnClick="@(() => NavigationManager.NavigateTo("/advertisements", true))">@Localizer["Advertisements"]</MudNavLink>
+    }
+    
+    @if (_canViewUserRples || _canViewUsers)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.VerifiedUser" Title="@Localizer["ManageUsers"]" Expanded="false">
+            @if (_canViewUserRples)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/security/roles", true))">@Localizer["Roles"]</MudNavLink>
+            }
+            @if (_canViewUsers)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/registrations/users", true))">@Localizer["AdminUsers"]</MudNavLink>
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/registrations/users", true))">@Localizer["Users"]</MudNavLink>
+            }
+        </MudNavGroup>
+    }
+</MudNavMenu>

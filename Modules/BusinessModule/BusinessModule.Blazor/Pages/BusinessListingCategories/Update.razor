@@ -1,0 +1,272 @@
+@page "/businessdirectory/categories/update/{CategoryId}"
+
+@using BusinessModule.Blazor.Components.BusinessCategories
+@using BusinessModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Constants
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    @@import url('https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css');
+
+    .mud-input-control.mud-select:not(.mud-input-control-full-width),
+    .mud-select > .mud-popover:not(.mud-popover-full-width) {
+        flex-grow: 2;
+        max-width: 750px !important;
+    }
+
+    .mud-popover {
+        max-width: 750px !important;
+    }
+
+    .iconDropDown .mud-input > input.mud-input-root,
+    div.mud-input-slot.mud-input-root {
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #424242;
+        color: #ffffff;
+        object-fit: contain;
+    }
+
+    .icon-option__preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    .icon-option__preview i {
+        font-size: 1.8rem;
+        line-height: 1;
+    }
+
+    .icon-option__preview--value {
+        width: 40px;
+        height: 40px;
+    }
+
+    .icon-placeholder {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .icon-select {
+        position: relative;
+        max-height:100px;
+    }
+
+    .icon-select__input .mud-input-slot {
+        padding-left: 64px;
+    }
+
+    .icon-select__value {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background-color: #424242;
+        color: #ffffff;
+        pointer-events: none;
+        transition: background-color 0.2s ease;
+    }
+
+        .icon-select__value img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .icon-select__value i {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+    .icon-select__value--placeholder {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+        background-color: transparent;
+    }
+
+    .iconDropDown .mud-input-slot .mud-input-root {
+        color: transparent;
+        caret-color: transparent;
+    }
+
+    .iconDropDown .mud-input-slot {
+        color: transparent;
+    }
+
+        .iconDropDown .mud-input-slot .mud-input-root::selection {
+            background: transparent;
+        }
+
+
+
+    .icon-select__menu .mud-list .mud-list-item {
+        justify-content: center;
+    }
+
+    .icon-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .icon-option__preview {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #424242;
+        color: #ffffff;
+        object-fit: contain;
+    }
+
+        .icon-option__preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .icon-option__preview i {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+    .icon-option__label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.87);
+        word-break: break-word;
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+</style>
+
+<EditForm Model="_category" OnValidSubmit="UpdateAsync" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Update Category" Caption="Please change the following information to update an existing category" />
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <MudGrid>
+        <MudItem xs="12" sm="12">
+            <MudTabs>
+                <MudTabPanel Text="Details">
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="4" lg="3">
+                            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_category.Name" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(BusinessListing)" ParentId="@_category.CategoryId"/>
+                        </MudItem>
+                        <MudItem xs="12" sm="12" md="8" lg="9">
+                            <MudCard>
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem xs="12">
+                                            <MudTextField T="string" Label="Category Name" Class="mt-3" @bind-Value="_category.Name" For="@(() => _category.Name)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                            <MudItem sm="12" md="3" lg="3" xl="2">
+                                            <div class="icon-select">
+                                                <MudSelect T="string" Class="iconDropDown icon-select__input" Value="_category.IconImageUrl" ValueChanged="IconChanged" Label="Icon" Dense="false" FitContent="true" MenuClass="icon-select__menu">
+                                                    <ChildContent>
+                                                        <MudGrid Class="icon-select__grid" Spacing="2">
+                                                            @foreach (var icon in CustomIcons.IconOptions)
+                                                            {
+                                                                <MudItem xs="4" sm="3" md="2" lg="2">
+                                                                    <MudSelectItem Value="icon.Value">
+                                                                        <div class="icon-option">
+                                                                            @if (CustomIcons.IsFontIcon(icon.Value))
+                                                                            {
+                                                                                <span class="icon-option__preview">
+                                                                                    <i class="@CustomIcons.GetCssClass(icon.Value)" aria-hidden="true"></i>
+                                                                                </span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="icon-option__preview">
+                                                                                    <img src="@icon.Value" alt="@icon.DisplayName" />
+                                                                                </span>
+                                                                            }
+                                                                            <span class="icon-option__label">@icon.DisplayName</span>
+                                                                        </div>
+                                                                    </MudSelectItem>
+                                                                </MudItem>
+                                                            }
+                                                        </MudGrid>
+                                                    </ChildContent>
+                                                </MudSelect>
+                                            </div>
+                        </MudItem>
+                                        <MudItem sm="12" md="9" lg="9" xl="10">
+                                            <MudTextField T="string" Label="Short Description" @bind-Value="@_category.Description" Lines="3" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem xs="12" md="12">
+                                            <MudTextField T="string" Label="Tags" Text="@_category.WebTags" Lines="3" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="12">
+                                            <div class="d-flex">
+                                                <MudSwitch @bind-Value="@_category.Active" Color="Color.Warning" Style="margin-left: 5px;">Active</MudSwitch>
+                                                <MudSwitch @bind-Value="@_category.Featured" Color="Color.Warning" Style="margin-left: 5px;">Featured</MudSwitch>
+                                                <MudSwitch @bind-Value="@_category.DisplayAsMenuItem" Color="Color.Warning" Style="margin-left: 5px;">Menu Item</MudSwitch>
+                                                <MudSwitch @bind-Value="@_category.DisplayAsSliderItem" Color="Color.Warning" Style="margin-left: 5px;">Slider Item</MudSwitch>
+                                            </div>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+                <MudTabPanel Text="Sub-Categories">
+                    <BusinessCategoriesTable CreateUrl="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/businessdirectory/categories/create/{_category.CategoryId}")" ParentId="@_category.CategoryId" />
+                </MudTabPanel>
+            </MudTabs>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

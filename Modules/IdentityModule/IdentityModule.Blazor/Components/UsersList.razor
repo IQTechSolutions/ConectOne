@@ -1,0 +1,95 @@
+﻿@using IdentityModule.Application.ViewModels
+@using IdentityModule.Domain.Extensions
+@using MudBlazor
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+
+
+@if (!_loaded)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudTable ServerData="GetUsersAsync" Hover="true" Elevation="25" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_userTable">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreateUsers)
+                {
+                    @* <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Register New User</MudButton> *@
+                    <MudButton Variant="Variant.Filled" OnClick="ReloadTable" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+                    @if (_canExportUsers)
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="ExportToExcel" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 10px;">Export</MudButton>
+                    }
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="ReloadTable" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+                    @if (_canExportUsers)
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="ExportToExcel" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 10px;">Export</MudButton>
+                    }
+                }
+            </div>
+            <MudSpacer />
+            @if (_canSearchUsers)
+            {
+                <MudTextField @bind-Value="_pageParameters.SearchText" Placeholder="Search" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
+
+                <MudButton Variant="Variant.Filled" OnClick="ReloadTable" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">Search</MudButton>
+            }
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.FirstName)">First Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.LastName)">Last Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.EmailAddress)">Email</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<UserInfoViewModel, object>(x => x.PhoneNr)">PhoneNumber</MudTableSortLabel></MudTh>
+            <MudTh Style="text-align:right">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="FirstName">
+                <MudHighlighter Text="@context.FirstName" HighlightedText="@_searchString" />
+            </MudTd>
+             <MudTd DataLabel="LastName">
+                <MudHighlighter Text="@context.LastName" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="Email">
+                <MudHighlighter Text="@context.EmailAddress" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="PhoneNumber">
+                <MudHighlighter Text="@context.PhoneNr" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="Actions" Style="text-align:right">
+                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.CenterLeft">
+                   <MudMenuItem OnClick="(()=>ViewProfile(context.UserId!))">View Profile</MudMenuItem> 
+                    @if (_canViewRoles)
+                    {
+                        <MudMenuItem OnClick="(()=>ManageRoles(context.UserId!, context.EmailAddress))">Manage Roles</MudMenuItem>
+                    }
+                    @if (_currentUser.GetUserId() != context.UserId)
+                    {
+                        <MudMenuItem OnClick="(()=>DeleteBlogEntry(context.UserId!))">Remove User</MudMenuItem>
+                    }
+                </MudMenu>
+            </MudTd> 
+        </RowTemplate>
+        <FooterContent>
+            <MudTd colspan="7">
+                <div class="d-flex">
+                    <MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+                    <MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                    <MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                </div>
+            </MudTd>
+        </FooterContent>
+        <PagerContent>
+            <MudTablePager/>
+        </PagerContent>
+    </MudTable>
+}

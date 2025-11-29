@@ -1,0 +1,8 @@
+﻿@using MudBlazor
+
+@foreach (var item in _rolesToDisplayInMenu)
+{
+    <MudNavGroup Icon="@Icons.Material.Outlined.LocalActivity" Title="@item.Name" Expanded="false">
+        <MudNavLink OnClick="@(() => NavigationManager.NavigateTo($"roles/managed/user/dashboard/{item.Id}"))">Members</MudNavLink>
+    </MudNavGroup>
+}

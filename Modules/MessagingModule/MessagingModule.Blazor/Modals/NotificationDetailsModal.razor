@@ -1,0 +1,29 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudDialog>
+
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Message" Class="mr-3 mb-n1"/>
+            Message Details
+        </MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <MudGrid>
+            <MudItem>
+                <MudText Typo="Typo.h6">
+                    @_notification.Title
+                </MudText>
+            </MudItem>
+            <MudItem>
+                <MudText Color="Color.Default" Typo="Typo.subtitle1" Style="font-weight: 300; text-align:center; width:100%;">@_notification.Message.HtmlToPlainText()</MudText>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Ok</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="NotifyAsync" Color="Color.Success">Notify Again</MudButton>
+    </DialogActions>
+</MudDialog>

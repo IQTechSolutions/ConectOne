@@ -1,0 +1,16 @@
+@page "/products/categories"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using ProductsModule.Blazor.Components.ProductCategories
+
+@attribute [Authorize]
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Product Categories" Caption="@($"All product categories offered at {@Configuration["ApplicationConfiguration:ApplicationName"]}")" />
+
+<ProductCategoriesTable CreateUrl="/products/categories/create" />

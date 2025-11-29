@@ -1,0 +1,100 @@
+﻿@page "/teachers"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using SchoolsModule.Application.ViewModels
+@using SchoolsModule.Blazor.Components.Teachers
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Teachers" Caption="All available school teachers" />
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+     <MudTable Elevation="25" ServerData="ServerReload" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreate)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/teachers/create" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>               
+                }
+                <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+            </div>
+            <MudSpacer />
+            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search Events" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel T="TeacherViewModel" SortLabel="Title">Title</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="TeacherViewModel" SortLabel="FirstName">First Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="TeacherViewModel" SortLabel="LastName">Last Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="TeacherViewModel" SortLabel="PhoneNr">Phone Nr</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="TeacherViewModel" SortLabel="Email">Email</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="TeacherViewModel" SortLabel="Grade">Grade</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="TeacherViewModel" SortLabel="Class">Class</MudTableSortLabel></MudTh>
+            <MudTh>
+                <div style="float:right">
+                    <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                        <MudMenuItem @onclick="() => _dense = !_dense">
+                            <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                                Dense
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _striped = !_striped">
+                            <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                                Striped
+                            </MudSwitch>
+                        </MudMenuItem>
+                        <MudMenuItem @onclick="() => _bordered = !_bordered">
+                            <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                                Bordered
+                            </MudSwitch>
+                        </MudMenuItem>
+                    </MudMenu>
+                </div>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Title">
+                @context.Title
+            </MudTd>
+            <MudTd DataLabel="First Name">
+                <MudHighlighter Text="@context.FirstName" HighlightedText="@args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Last Name">
+                <MudHighlighter Text="@context.LastName" HighlightedText="@args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Grade">
+                <MudHighlighter Text="@context.ContactNumber?.Number" HighlightedText="@args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Class">
+                <MudHighlighter Text="@context.EmailAddress?.EmailAddress" HighlightedText="@args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Grade">
+                <MudHighlighter Text="@context.Grade?.SchoolGrade" HighlightedText="@args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Class">
+                <MudHighlighter Text="@context.Class?.SchoolClass" HighlightedText="@args.SearchText" />
+            </MudTd>
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                <TeachersTableActionsMenu TeacherId="@context.TeacherId" RemoveTeacher="DeleteTeacher"/>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+}

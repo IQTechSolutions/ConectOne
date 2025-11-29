@@ -1,0 +1,74 @@
+﻿@using MudBlazor
+@using ProductsModule.Domain.DataTransferObjects
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<MudGrid>
+    <MudItem md="12">
+        <MudTable Elevation="25" Items="_products" Hover="true" Dense="@_dense" Bordered="@_bordered" Striped="@_striped">
+            <ToolBarContent>
+                <div class="justify-center mud-text-align-center">
+                    <MudSpacer />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async () => await CreateProductAttribute())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+                </div>
+            </ToolBarContent>
+            
+                <HeaderContent>
+            @if (ShowHeaders)
+            {
+                    <MudTh><MudTableSortLabel T="ProductDto" SortLabel="Name">Name</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel T="ProductDto" SortLabel="Details.Sku">SKU</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel T="ProductDto" SortLabel="Pricing.PriceIncl">Price</MudTableSortLabel></MudTh>
+                    <MudTh>
+                        <div style="float:right">
+                            <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                                <MudMenuItem><MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch></MudMenuItem>
+                                <MudMenuItem><MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch></MudMenuItem>
+                                <MudMenuItem><MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">Bordered</MudSwitch></MudMenuItem>
+                            </MudMenu>
+                        </div>
+                    </MudTh>
+            }
+                </HeaderContent>
+            
+            
+            <RowTemplate>
+                <MudTd DataLabel="Name">
+                    @context.DisplayName
+                </MudTd>
+                <MudTd DataLabel="SKU">
+                    @context.Sku
+                </MudTd>
+                <MudTd DataLabel="Price">
+                    @context.Pricing.PriceIncl
+                </MudTd>
+                <MudTd DataLabel="Actions" Style="text-align: right">
+                    <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => ShowDetails(context))">Show Attributes</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => UpdateProductAttribute(context))">Edit</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteProductAttribute(context.ProductId))">Delete</MudMenuItem>
+                    </MudMenu>
+                </MudTd>
+            </RowTemplate>
+            <ChildRowContent>
+                @if(context.ShowAttributes)
+                {
+                    <td colspan="5" style="padding-bottom:20px; padding-left:20px;">
+                        <MudCard>
+                            <MudCardContent Class="pa-0">
+                                <ProductAttributeTable ProductId="@context.ProductId" ShowHeaders="false"/>
+                            </MudCardContent>
+                        </MudCard>
+                    </td>
+                }			
+            </ChildRowContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>

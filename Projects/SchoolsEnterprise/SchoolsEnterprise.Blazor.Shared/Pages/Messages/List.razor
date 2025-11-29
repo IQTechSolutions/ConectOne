@@ -1,0 +1,24 @@
+﻿@page "/messages"
+@page "/messages/bytype/{MessageType:int}"
+@page "/messages/bytype/{MessageType:int}/{EntityId}"
+
+@using ConectOne.Blazor.Components
+@using MessagingModule.Blazor.Components.Messages
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using NeuralTech.Base.Enums
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="@(((MessageType)MessageType).ToString())" Caption="@($"All available {((MessageType)MessageType).ToString()} messages")" />
+
+<MessagesTable EntityId="@EntityId" MessageType="MessageType" SendPushNotification="SendPushNotification"></MessagesTable>

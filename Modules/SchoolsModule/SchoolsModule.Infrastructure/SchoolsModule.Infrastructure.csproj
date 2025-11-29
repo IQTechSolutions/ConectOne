@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Vendors\Google\GoogleCalendar\GoogleCalendar.csproj" />
+    <ProjectReference Include="..\..\Base\ConectOne.Infrastructure\ConectOne.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Domain\FilingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Infrastucture\FilingModule.Infrastucture.csproj" />
+    <ProjectReference Include="..\..\GroupingModule\GroupingModule.Domain\GroupingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\GroupingModule\GroupingModule.Infrastructure\GroupingModule.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\MessagingModule\MessagingModule.Infrastructure\MessagingModule.Infrastructure.csproj" />
+    <ProjectReference Include="..\SchoolsModule.Domain\SchoolsModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

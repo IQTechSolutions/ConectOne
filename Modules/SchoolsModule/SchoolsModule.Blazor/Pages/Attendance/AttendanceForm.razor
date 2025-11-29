@@ -1,0 +1,8 @@
+﻿@page "/attendance-form/{GroupId}/{AttendanceType:int}"
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using SchoolsModule.Domain.Enums
+
+<DefaultTitle Title="Attendance Form" Caption="@($"All attendance forms  for { ((AttendanceType)AttendanceType).GetDescription() }")" />
+
+<AttendanceList GroupId="@GroupId" Date="@DateTime.Now" AttendanceType="@((AttendanceType)AttendanceType)" GroupName="@(((AttendanceType)AttendanceType).GetDescription())" />

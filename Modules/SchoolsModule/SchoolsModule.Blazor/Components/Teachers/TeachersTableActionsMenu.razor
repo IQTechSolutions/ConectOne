@@ -1,0 +1,24 @@
+﻿@using MudBlazor
+@using NeuralTech.Base.Enums
+
+<MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+    @if (_canEdit)
+    {
+        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/teachers/update/{TeacherId}")">Edit</MudMenuItem>
+    }
+    @if (_canDelete && IsRemoveTeacherSet)
+    {
+        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="OnRemoveLearner">Delete</MudMenuItem>
+    }
+    @if (_userInfo is not null)
+    {
+        @if (_canCreateChat)
+        {
+            <MudMenuItem Icon="@Icons.Material.Filled.Message" Href="#">Create Chat</MudMenuItem>
+        }
+        @if (_canAddMessage)
+        {
+            <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="@($"/{Enum.GetName(typeof(MessageType), MessageType.Teacher)}/messages/create/{TeacherId}")">New Message</MudMenuItem>
+        }
+    }
+</MudMenu>

@@ -1,0 +1,143 @@
+@page "/products/update/{ProductId}"
+
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using Microsoft.AspNetCore.Components.Forms
+@using FilingModule.Domain.Enums
+@using GroupingModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<EditForm Model="_product" OnValidSubmit="UpdateAsync">
+    <MudGrid>
+
+        <MudItem md="6">
+            <DefaultTitle Title="Update Product" Caption="Change product information"/>
+        </MudItem>
+
+        <MudItem md="6" Style="float:right">
+            <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+        </MudItem>
+
+        <MudItem md="12">
+            <DataAnnotationsValidator/>
+            <MudTabs>
+
+                <MudTabPanel Text="Details">
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="3" lg="3">
+                            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_product.Details.Name" Src="@_imageSource" ImageType="UploadType.Cover" TEntity="typeof(Product)" ParentId="@_product.ProductId" />
+                        </MudItem>
+                        <MudItem xs="12" sm="12" md="9" lg="9">
+                            <MudCard>
+                                <MudCardHeader>
+                                    <MudText Align="Align.Center" Typo="Typo.h6">Product Information</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem md="6">
+                                            <MudTextField Label="Name" Class="mt-3" @bind-Value="_product.Details.Name" For="@(() => _product.Details.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="6">
+                                            <MudTextField Label="Display Name" Class="mt-3" @bind-Value="_product.Details.DisplayName" For="@(() => _product.Details.DisplayName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="4">
+                                            <MudTextField Label="SKU" Class="mt-3" @bind-Value="_product.Details.Sku" For="@(() => _product.Details.Sku)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12">
+                                            <MudSelect MultiSelection="true" @bind-SelectedValues="_product.Categories" ToStringFunc="@_categoryConverter" T="CategoryDto" Label="Categories" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                                @foreach (var state in _availableCategories)
+                                                {
+                                                    <MudSelectItem T="CategoryDto" Value="@state">@state.Name</MudSelectItem>
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <MudTextField Label="Short Description" Class="mt-3" @bind-Value="_product.Details.ShortDescription" Lines="3" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <MudTextField Label="Description" Class="mt-3" @bind-Value="_product.Description" Lines="5" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Pricing">
+                    <MudCard>
+                        <MudGrid Style="padding:10px;">
+                            <MudItem md="4">
+                                <MudTextField T="double" Label="Cost of Product" Class="mt-3" @bind-Value="_product.Pricing.CostExcl" For="@(() => _product.Pricing.CostExcl)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem md="4">
+                                <MudTextField T="double" Label="Price (Incl)" Class="mt-3" @bind-Value="_product.Pricing.SellingPrice" For="@(() => _product.Pricing.SellingPrice)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem md="4">
+                                <label class="sq-radio" style="padding-right:20px !important; padding-top:4px;">
+                                    Vatable
+                                    <InputCheckbox @bind-Value="_product.Pricing.Vatable" class="form-control"></InputCheckbox>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudDatePicker Label="Discount End" Class="mt-3" @bind-Date="_product.Pricing.DiscountEndDate" For="@(() => _product.Pricing.DiscountEndDate)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField Label="Discount Percentage" Style="margin-top:7px;" Class="mt-3" @bind-Value="_product.Pricing.DiscountPercentage" For="@(() => _product.Pricing.DiscountPercentage)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField Label="Shipping Ammount" Class="mt-3" @bind-Value="_product.Pricing.ShippingAmount" For="@(() => _product.Pricing.ShippingAmount)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem md="6">
+
+                            </MudItem>
+                        </MudGrid>
+                    </MudCard>
+                </MudTabPanel>
+                
+                <MudTabPanel Text="Images" Style="padding-left:20px;">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudButton Variant="Variant.Filled" OnClick="UploadImageAsync" Color="Color.Primary" FullWidth="true">Add Gallery Image</MudButton>
+                        </MudItem>
+                        @foreach (var item in _galleryImageToUpload)
+                        {
+                            <MudItem xs="12" sm="4" md="3">
+                                <MudGalleryImageCard Image="@(item.Contains("StaticFiles") ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Replace("\\", "/")}" : item)" OnRemoveImage="RemoveOnUploadedImage" />
+                            </MudItem>
+                        }
+                        @foreach (var item in _product.Images.Where(c => c.ImageType == UploadType.Image))
+                        {
+                            <MudItem xs="12" sm="4" md="3">
+                                <MudGalleryImageCard Image="@(item.RelativePath.Contains("StaticFiles") ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.RelativePath.Replace("\\", "/")}" : item.RelativePath)" OnRemoveImage="@(() => RemoveGalleryImage(item.Id))" />
+                            </MudItem>
+                        }
+                    </MudGrid>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Attributes">
+                    <ProductAttributeTable ProductId="@ProductId"/>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Meta Data">
+                    <ProductMetadataTable ProductId="@ProductId" />
+                </MudTabPanel>
+
+            </MudTabs>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+
+    </MudGrid>
+</EditForm>

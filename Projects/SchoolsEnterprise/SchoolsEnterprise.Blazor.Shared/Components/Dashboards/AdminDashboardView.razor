@@ -1,0 +1,185 @@
+@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+
+<MudGrid Class="">
+    <MudItem xs="12">
+        <MudPaper Elevation="2" Class="pa-4 d-flex justify-space-between align-center">
+            <div>
+                <MudText Typo="Typo.h5" Class="fw-bold">School Dashboard</MudText>
+                <MudText Typo="Typo.subtitle2" Class="mud-secondary-text">A quick glance at sales, learners, and campus activity.</MudText>
+            </div>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.EditCalendar" OnClick="@(() => NavigationManager.NavigateTo("/calendar", true))">
+                Go to Calendar
+            </MudButton>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="3">
+        <MudStack Spacing="1">
+            <MudPaper Elevation="6" Class="pa-4 d-flex align-center justify-space-between">
+                <div>
+                    <MudText Typo="Typo.subtitle2" Class="mud-secondary-text">Learners</MudText>
+                    <MudText Typo="Typo.h4">@_learnerSummary.First(s => s.Label == "Total Learners").Count</MudText>
+                </div>
+                <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Large" />
+            </MudPaper>
+            <MudPaper Elevation="6" Class="pa-4 d-flex align-center justify-space-between">
+                <div>
+                    <MudText Typo="Typo.subtitle2" Class="mud-secondary-text">Parents</MudText>
+                    <MudText Typo="Typo.h4">@_learnerSummary.First(s => s.Label == "Parents").Count</MudText>
+                </div>
+                <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Secondary" Size="Size.Large" />
+            </MudPaper>
+            <MudPaper Elevation="6" Class="pa-4 d-flex align-center justify-space-between">
+                <div>
+                    <MudText Typo="Typo.subtitle2" Class="mud-secondary-text">Staff</MudText>
+                    <MudText Typo="Typo.h4">@_learnerSummary.First(s => s.Label == "Staff").Count</MudText>
+                </div>
+                <MudIcon Icon="@Icons.Material.Filled.Badge" Color="Color.Info" Size="Size.Large" />
+            </MudPaper>
+            <MudPaper Elevation="6" Class="pa-4 d-flex align-center justify-space-between">
+                <div>
+                    <MudText Typo="Typo.subtitle2" Class="mud-secondary-text">Club Members</MudText>
+                    <MudText Typo="Typo.h4">@_learnerSummary.First(s => s.Label == "Club Members").Count</MudText>
+                </div>
+                <MudIcon Icon="@Icons.Material.Filled.Groups3" Color="Color.Success" Size="Size.Large" />
+            </MudPaper>
+        </MudStack>
+    </MudItem>
+
+    <MudItem xs="12" md="9">
+        <MudPaper Elevation="2" Class="pa-4">
+            <MudStack Spacing="1">
+                <MudText Typo="Typo.h6">Total Sales</MudText>
+                <MudText Typo="Typo.body2" Class="mud-secondary-text">Monthly totals by shop category with quick insights.</MudText>
+                <MudGrid Class="mt-2" GutterSize="GutterSize.Small">
+                    <MudItem xs="12" md="7">
+                        <MudTable Items="_salesRecords" Dense="true" Hover="true" Elevation="0">
+                            <HeaderContent>
+                                <MudTh>Month</MudTh>
+                                <MudTh>School Clothing Shop</MudTh>
+                                <MudTh>Supporters Gear Shop</MudTh>
+                                <MudTh>School Advertisements</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Month">@context.Month</MudTd>
+                                <MudTd DataLabel="School Clothing Shop">@context.ClothingShop.ToString("C0")</MudTd>
+                                <MudTd DataLabel="Supporters Gear Shop">@context.SupportersGear.ToString("C0")</MudTd>
+                                <MudTd DataLabel="School Advertisements">@context.Advertising.ToString("C0")</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudItem>
+                    <MudItem xs="12" md="5">
+                        <MudGrid GutterSize="GutterSize.Small">
+                            <MudItem xs="6" sm="6">
+                                <MudPaper Class="pa-2" Elevation="1">
+                                    <MudText Typo="Typo.subtitle2" Align="Align.Center">School Clothing Shop</MudText>
+                                    <MudChart ChartType="ChartType.Donut" InputData="_clothingChart" Labels="_pieLabels" Class="mt-1" />
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="6">
+                                <MudPaper Class="pa-2" Elevation="1">
+                                    <MudText Typo="Typo.subtitle2" Align="Align.Center">Supporters Gear Shop</MudText>
+                                    <MudChart ChartType="ChartType.Donut" InputData="_supportersChart" Labels="_pieLabels" Class="mt-1" />
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudPaper Class="pa-2" Elevation="1">
+                                    <MudText Typo="Typo.subtitle2">Business Income</MudText>
+                                    <MudChart ChartType="ChartType.Line" InputData="_incomeChart" Labels="_monthLabels" Class="mt-1" />
+                                </MudPaper>
+                            </MudItem>
+                        </MudGrid>
+                    </MudItem>
+                </MudGrid>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+        <MudPaper Elevation="2" Class="pa-4 h-100">
+            <MudStack Spacing="1">
+                <MudText Typo="Typo.h6">Learners By Gender</MudText>
+                <MudStack Spacing="1">
+                    @foreach (var item in _genderStats)
+                    {
+                        <div class="d-flex align-center justify-space-between">
+                            <MudText Typo="Typo.body1">@item.Label</MudText>
+                            <MudText Typo="Typo.body1">@item.Count</MudText>
+                        </div>
+                        <MudProgressLinear Value="item.Percentage" Color="item.Color" Rounded="true" Class="mb-2" />
+                    }
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+        <MudPaper Elevation="2" Class="pa-4 h-100">
+            <MudStack Spacing="1">
+                <MudText Typo="Typo.h6">Learners By Grade</MudText>
+                <MudStack Spacing="1">
+                    @foreach (var item in _gradeStats)
+                    {
+                        <div class="d-flex align-center justify-space-between">
+                            <MudText Typo="Typo.body1">@item.Grade</MudText>
+                            <MudText Typo="Typo.body1">@item.Count</MudText>
+                        </div>
+                        <MudProgressLinear Value="item.Percentage" Color="Color.Primary" Rounded="true" Class="mb-2" />
+                    }
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+        <MudPaper Elevation="2" Class="pa-4 h-100 d-flex flex-column">
+            <MudText Typo="Typo.h6">Learners By Class Group</MudText>
+            <MudStack Spacing="1" Class="mt-2">
+                @foreach (var item in _classGroupStats)
+                {
+                    <div class="d-flex align-center justify-space-between">
+                        <MudText Typo="Typo.body1">@item.Label</MudText>
+                        <MudText Typo="Typo.body1">@item.Count</MudText>
+                    </div>
+                    <MudProgressLinear Value="item.Percentage" Color="Color.Secondary" Rounded="true" Class="mb-2" />
+                }
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudPaper Elevation="2" Class="pa-4">
+            <MudStack Spacing="1">
+                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h6">Learners Directory</MudText>
+                    <MudText Typo="Typo.caption" Class="mud-secondary-text">Click a learner to view the profile.</MudText>
+                </MudStack>
+                <MudTable Items="_learners" Hover="true" Dense="true" Bordered="true" Breakpoint="Breakpoint.Md" SortLabel="Sort by">
+                    <HeaderContent>
+                        <MudTh>First Name</MudTh>
+                        <MudTh>Last Name</MudTh>
+                        <MudTh>Gender</MudTh>
+                        <MudTh>Grade</MudTh>
+                        <MudTh>Academic Average</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="First Name"><MudLink Href="@($"/learners/{context.Id}")">@context.FirstName</MudLink></MudTd>
+                        <MudTd DataLabel="Last Name">@context.LastName</MudTd>
+                        <MudTd DataLabel="Gender">@context.Gender</MudTd>
+                        <MudTd DataLabel="Grade">@context.Grade</MudTd>
+                        <MudTd DataLabel="Academic Average">@context.AcademicAverage.ToString("P0")</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    
+}

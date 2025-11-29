@@ -1,0 +1,78 @@
+@page "/affiliates"
+
+@using AdvertisingModule.Domain.DataTransferObjects
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Extensions
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using Radzen
+@using Radzen.Blazor
+
+@attribute [Authorize]
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+ <MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="Advertisements" Caption="All available advertisements" />
+    </MudItem>
+    <MudItem md="6" Style="float:right">
+        <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+    </MudItem>
+    <MudItem md="12">
+        <MudAppBar Color="Color.Transparent" Fixed="false" Dense="true" Elevation="0">
+            <MudSpacer />
+            @if (_canCreate)
+            {
+                <MudButton Style="margin-right:10px;" Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Href="/affiliates/create" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+            }
+            
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="@(async () => await Reload())" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+        </MudAppBar>
+    </MudItem>
+    <MudItem md="12">
+        @if (!_loaded)
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        }
+        else
+        {
+            <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" 
+                   PageSize="12" AllowPaging="false" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                   Data="@_affiliates" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single"
+                   @bind-Value=@_selectedAffiliates RowRender="@RowRender">
+                <Columns>
+                    <RadzenDataGridColumn Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center" >
+                        <Template Context="data">
+                            <RadzenImage Path="@(data.Images.ToUrl(UploadType.Cover, Configuration))" Style="height:70px; width:70px;" AlternateText="@(data.Title)" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="@nameof(AffiliateDto.Title)" Title="Title" Frozen="true" />
+                    <RadzenDataGridColumn Property="@nameof(AffiliateDto.Url)" Title="Url" />
+                    <RadzenDataGridColumn TItem="AffiliateDto" Context="order" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="true" FrozenPosition="FrozenColumnPosition.Right">
+                         <Template Context="order">
+                             @if (_canEdit || _canDelete)
+                             {
+                                 <MudMenu Label="Actions" Variant="MudBlazor.Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                     @if (_canEdit)
+                                     {
+                                         <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/affiliates/update/{order.Id}")">Edit</MudMenuItem>
+                                     }
+                                     @if (_canDelete)
+                                     {
+                                         <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteAffiliate(order.Id))">Delete</MudMenuItem>
+                                     }
+                                 </MudMenu>
+                             }
+                         </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        }
+    </MudItem>
+</MudGrid> 

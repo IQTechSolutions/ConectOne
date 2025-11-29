@@ -1,0 +1,98 @@
+﻿@page "/{MessageType}/messages/create"
+@page "/{MessageType}/messages/create/{EntityId}"
+@page "/{MessageType}/messages/create/{EntityId}/{SendNotification}/{PublicMessage}"
+
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Enums
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using NeuralTech.Base.Enums
+@using Radzen.Blazor
+
+@attribute [Authorize]
+
+<MudGrid>
+    <MudItem md="6">
+        <DefaultTitle Title="@(MessageType == "0" ? $"Create New {(MessageType)Convert.ToInt32(MessageType)} Message" : $"Create New {Enum.Parse<MessageType>(MessageType).ToString()} Message")" Caption="@($"Complete the following information to create a new {MessageType} message")" />
+    </MudItem>
+    <MudItem md="6">
+        <MudBreadcrumbs Items="_items" Style="@("float:right")"></MudBreadcrumbs>
+    </MudItem>
+</MudGrid>
+
+<EditForm Model="_notificationMessage" OnValidSubmit="CreateAsync">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem md="6">
+                            <MudRadioGroup @bind-Value="_notificationMessage.Gender">
+                                <MudRadio Value="@(Gender.All)">Default</MudRadio>
+                                <MudRadio Value="@(@Gender.Male)" Color="Color.Primary">Male</MudRadio>
+                                <MudRadio Value="@(@Gender.Female)" Color="Color.Secondary">Female</MudRadio>
+                            </MudRadioGroup>
+                        </MudItem>
+                        <MudItem md="6">
+                            <MudSwitch Style="float:right;" @bind-Value="@_notificationMessage.Public" Color="Color.Error" Label="Public Message" />
+                            <MudSwitch Style="float:right;" @bind-Value="@_notificationMessage.SendNotification" Color="Color.Error" Label="Send Notification"/>
+                        </MudItem>
+                        <MudItem md="12">
+                            <MudTextField Label="@("Message Title")" Class="@("mt-3")" @bind-Value="_notificationMessage.Subject" For="@(() => _notificationMessage.Subject)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                        </MudItem>
+                        <MudItem md="12">
+                            <MudTextField Lines="4" Label="@("Description")" Class="@("mt-3")" @bind-Value="_notificationMessage.ShortDescription" For="@(() => _notificationMessage.ShortDescription)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                        </MudItem>
+                        <MudItem md="12">
+                            <RadzenHtmlEditor @bind-Value=@_notificationMessage.Message style="height: 450px;" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        
+        <MudItem md="12">
+            <MudCard>
+                <MudCardHeader>
+                    <MudText Typo="Typo.h6">Document Links to Include</MudText>                     
+                </MudCardHeader>
+                <MudCardContent>
+                    @if (_notificationMessage.DocumentLinks.Any())
+                    {
+                        <MudList T="string" Dense="@true" DisableGutters="false">
+                            @foreach (var item in _notificationMessage.DocumentLinks)
+                            {
+                                <MudListItem Icon="@Icons.Material.Filled.Attachment">@item.TruncateLongString(85)<MudButton Style="@("float:right")" OnClick="@(() => RemoveDocumentLink(item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error" Class="@("ml-auto")">Delete</MudButton></MudListItem>
+                            }
+                        </MudList>
+                    }
+                    @if (_notificationMessage.Documents.Any())
+                    {
+                        <MudList T="string" Dense="@true" DisableGutters="false">
+                            @foreach (var item in _notificationMessage.Documents)
+                            {
+                                <MudListItem Icon="@Icons.Material.Filled.Attachment">@item.FileName.TruncateLongString(85)<MudButton Style="@("float:right")" OnClick="@(() => RemoveDocumentLink(item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error" Class="@("ml-auto")">Delete</MudButton></MudListItem>
+                            }
+                        </MudList>
+                    }
+                    <MudButton OnClick="CreateNotificationLinkAsync" Variant="Variant.Filled" Color="Color.Tertiary" Class="@MlAuto" FullWidth>Create New Link</MudButton>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="4" lg="4">            
+            <MudButton OnClick="CreateNotificationAndPushAsync" Variant="Variant.Filled" Color="Color.Info" Class="@MlAuto" FullWidth>Create & Send</MudButton>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="4" lg="4">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="@MlAuto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="4" lg="4">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="@MlAuto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

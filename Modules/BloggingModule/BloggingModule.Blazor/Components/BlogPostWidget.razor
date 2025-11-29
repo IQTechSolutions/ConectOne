@@ -1,0 +1,30 @@
+﻿@using MudBlazor
+<style>
+	.mud-table-container {
+		overflow: auto;
+	}
+</style>
+
+<MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@WidgetTitle</MudText>
+
+<MudTable Elevation="25" ServerData="GetBlogPostsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>Featured</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd>@context.Title</MudTd>
+        <MudTd>@context.Featured</MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Color="Color.Primary" Class="px-2 rounded-lg">Read</MudChip>
+        </MudTd>
+    </RowTemplate>
+
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new[] {5, 10, 25, 50, 100 }" />
+    </PagerContent>
+
+</MudTable>

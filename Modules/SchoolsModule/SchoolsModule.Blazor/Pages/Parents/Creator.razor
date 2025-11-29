@@ -1,0 +1,156 @@
+﻿@page "/parents/create"
+
+@using ConectOne.Blazor.Components
+@using ConectOne.Blazor.Components.ContactNumbers
+@using ConectOne.Blazor.Components.EmailAddresses
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using SchoolsModule.Blazor.Components.Learners
+@using SchoolsModule.Domain.Entities
+
+@attribute [Authorize]
+
+<EditForm Model="_parent" OnValidSubmit="CreateAsync">
+    <MudGrid>
+        <!-- Title & Breadcrumb Section -->
+        <MudItem md="6">
+            <!-- Displays a default title with a heading & caption -->
+            <DefaultTitle Title="Create Parent" Caption="Complete or change to update learner information" />
+        </MudItem>
+        <MudItem md="6" Style="float:right">
+            <!-- Displays breadcrumb navigation items (Dashboard -> Parents -> Update Parent) -->
+            <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+        </MudItem>
+
+        <MudItem md="12">
+            <!-- Integrates Blazor's validation system based on Data Annotations in the ViewModel -->
+            <DataAnnotationsValidator />
+
+            <MudGrid>
+                <!-- Left Section: Cover/Profile Image Upload -->
+                <MudItem xs="12" sm="12" md="3" lg="3">
+                    <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@($"{_parent.FirstName} {_parent.LastName}")" Src="@_imageSource" ImageType="UploadType.Cover"
+                                                 Entity="typeof(Parent)" ParentId="@_parent.ParentId" />
+                </MudItem>
+
+                <!-- Right Section: Parent Information & Child Components -->
+                <MudItem xs="12" sm="12" md="9" lg="9">
+                    <MudCard>
+                        <MudCardHeader>
+                            <MudText Align="Align.Center" Typo="Typo.h5">Personal Information</MudText>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudGrid>
+                                <!-- Parent name fields: First Name, Middle Names, Last Name -->
+                                <MudItem md="4">
+                                    <MudTextField Label="First Name" Class="mt-3" @bind-Value="_parent.FirstName" For="@(() => _parent.LastName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem md="4">
+                                    <MudTextField Label="Middle Names" Class="mt-3" @bind-Value="_parent.MiddleName" For="@(() => _parent.MiddleName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem md="4">
+                                    <MudTextField Label="Last Name" Class="mt-3" @bind-Value="_parent.LastName" For="@(() => _parent.LastName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+
+                                <!-- Switches for communication & consent preferences -->
+                                <MudItem xs="3">
+                                    <MudSwitch @bind-Value="@_parent.RequireConsent" Color="Color.Secondary" Style="margin-left: 5px;">
+                                        Require Consent
+                                    </MudSwitch>
+                                </MudItem>
+                                <MudItem xs="3">
+                                    <MudSwitch @bind-Value="@_parent.ReceiveMessages"
+                                               Color="Color.Secondary"
+                                               Style="margin-left: 5px;">
+                                        Receive Messages
+                                    </MudSwitch>
+                                </MudItem>
+                                <MudItem xs="3">
+                                    <MudSwitch @bind-Value="@_parent.ReceiveNotifications" Color="Color.Secondary" Style="margin-left: 5px;">
+                                        Receive Notifications
+                                    </MudSwitch>
+                                </MudItem>
+                                <MudItem xs="3">
+                                    <MudSwitch @bind-Value="@_parent.ReceiveEmails" Color="Color.Secondary" Style="margin-left: 5px;">
+                                        Receive Emails
+                                    </MudSwitch>
+                                </MudItem>
+
+                                <!-- Contact Numbers Section -->
+                                <MudItem xs="12" sm="12" md="6" lg="6">
+                                    <MudCard>
+                                        <ContactNumberList TContactNumberOwner="Parent" ContactNumbers="_parent.ContactNumbers" />
+                                    </MudCard>
+                                </MudItem>
+
+                                <!-- Email Addresses Section -->
+                                <MudItem xs="12" sm="12" md="6" lg="6">
+                                    <MudCard>
+                                        <EmailAddressList TEmailAddressOwner="Parent" EmailAddresses="_parent.EmailAddresses" />
+                                    </MudCard>
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudDivider Class="my-2" />
+                                    <MudText Typo="Typo.subtitle1">Medical Information</MudText>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField T="string" Label="Emergency Medical Info" Variant="Variant.Outlined" @bind-Value="_parent.EmergencyMedicalInfo" Lines="3" Margin="Margin.Dense" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudTextField Label="Medical Aid Provider" Class="mt-3" @bind-Value="_parent.MedicalAidProvider" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudTextField Label="Medical Aid Plan" Class="mt-3" @bind-Value="_parent.MedicalAidPlan" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudTextField Label="Medical Aid Number" Class="mt-3" @bind-Value="_parent.MedicalAidNumber" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudTextField Label="Medical Aid Main Member" Class="mt-3" @bind-Value="_parent.MedicalAidMainMember" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudTextField Mask="@(new PatternMask("000000 0000 000"))" Label="Main Member ID Number" Class="mt-3" @bind-Value="_parent.MedicalAidMainMemberIdNumber" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudTextField Label="Primary Physician" Class="mt-3" @bind-Value="_parent.PrimaryPhysicianName" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" sm="6" md="4">
+                                    <MudTextField Label="Physician Contact Number" Class="mt-3" @bind-Value="_parent.PrimaryPhysicianContactNumber" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+
+                                <!-- Dependent Learners Section -->
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudCard>
+                                        <MudCardHeader>
+                                            <MudText Typo="Typo.h6">My Dependents</MudText>
+                                        </MudCardHeader>
+                                        <MudCardContent>
+                                            <LearnersTable LearnerRemoved="OnLearnerRemoved" MultiSelectionChanged="OnMultiSelectionChanged" ServerData="ServerReload" SelectedPagedLearners="_selectedPagedLearners"
+                                                           ParentId="@_parent.ParentId" UseModal="true" LearnerCreated="OnLearnerCreated" Search="OnLearnerSearh"/>
+                                        </MudCardContent>
+                                    </MudCard>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+
+        <!-- Footer: Submit and Cancel -->
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>
+                Save
+            </MudButton>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
+                Cancel
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

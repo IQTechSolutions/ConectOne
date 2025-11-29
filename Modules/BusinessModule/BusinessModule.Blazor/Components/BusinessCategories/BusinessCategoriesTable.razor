@@ -1,0 +1,90 @@
+@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudTable MultiSelection="false" Elevation="25" ServerData="GetCategoriesAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+    <ToolBarContent>
+        @if (_canSearch)
+        {
+            <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0" />
+        }
+        @if (_canCreate)
+        {
+            <MudSpacer/>
+            <MudButton Variant="Variant.Filled" Href="@CreateUrl" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New Category</MudButton>
+        }
+        @ToolbarButtons
+    </ToolBarContent>
+
+    <HeaderContent>
+        @if(!_dense)
+        {
+            <MudTh>Cover</MudTh>
+        }
+        <MudTh>Name</MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh>
+            <div style="float:right">
+                <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                    <MudMenuItem @onclick="() => _dense = !_dense">
+                        <MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">
+                            Dense
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _striped = !_striped">
+                        <MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">
+                            Striped
+                        </MudSwitch>
+                    </MudMenuItem>
+                    <MudMenuItem @onclick="() => _bordered = !_bordered">
+                        <MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">
+                            Bordered
+                        </MudSwitch>
+                    </MudMenuItem>
+                </MudMenu>
+            </div>
+        </MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        @if(!_dense)
+        {
+            <MudTd><MudImage Width="50" Height="50" Src="@context.CoverImageUrl" /></MudTd>
+        }
+        <MudTd>@context.Name</MudTd>
+        <MudTd><strong>@context.Description.HtmlToPlainText().TruncateLongString(150)</strong></MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                @if (_canEdit)
+                {
+                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => NavigateToCategory(context.CategoryId))">Edit</MudMenuItem>
+                }
+                @if (_canDelete)
+                {
+                    <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCategory(context.CategoryId))">Delete</MudMenuItem>
+                }
+                @if(context.SubCategoryCount > 0 && _canCreateSubCategories)
+                {
+                    <MudMenuItem Icon="@Icons.Material.Filled.Details" @onclick="@(() => context.ShowSubCategories = !context.ShowSubCategories)">@((context.ShowSubCategories) ? "Hide" : "Show") Sub-Categories (@context.SubCategoryCount)</MudMenuItem> 
+                }
+            </MudMenu>
+        </MudTd>
+    </RowTemplate>
+    
+    <ChildRowContent>
+        @if (context.ShowSubCategories)
+        {
+            <MudTr>
+                <td colspan="4">
+                    <BusinessCategoriesTable ParentId="@context.CategoryId" CreateUrl="/businessdirectory/categories/create" />
+                </td>
+            </MudTr>
+        }
+    </ChildRowContent>
+
+    <PagerContent>
+        @if(_table.Items is not null && _table.Items.Any())
+        {
+            <MudTablePager />
+        }
+    </PagerContent>
+</MudTable>

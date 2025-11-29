@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+@if (Attribute != null)
+{
+    <EditForm Model="@Attribute" OnValidSubmit="SaveAsync">
+        <MudDialog>
+            <DialogContent>
+                <DataAnnotationsValidator />
+                <ValidationSummary></ValidationSummary>
+                <MudGrid>
+                    <MudItem xs="12" md="12">
+                        <MudTextField Adornment="Adornment.Start" AdornmentText="@Attribute.NamePrefix" Label="Name" @bind-Value="@Attribute.Name" ShowToolbar="false" Variant="Variant.Outlined"/>
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudTextField Label="Price" @bind-Value="@Attribute.Price.SellingPrice" ShowToolbar="false" Variant="Variant.Outlined"/>
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudTextField Label="SKU" Adornment="Adornment.Start" AdornmentText="@Attribute.SkuPrefix" @bind-Value="@Attribute.Sku" ShowToolbar="false" Variant="Variant.Outlined"/>
+                    </MudItem>
+
+                    <MudItem xs="12" md="12">
+                        <MudTextField Lines="4" Label="Description" @bind-Value="@Attribute.Description" ShowToolbar="false" Variant="Variant.Outlined"/>
+                    </MudItem>
+                </MudGrid>
+            </DialogContent>
+            <DialogActions>
+                <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </EditForm>
+}

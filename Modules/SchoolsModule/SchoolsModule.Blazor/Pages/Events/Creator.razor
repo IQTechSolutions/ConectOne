@@ -1,0 +1,168 @@
+﻿@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using Radzen.Blazor
+@using SchoolsModule.Blazor.Components.ActivityCategories
+@using SchoolsModule.Blazor.Components.ActivityGroups
+@using SchoolsModule.Domain.Entities
+
+@attribute [Authorize]
+
+@page "/activities/activitygroups/events/create/{ActivityCategoryId}"
+
+<EditForm Model="EventStateManager.SchoolEvent" OnValidSubmit="CreateAsync">
+    <MudGrid>
+        <MudItem md="6">
+            <DefaultTitle Title="@(string.IsNullOrEmpty(_categoryName) ? "Create New Event" : $"Create New Event for {_categoryName}")" Caption="Please complete the information and selections to add a new event" />
+        </MudItem>
+        <MudItem md="6" Style="float:right">
+            <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+        </MudItem>
+        <MudItem md="12">
+            <DataAnnotationsValidator />
+            <MudTabs>
+                <MudTabPanel Text="Event Details">
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="4" lg="3">
+                            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@($"{EventStateManager.SchoolEvent.Name}")" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(SchoolEvent<ActivityGroup>)" ParentId="@EventStateManager.SchoolEvent.EventId" />
+                        </MudItem>
+                        <MudItem xs="12" sm="12" md="8" lg="9">
+                            <MudCard>
+                                <MudCardHeader>
+                                    <MudText Align="Align.Center" Typo="Typo.h4">Event Information</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem md="12">
+                                            <MudTextField Label="Event Name" Class="mt-3" @bind-Value="EventStateManager.SchoolEvent.Name" For="@(() => EventStateManager.SchoolEvent.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <label style="padding-left:20px;">Descriptions</label>
+                                            <RadzenHtmlEditor @bind-Value=@EventStateManager.SchoolEvent.Details style="height: 450px;" />
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <MudItem md="12">
+                                                <MudSelect T="bool" Label="Home Event" @bind-Value="@EventStateManager.SchoolEvent.HomeEvent" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                                    <MudSelectItem T="bool" Value="true">True</MudSelectItem>
+                                                    <MudSelectItem T="bool" Value="false">False</MudSelectItem>
+                                                </MudSelect>
+                                            </MudItem>
+                                        </MudItem>
+
+                                        <MudItem xs="6">
+                                            <MudDateRangePicker Label="Event Dates" @bind-DateRange="_dateRange" PickerClosed="SetDateRange" Style="background-color:white"
+                                                                Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.EditCalendar"
+                                                                AdornmentColor="Color.Primary" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudTimePicker Label="Start Time" @bind-Time="_startTime" PickerClosed="SetStartTime"
+                                                           Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Timer"
+                                                           AdornmentColor="Color.Primary" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudTimePicker Label="End Time" @bind-Time="_endTime" PickerClosed="SetEndTime"
+                                                           Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Timer"
+                                                           AdornmentColor="Color.Primary" Margin="Margin.Dense" />
+                                        </MudItem>
+
+                                        <MudItem md="12">
+                                            <MudTextField Label="Address" Class="mt-3" @bind-Value="EventStateManager.SchoolEvent.Address" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <MudTextField Label="Google Map Link" Class="mt-3" @bind-Value="EventStateManager.SchoolEvent.GoogleMapLink" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+                        <MudItem md="12">
+                            <MudCard>
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h6">Document Links to Include</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    @if (EventStateManager.SchoolEvent!.DocumentLinks.Any())
+                                    {
+                                        <MudList T="string" Dense="@true" DisableGutters="false">
+                                            @foreach (var item in EventStateManager.SchoolEvent.DocumentLinks)
+                                            {
+                                                <MudListItem Icon="@Icons.Material.Filled.Attachment">@item.TruncateLongString(85)<MudButton Style="float:right" OnClick="@(() => RemoveDocumentLink(item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto">Delete</MudButton></MudListItem>
+                                            }
+                                        </MudList>
+                                    }
+                                    <MudButton OnClick="CreateLinkAsync" Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto" FullWidth>Create New Link</MudButton>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+
+                @if (_categoryCount > 0)
+                {
+                    <MudTabPanel Text="Event Categories">
+                        <ActivityCategoriesTable ServerData="CategoryTableReload" MultiSelection="_categoryTableMultiSelection" CategorySelectionChanged="OnCategorySelectionChanged" />
+                    </MudTabPanel>
+                    if (!_working && EventStateManager.SchoolEvent!.SelectedActivityCategories.Any())
+                    {
+                        <MudTabPanel Text="Event Teams">
+                            <ActivityGroupTableV2 ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" 
+                                                  LearnerSelectionSelectionChanged="OnActivityGroupTeamMemberSelectionChanged" 
+                                                  CategoryIds="@(string.Join(",",  EventStateManager.SchoolEvent!.SelectedActivityCategories.Select(c => c.CategoryId)))" />
+                        </MudTabPanel>
+                    }
+                }
+                else
+                {
+                    <MudTabPanel Text="Event Teams">
+                        <ActivityGroupTableV2 ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" LearnerSelectionSelectionChanged="OnActivityGroupTeamMemberSelectionChanged"/>
+                    </MudTabPanel>
+                }
+                
+                <MudTabPanel Text="Event Tickets">
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Document Links to Include</MudText>
+                    </MudCardHeader>
+                    <MudTable Elevation="25" Items="EventStateManager.SchoolEvent.TicketTypes" Hover="true">
+                        <HeaderContent >
+                            <MudTh>Ticket Type</MudTh>
+                            <MudTh>Qty Available</MudTh>
+                            <MudTh>Price</MudTh>
+                            <MudTh>Qty Sold</MudTh>
+                            <MudTh style="text-align: right">Actions</MudTh>
+                        </HeaderContent >
+                        <RowTemplate Context="bb">
+                            <MudTd DataLabel="Ticket Type">@bb.Name</MudTd>
+                            <MudTd DataLabel="Ticket Type">@bb.QuantityAvailable</MudTd>
+                            <MudTd DataLabel="Ticket Type">@bb.Price.ToString("C")</MudTd>
+                            <MudTd DataLabel="Ticket Type">@bb.QuantitySold</MudTd>
+                            <MudTd>
+                                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => UpdateTicketType(bb))">Edit</MudMenuItem>
+                                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => RemoveTicketType(bb.Id))">Remove</MudMenuItem>
+                                </MudMenu>
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                    <MudCardContent>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="CreateTicketType">Create New Ticket Type</MudMenuItem>
+                    </MudCardActions>
+                </MudTabPanel>
+
+            </MudTabs>
+        </MudItem>
+        
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>

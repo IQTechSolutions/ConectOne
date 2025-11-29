@@ -1,1 +1,93 @@
-<Solution />
+<Solution>
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/AdvertisingModule/">
+    <Project Path="Modules/AdvertisingModule/AdvertisingModule.Application/AdvertisingModule.Application.csproj" Id="215fefef-c684-4d28-bb51-607ffcf4988c" />
+    <Project Path="Modules/AdvertisingModule/AdvertisingModule.Blazor/AdvertisingModule.Blazor.csproj" Id="59d9dd1d-7278-4bdc-8585-6c92b94681ab" />
+    <Project Path="Modules/AdvertisingModule/AdvertisingModule.Domain/AdvertisingModule.Domain.csproj" Id="0057b70f-d03a-465a-89c9-5d2ce27be23d" />
+    <Project Path="Modules/AdvertisingModule/AdvertisingModule.Infrastructure/AdvertisingModule.Infrastructure.csproj" Id="8d1d14ed-0a03-422b-b673-db0824d2bc70" />
+  </Folder>
+  <Folder Name="/Modules/Base/">
+    <Project Path="Modules/Base/ConectOne.Application/ConectOne.Application.csproj" Id="ba7413a2-a8c5-4e32-9087-e4ddd7f948e7" />
+    <Project Path="Modules/Base/ConectOne.Blazor/ConectOne.Blazor.csproj" Id="dffa90e6-dcdf-4ee6-9429-9c29f0a39ff2" />
+    <Project Path="Modules/Base/ConectOne.Domain/ConectOne.Domain.csproj" />
+    <Project Path="Modules/Base/ConectOne.EntityFrameworkCore.Sql/ConectOne.EntityFrameworkCore.Sql.csproj" />
+    <Project Path="Modules/Base/ConectOne.Infrastructure/ConectOne.Infrastructure.csproj" Id="c5596050-694d-47b5-bdd0-61003eb844b1" />
+  </Folder>
+  <Folder Name="/Modules/BloggingModule/">
+    <Project Path="Modules/BloggingModule/BloggingModule.Application/BloggingModule.Application.csproj" Id="b7950293-048a-4300-bfc4-941912d52303" />
+    <Project Path="Modules/BloggingModule/BloggingModule.Blazor/BloggingModule.Blazor.csproj" Id="6bd93310-4075-4576-bafc-17e413bfdd80" />
+    <Project Path="Modules/BloggingModule/BloggingModule.Domain/BloggingModule.Domain.csproj" Id="c8f4a408-13fb-4027-88a1-f17a497e9de8" />
+    <Project Path="Modules/BloggingModule/BloggingModule.Infrastructure/BloggingModule.Infrastructure.csproj" Id="7b44d46f-e5fc-49b4-b47f-b0716c7cb607" />
+  </Folder>
+  <Folder Name="/Modules/BusinessModule/">
+    <Project Path="Modules/BusinessModule/BusinessModule.Application/BusinessModule.Application.csproj" Id="51a25ed2-9250-4b46-9b1b-49ab06593c40" />
+    <Project Path="Modules/BusinessModule/BusinessModule.Blazor/BusinessModule.Blazor.csproj" Id="4197bb79-74f6-4cee-9533-b57a032532bf" />
+    <Project Path="Modules/BusinessModule/BusinessModule.Domain/BusinessModule.Domain.csproj" Id="6af2c0c7-af28-4e9c-8dc7-87ce3787822b" />
+    <Project Path="Modules/BusinessModule/BusinessModule.Infrastructure/BusinessModule.Infrastructure.csproj" Id="883e9a24-6c2e-482d-a80b-ef77f01ccf9c" />
+  </Folder>
+  <Folder Name="/Modules/CalendarModule/">
+    <Project Path="Modules/CalendarModule/CalendarModule.Application/CalendarModule.Application.csproj" Id="4ba2d654-431e-45de-a266-7e92afef1cb4" />
+    <Project Path="Modules/CalendarModule/CalendarModule.Blazor/CalendarModule.Blazor.csproj" Id="ded12e8f-820b-4c84-addf-dbccb737a900" />
+    <Project Path="Modules/CalendarModule/CalendarModule.Domain/CalendarModule.Domain.csproj" Id="ec8a804d-9373-4331-ac7a-ff572adc4bfe" />
+    <Project Path="Modules/CalendarModule/CalendarModule.Infrastructure/CalendarModule.Infrastructure.csproj" Id="5f3a6df6-d6b1-4166-b56e-eb25db95f2cd" />
+  </Folder>
+  <Folder Name="/Modules/FeedbackModule/" />
+  <Folder Name="/Modules/FilingModule/">
+    <Project Path="Modules/FilingModule/FilingModule.Application/FilingModule.Application.csproj" Id="62258192-5d32-4275-a3dd-9b53cf675164" />
+    <Project Path="Modules/FilingModule/FilingModule.Blazor/FilingModule.Blazor.csproj" Id="7699058e-308c-4d99-9238-d3fb3b1b2414" />
+    <Project Path="Modules/FilingModule/FilingModule.Domain/FilingModule.Domain.csproj" />
+    <Project Path="Modules/FilingModule/FilingModule.Infrastucture/FilingModule.Infrastucture.csproj" Id="41a50f95-4b58-4e5e-a276-4243bab6fb2c" />
+  </Folder>
+  <Folder Name="/Modules/GroupingModule/">
+    <Project Path="Modules/GroupingModule/GroupingModule.Application/GroupingModule.Application.csproj" Id="6489278a-2e20-4282-86bc-1e6816fffb21" />
+    <Project Path="Modules/GroupingModule/GroupingModule.Domain/GroupingModule.Domain.csproj" Id="e9d59a24-9823-4e26-9dcf-6ee649b57fa1" />
+    <Project Path="Modules/GroupingModule/GroupingModule.Infrastructure/GroupingModule.Infrastructure.csproj" Id="96892f79-a20c-49d5-994c-b3c773f790a1" />
+  </Folder>
+  <Folder Name="/Modules/IdentityModule/">
+    <Project Path="Modules/IdentityModule/IdentityModule.Application/IdentityModule.Application.csproj" Id="176035a0-4a07-4a11-93ac-660579f7acd3" />
+    <Project Path="Modules/IdentityModule/IdentityModule.Blazor/IdentityModule.Blazor.csproj" Id="626637c1-66f0-4875-b5c8-e464db394c5c" />
+    <Project Path="Modules/IdentityModule/IdentityModule.Domain/IdentityModule.Domain.csproj" />
+    <Project Path="Modules/IdentityModule/IdentityModule.Infrastructure/IdentityModule.Infrastructure.csproj" Id="79213c03-755f-4523-a60d-c013d1d8b191" />
+  </Folder>
+  <Folder Name="/Modules/MessagingModule/">
+    <Project Path="Modules/MessagingModule/MessagingModule.Application/MessagingModule.Application.csproj" Id="2399b935-c74b-4c4d-8638-8762170b3fa3" />
+    <Project Path="Modules/MessagingModule/MessagingModule.Blazor/MessagingModule.Blazor.csproj" Id="58c047a4-8bb6-415f-8a3e-49ee8c83cd34" />
+    <Project Path="Modules/MessagingModule/MessagingModule.Domain/MessagingModule.Domain.csproj" Id="4f4f9ffc-f8be-48da-afb3-9ae7f6e7abcb" />
+    <Project Path="Modules/MessagingModule/MessagingModule.Infrastructure/MessagingModule.Infrastructure.csproj" Id="d2bd476c-4c00-45b7-a9ed-2bcb2fbcb2bd" />
+  </Folder>
+  <Folder Name="/Modules/ProductsModule/">
+    <Project Path="Modules/ProductsModule/ProductsModule.Application/ProductsModule.Application.csproj" Id="afc3c617-094a-4009-8b9a-7d379d00e491" />
+    <Project Path="Modules/ProductsModule/ProductsModule.Blazor/ProductsModule.Blazor.csproj" Id="6e0d6467-f544-4906-885c-ae93a5543aa5" />
+    <Project Path="Modules/ProductsModule/ProductsModule.Domain/ProductsModule.Domain.csproj" Id="ac3cbc3c-236b-494a-93b4-23c162afe133" />
+    <Project Path="Modules/ProductsModule/ProductsModule.Infrastructure/ProductsModule.Infrastructure.csproj" Id="1d98386a-e7ac-4581-8e73-ae6ac024d7df" />
+  </Folder>
+  <Folder Name="/Modules/SchoolsModule/">
+    <Project Path="Modules/SchoolsModule/SchoolsModule.Application/SchoolsModule.Application.csproj" Id="35b8b9eb-f7e2-40f3-8c3c-215b4c6d303e" />
+    <Project Path="Modules/SchoolsModule/SchoolsModule.Blazor/SchoolsModule.Blazor.csproj" Id="e8c56527-5061-4b61-95ff-ec6c9f08217c" />
+    <Project Path="Modules/SchoolsModule/SchoolsModule.Domain/SchoolsModule.Domain.csproj" Id="eaeff98f-bf98-42d2-a6d4-b946c25d4cf3" />
+    <Project Path="Modules/SchoolsModule/SchoolsModule.Infrastructure/SchoolsModule.Infrastructure.csproj" Id="8873558e-6ad3-437a-b863-8cecc70b499f" />
+  </Folder>
+  <Folder Name="/Modules/ShoppingModule/">
+    <Project Path="Modules/ShoppingModule/ShoppingModule.Application/ShoppingModule.Application.csproj" Id="c340529e-e04d-438a-aa07-797a0e6a4cf4" />
+    <Project Path="Modules/ShoppingModule/ShoppingModule.Blazor/ShoppingModule.Blazor.csproj" Id="f42b5b6d-9e8d-4418-b846-32d2b69a2c5f" />
+    <Project Path="Modules/ShoppingModule/ShoppingModule.Domain/ShoppingModule.Domain.csproj" Id="d01b29c4-92f8-49dd-9ab5-ff71e1d7ab53" />
+    <Project Path="Modules/ShoppingModule/ShoppingModule.Infrastructure/ShoppingModule.Infrastructure.csproj" Id="a8c480a7-06a5-4050-bf7c-efe772b54187" />
+  </Folder>
+  <Folder Name="/Projects/" />
+  <Folder Name="/Projects/NelspruitHigh/">
+    <Project Path="Projects/NelspruitHigh/NelspruitHigh.Blazor.Maui/NelspruitHigh.Blazor.Maui.csproj" />
+    <Project Path="Projects/NelspruitHigh/NelspruitHigh.Blazor.Pwa/NelspruitHigh.Blazor.Pwa.csproj" />
+    <Project Path="Projects/NelspruitHigh/NelspruitHigh.Blazor.ServerClient/NelspruitHigh.Blazor.ServerClient.csproj" />
+  </Folder>
+  <Folder Name="/Projects/SchoolsEnterprise/">
+    <Project Path="Projects/SchoolsEnterprise/SchoolsEnterprise.Base/SchoolsEnterprise.Base.csproj" Id="60106784-5ee3-4181-905b-613c4f917a46" />
+    <Project Path="Projects/SchoolsEnterprise/SchoolsEnterprise.Blazor.Shared/SchoolsEnterprise.Blazor.Shared.csproj" Id="a63c9ed1-e0aa-4de6-9195-bfb84cc4465e" />
+  </Folder>
+  <Folder Name="/Vendors/">
+    <Project Path="Vendors/PayFast/PayFast.csproj" Id="f93c09c0-6604-4fbf-a599-c26889942061" />
+  </Folder>
+  <Folder Name="/Vendors/Google/">
+    <Project Path="Vendors/Google/GoogleCalendar/GoogleCalendar.csproj" Id="15f46080-d024-4362-9f6f-73a128e3fb80" />
+    <Project Path="Vendors/Google/GoogleMapsComponents/GoogleMapsComponents.csproj" Id="2b6881ab-2dc7-4193-9547-35a3506fc583" />
+  </Folder>
+</Solution>

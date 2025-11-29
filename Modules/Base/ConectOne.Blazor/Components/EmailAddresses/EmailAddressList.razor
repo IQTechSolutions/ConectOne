@@ -1,0 +1,63 @@
+﻿@using MudBlazor
+@typeparam TEmailAddressOwner
+
+<MudCard>
+    <MudCardHeader>
+        <MudText Typo="Typo.h6">Email Addresses</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <div data-scrollbar="true" data-height="280px" class="bg-silver">
+            <MudTable Items="EmailAddresses" Hover="true" Breakpoint="Breakpoint.Xs" LoadingProgressColor="Color.Info" Dense="true">
+                <HeaderContent>
+                    <MudTh>Number</MudTh>
+                    <MudTh>Default</MudTh>
+                    <MudTh></MudTh>
+                    @if (EmailAddresses.Count() > 1)
+                    {
+                        <MudHidden Breakpoint="Breakpoint.Xs">
+                            <MudTh></MudTh>
+                        </MudHidden>
+                    }
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Email">@context.EmailAddress</MudTd>
+                    <MudTd DataLabel="Default"><MudCheckBox @bind-Value="@context.Default" Disabled="true"></MudCheckBox></MudTd>
+                    <MudTd>
+                        <MudHidden Breakpoint="Breakpoint.Xs">
+                            <MudIconButton OnClick="@(() => CalUpdateEmailAddressModal(@context.EmailAddressId))" Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                        </MudHidden>
+                        <MudHidden Breakpoint="Breakpoint.SmAndUp">
+                           @if (!context.Default)
+                           {
+                               <MudGrid>
+                                   <MudItem xs="6">
+                                        <MudButton OnClick="@(() => CalUpdateEmailAddressModal(@context.EmailAddressId))" FullWidth Color="Color.Primary"><MudIcon Icon="@Icons.Material.Filled.Edit"></MudIcon></MudButton>
+                                   </MudItem>
+                                    <MudItem xs="6">
+                                        <MudButton OnClick="@(() => CallDeleteConfirmationModalAsync(@context.EmailAddressId))"><MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon></MudButton>
+                                    </MudItem>
+                               </MudGrid>
+                           }
+                            else
+                            {
+                                <MudButton OnClick="@(() => CalUpdateEmailAddressModal(@context.EmailAddressId))" FullWidth Color="Color.Primary"><MudIcon Icon="@Icons.Material.Filled.Edit"></MudIcon></MudButton>
+                            }
+                        
+                        </MudHidden>
+                    </MudTd>
+                    @if (!context.Default)
+                    {
+                        <MudHidden Breakpoint="Breakpoint.Xs">
+                            <MudTd>
+                                <MudIconButton OnClick="@(() => CallDeleteConfirmationModalAsync(@context.EmailAddressId))" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                            </MudTd>
+                        </MudHidden>
+                    }
+                </RowTemplate>
+            </MudTable>
+        </div>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton OnClick="CallCreateEmailAddressModalAsync" FullWidth Color="Color.Primary">New Email Address</MudButton>
+    </MudCardActions>
+</MudCard>

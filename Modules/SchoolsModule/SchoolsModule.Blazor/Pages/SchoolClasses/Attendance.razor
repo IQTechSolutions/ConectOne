@@ -1,0 +1,19 @@
+@page "/schoolclasses/attendance/{SchoolClassId}"
+
+@using ConectOne.Blazor.Components
+@using MudBlazor
+@using SchoolsModule.Blazor.Pages.Attendance
+@using SchoolsModule.Domain.Enums
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@if (!_loaded)
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+}
+else
+{
+    <DefaultTitle Title="Class Attendance" />
+    <AttendanceList GroupId="@SchoolClassId" AttendanceType="AttendanceType.Class" Date="@DateTime.Now" GroupName="@(_class?.SchoolClass ?? string.Empty)" />
+}

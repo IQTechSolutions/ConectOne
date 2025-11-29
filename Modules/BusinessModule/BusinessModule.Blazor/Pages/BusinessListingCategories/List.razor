@@ -1,0 +1,16 @@
+@page "/businessdirectory/categories"
+@using BusinessModule.Blazor.Components.BusinessCategories
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<DefaultTitle Title="Business Categories" Caption="All categories for business listings" />
+
+<BusinessCategoriesTable CreateUrl="/businessdirectory/categories/create" />

@@ -1,0 +1,50 @@
+﻿@using MudBlazor
+<MudTable Elevation="25" ServerData="ServerReload" Hover="true" Loading="!_loaded" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" @ref="_table">
+    <ToolBarContent>
+        <div class="justify-center mud-text-align-center">
+            <MudSpacer />
+            @if (_canCreate)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/businesslistings/create" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+            }
+            <MudButton Variant="Variant.Filled" OnClick="@(async () => await Reload())" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+        </div>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel T="string" SortLabel="CompanyName">Company</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="string" SortLabel="Tier">Tier</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="string" SortLabel="Approved">Approved</MudTableSortLabel></MudTh>
+        <MudTh>
+            <div style="float:right">
+                <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                    <MudMenuItem><MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch></MudMenuItem>
+                    <MudMenuItem><MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch></MudMenuItem>
+                    <MudMenuItem><MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">Bordered</MudSwitch></MudMenuItem>
+                </MudMenu>
+            </div>
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Company">@context.Heading</MudTd>
+        <MudTd DataLabel="Tier">@context.Tier</MudTd>
+        <MudTd DataLabel="Approved">@context.Status</MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            @if (_canDelete || _canEdit)
+            {
+                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                    @if (_canEdit)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => ApproveAdvertisement(context.Id))">Approve</MudMenuItem>
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => RejectAdvertisement(context.Id))">Reject</MudMenuItem>
+                    }
+                </MudMenu>
+            }
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

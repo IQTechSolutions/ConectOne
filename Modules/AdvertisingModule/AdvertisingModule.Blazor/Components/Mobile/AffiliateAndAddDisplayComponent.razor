@@ -1,0 +1,49 @@
+﻿@using FilingModule.Domain.Enums
+@using MudBlazor
+@using Radzen
+@using Radzen.Blazor
+
+@implements MudBlazor.IBrowserViewportObserver
+@implements IAsyncDisposable
+
+
+
+<RadzenCarousel @ref=_affiliateCarousel @bind-SelectedIndex="@_selectedIndex" AllowPaging="false"  Auto="true" Interval="@Interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="@($"height:{_affiliateCarouselHeight}")" AllowNavigation="false">
+    <Items>
+
+        @foreach(var item in _affiliateSlideGroups)
+        {
+            <RadzenCarouselItem>
+                <MudGrid>
+                    @foreach (var group in item.Value)
+                    {
+                        <MudItem xs="_columnSize" sm="_columnSize" md="_columnSize" lg="_columnSize" xl="_columnSize" Style="text-align:center" @onclick="@(() => { NavigationManager.NavigateTo(@group.Url); })">
+                            <MudImage Class="ma-2 align-self-center" Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{group?.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" Style="height:100px; width:100px;" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            </RadzenCarouselItem>
+        }
+
+    </Items>
+</RadzenCarousel>
+
+<RadzenCarousel @ref=_addCarousel Auto="true" Interval="@Interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="@($"height:{_advertisementCarouselHeight}")" AllowNavigation="false">
+    <Items>
+
+        @foreach (var item in _adverTisementSlideGroups)
+        {
+            <RadzenCarouselItem>
+                <MudGrid>
+                    @foreach (var group in item.Value)
+                    {
+                        <MudItem xs="_columnSize" sm="_columnSize" md="_columnSize" lg="_columnSize" xl="_columnSize" Style="text-align:center" @onclick="@(() => { NavigationManager.NavigateTo(@group.Url); })">
+                            <MudImage Class="ma-2 align-self-center" Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{group.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" Style="height:100px; width:100px;" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            </RadzenCarouselItem>
+        }
+
+    </Items>
+</RadzenCarousel>

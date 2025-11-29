@@ -1,0 +1,7 @@
+﻿@page "/evers/list/{CategoryId}"
+@using BloggingModule.Blazor.Components
+@using ConectOne.Blazor.Components
+
+<DefaultTitle Title="@PageTitle" Caption="@($"All Categories for newsfeeds offered at {Configuration["ApplicationConfiguration:ApplicationName"]}")" />
+
+<BlogPostTable CategoryId="@CategoryId" ></BlogPostTable>

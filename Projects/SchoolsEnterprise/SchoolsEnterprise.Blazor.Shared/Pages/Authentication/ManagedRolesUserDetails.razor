@@ -1,0 +1,199 @@
+﻿@page "/roles/managed/user/dashboard/{RoleId}"
+
+@using MudBlazor
+@using NeuralTech.Base.Enums
+
+<MudGrid>
+    <MudItem xs="6" sm="3" md="2">
+    </MudItem>
+    <MudItem xs="6" sm="3" md="2">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.ViewCarousel" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Managed roles</MudText>
+                <MudText Typo="Typo.h5">@TotalManagedRoleCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="6" sm="3" md="2">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.PanoramaPhotosphereSelect" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Users:</MudText>
+                <MudText @bind-Value="@(TotalManagedUserCount)" Typo="Typo.h5">@TotalManagedUserCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="6" sm="3" md="2">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.AttachFile" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Registration Tiers</MudText>
+                <MudText @bind-Value="@TotalManagedRegistrationTierCount" Typo="Typo.h5">@TotalManagedRegistrationTierCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="6" sm="3" md="2">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.FileCopy" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Managed Services</MudText>
+                <MudText @bind-Value="@TotalManagedServiceCount" Typo="Typo.h5">@TotalManagedServiceCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="6" sm="3" md="2">
+    </MudItem>
+    
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Face" Color="Color.Error" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Registrations in Arears</MudText>
+                <MudText Typo="Typo.h5">@TotalManagedUserCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Face" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Paying Registrations</MudText>
+                <MudText Typo="Typo.h5">@TotalManagedUserCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.SupervisedUserCircle" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Donators</MudText>
+                <MudText Typo="Typo.h5">@TotalManagedUserCount</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Money" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Donations</MudText>
+                <MudText Typo="Typo.h5">R0.00</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+    <MudGrid Style="padding-top:25px">
+        <MudItem xs="12">
+            <MudPaper Elevation="3" Class="role-dashboard-card">
+                <MudStack Spacing="1">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.AccountTree" Color="Color.Info" Size="Size.Large" />
+                        <MudText Typo="Typo.h6">Managed roles overview</MudText>
+                    </MudStack>
+                    <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                        Because your role manages additional communities, here is a quick glance at their membership and
+                        offerings.
+                    </MudText>
+                    <MudChipSet T="string" Filter="false" Dense="true" Class="mt-2">
+                        <MudChip T="string" Color="Color.Info" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AccountTree">
+                            Managed roles: @TotalManagedRoleCount
+                        </MudChip>
+                        <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Groups">
+                            Users: @TotalManagedUserCount
+                        </MudChip>
+                        <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Layers">
+                            Registration tiers: @TotalManagedRegistrationTierCount
+                        </MudChip>
+                        <MudChip T="string" Color="Color.Success" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.MiscellaneousServices">
+                            Services: @TotalManagedServiceCount
+                        </MudChip>
+                    </MudChipSet>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+<MudGrid Style="padding-top:25px">
+    <MudItem xs="12">
+        <MudPaper Elevation="3" Class="role-dashboard-card">
+            <MudStack Spacing="1">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.AccountTree" Color="Color.Info" Size="Size.Large" />
+                    <MudText Typo="Typo.h6">Overview of Donations and Donators</MudText>
+                </MudStack>
+                <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                    Here is a quick glance at donations made and the projects the donations was spent on!
+                </MudText>
+                <MudChipSet T="string" Filter="false" Dense="true" Class="mt-2">
+                    <MudChip T="string" Color="Color.Info" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AccountTree">
+                        Managed roles: @TotalManagedRoleCount
+                    </MudChip>
+                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Groups">
+                        Users: @TotalManagedUserCount
+                    </MudChip>
+                    <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Layers">
+                        Registration tiers: @TotalManagedRegistrationTierCount
+                    </MudChip>
+                    <MudChip T="string" Color="Color.Success" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.MiscellaneousServices">
+                        Services: @TotalManagedServiceCount
+                    </MudChip>
+                </MudChipSet>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+<MudGrid Class="role-dashboard-grid" Style="padding-top:25px" GutterSize="GutterSize.Small">
+    <MudItem xs="12" md="6">
+        <MudPaper Elevation="3" Class="role-dashboard-card">
+            <MudStack Spacing="1">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.Public" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6">Welcome to the community</MudText>
+                </MudStack>
+                <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                    Explore what is happening at Nelspruit High and get involved with events, clubs, and initiatives.
+                </MudText>
+                <MudList T="string" Dense="true" Class="role-dashboard-list">
+                    <MudListItem Icon="@Icons.Material.Outlined.Event" Href="/calendar">Browse the calendar</MudListItem>
+                    <MudListItem Icon="@Icons.Material.Outlined.Celebration" Href="/events">Discover activities &amp; clubs</MudListItem>
+                    <MudListItem Icon="@Icons.Material.Outlined.Campaign" OnClick="@(() => NavigationManager.NavigateTo($"messages/bytype/{(int)MessageType.Global}", true))">Read the latest announcements</MudListItem>
+                </MudList>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <MudPaper Elevation="3" Class="role-dashboard-card">
+            <MudStack Spacing="1">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.Handshake" Color="Color.Secondary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6">Lend a hand</MudText>
+                </MudStack>
+                <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                    Support learners, volunteer at events, or sponsor a campus initiative.
+                </MudText>
+                <MudList T="string" Dense="true" Class="role-dashboard-list">
+                    <MudListItem Icon="@Icons.Material.Outlined.VolunteerActivism" Href="/advertisements">Sponsor opportunities</MudListItem>
+                    <MudListItem Icon="@Icons.Material.Outlined.ShoppingCart" Href="/products/categories">Shop fundraiser items</MudListItem>
+                    <MudListItem Icon="@Icons.Material.Outlined.Chat" Href="/chats">Join the conversation</MudListItem>
+                </MudList>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudPaper Elevation="1" Class="role-dashboard-card highlight">
+            <MudStack Spacing="1" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                <MudIcon Icon="@Icons.Material.Filled.EmojiPeople" Color="Color.Primary" Size="Size.Large" />
+                <MudText Typo="Typo.subtitle1" Class="text-center">
+                    Complete your personal profile to unlock messaging, bookings, and tailored updates.
+                </MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"registrations/users/{_userId}")" StartIcon="@Icons.Material.Filled.PersonAdd">
+                    Go to my profile
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
