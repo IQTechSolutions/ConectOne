@@ -44,6 +44,11 @@
 </head>
 
 <body>
+    <div id="splash-screen">
+        <img class="splash-logo" src="NelspruitHighLogoWht.png" alt="Nelspruit High School logo" />
+        <div class="splash-loader" aria-label="Loading"></div>
+    </div>
+
     <Routes @rendermode="@PageRenderMode" />
     <ReconnectModal />
 
@@ -59,6 +64,28 @@
     <script src="_content/FilingModule.Blazor/js/filing.js"></script>
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2ipt9_RbWUdKwhIJ7hJe3hTujVZCk0ZQ&v=3&libraries=places,visualization,drawing&callback=Function.prototype"></script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
+
+    <script>
+        (() => {
+            const hideSplashScreen = () => {
+                const splash = document.getElementById('splash-screen');
+                if (!splash) {
+                    return;
+                }
+
+                splash.classList.add('hidden');
+                window.setTimeout(() => splash.remove(), 400);
+            };
+
+            // Hide once the page and static assets are ready
+            window.addEventListener('load', hideSplashScreen);
+
+            // Fallback in case load fires before this script executes
+            if (document.readyState === 'complete') {
+                hideSplashScreen();
+            }
+        })();
+    </script>
 </body>
 
 </html>
