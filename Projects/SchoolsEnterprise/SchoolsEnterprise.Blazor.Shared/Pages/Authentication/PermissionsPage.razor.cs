@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using SchoolsEnterprise.Base.Extensions;
 using SchoolsModule.Application.Extensions;
 
 namespace SchoolsEnterprise.Blazor.Shared.Pages.Authentication

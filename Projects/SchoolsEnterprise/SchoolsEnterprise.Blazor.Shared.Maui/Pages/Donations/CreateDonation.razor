@@ -1,0 +1,201 @@
+@page "/donations/create"
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using Microsoft.Extensions.Logging
+@using MudBlazor
+@using ShoppingModule.Domain.Enums
+
+@inject IStringLocalizer<CreateDonation> _localizer
+@inject ILogger<CreateDonation> Logger
+
+<PageTitle>@_localizer["PageTitle"]</PageTitle>
+
+<MobilePageTitle Title="Make a Donation"></MobilePageTitle>
+
+
+<MudCard Elevation="1" Class="rounded-lg">
+    <MudCardContent Class="pt-6">
+        @if (!string.IsNullOrWhiteSpace(_submissionError))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">@_submissionError</MudAlert>
+        }
+
+        <EditForm Model="_model" OnValidSubmit="HandleValidSubmitAsync">
+            <MudGrid Spacing="2">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle1" Class="mb-1">@_localizer["DonorInformationHeading"]</MudText>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@_localizer["DonorInformationDescription"]</MudText>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.FirstName"
+                                  For="@(() => _model.FirstName)"
+                                  Label="@_localizer["FullNameLabel"]"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="@_localizer["FullNameRequired"]"
+                                  Immediate="true" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.LastName"
+                                  For="@(() => _model.LastName)"
+                                  Label="@_localizer["FullNameLabel"]"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="@_localizer["FullNameRequired"]"
+                                  Immediate="true" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.Email"
+                                  For="@(() => _model.Email)"
+                                  Label="@_localizer["EmailLabel"]"
+                                  Variant="Variant.Outlined"
+                                  InputType="InputType.Email"
+                                  Required="true"
+                                  RequiredError="@_localizer["EmailRequired"]"
+                                  Immediate="true" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.PhoneNumber"
+                                  For="@(() => _model.PhoneNumber)"
+                                  Label="@_localizer["PhoneLabel"]"
+                                  Variant="Variant.Outlined"
+                                  Immediate="true" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDivider Class="my-4" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle1" Class="mb-1">@_localizer["DonationDetailsHeading"]</MudText>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@_localizer["DonationDetailsDescription"]</MudText>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudNumericField @bind-Value="_model.Amount"
+                                     T="double"
+                                     For="@(() => _model.Amount)"
+                                     Label="@_localizer["AmountLabel"]"
+                                     Variant="Variant.Outlined"
+                                     Adornment="Adornment.Start"
+                                     AdornmentText="R"
+                                     Min="50"
+                                     Max="1000000"
+                                     Immediate="true"
+                                     Required="true"
+                                     RequiredError="@_localizer["AmountRequired"]"
+                                     HelperText="@_localizer["AmountHelper"]" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSelect @bind-Value="_model.Designation"
+                               For="@(() => _model.Designation)"
+                               Label="@_localizer["DesignationLabel"]"
+                               Variant="Variant.Outlined"
+                               HelperText="@_localizer["DesignationHelper"]">
+                        <MudSelectItem Value="@_localizer["DonationDesignationGeneral"].Value">@_localizer["DonationDesignationGeneral"]</MudSelectItem>
+                        <MudSelectItem Value="@_localizer["DonationDesignationScholarship"].Value">@_localizer["DonationDesignationScholarship"]</MudSelectItem>
+                        <MudSelectItem Value="@_localizer["DonationDesignationFacilities"].Value">@_localizer["DonationDesignationFacilities"]</MudSelectItem>
+                        <MudSelectItem Value="@_localizer["DonationDesignationSports"].Value">@_localizer["DonationDesignationSports"]</MudSelectItem>
+                        <MudSelectItem Value="@_localizer["DonationDesignationOther"].Value">@_localizer["DonationDesignationOther"]</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.Message"
+                                  For="@(() => _model.Message)"
+                                  Label="@_localizer["MessageLabel"]"
+                                  Variant="Variant.Outlined"
+                                  Lines="4"
+                                  Immediate="true"
+                                  HelperText="@_localizer["MessageHelper"]" />
+                </MudItem>
+                
+                <MudItem xs="12">
+                    <MudSelect T="PaymentMethod" @bind-Value="_model.PaymentMethod" Label="Payment type" Strict="true" Variant="Variant.Outlined" Margin="Margin.Dense" Format="F2" OffsetY="true">
+                        <MudSelectItem Value="@(PaymentMethod.Eft)">Electronic Transfer</MudSelectItem>
+                        <MudSelectItem Value="@(PaymentMethod.Card)">PayFast Secure Card Payment</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                
+                @if (_model.PaymentMethod == PaymentMethod.Card)
+                {
+                    <MudCard Elevation="1" Class="rounded-lg mt-5">
+                        <MudCardContent>
+                            <MudGrid Spacing="1" Class="mb-3">
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="Color.Primary">PayFast Payment</MudText>
+                                    <MudText Typo="Typo.caption">You will be securely redirected to PayFast to complete your card payment.</MudText>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                }
+
+                <MudItem xs="12">
+                    <MudSwitch @bind-Value="_model.IsAnonymous"
+                               For="@(() => _model.IsAnonymous)"
+                               Color="Color.Primary"
+                               Class="mt-2"
+                               Label="@_localizer["IsAnonymousLabel"]" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSwitch @bind-Value="_model.IsRecurring"
+                               For="@(() => _model.IsRecurring)"
+                               Color="Color.Primary"
+                               Class="mt-2"
+                               Label="@_localizer["IsRecurringLabel"]" />
+                </MudItem>
+
+                @if (_model.IsRecurring)
+                {
+                    <MudItem xs="12">
+                        <MudSelect @bind-Value="_model.Frequency"
+                                   For="@(() => _model.Frequency)"
+                                   Variant="Variant.Outlined"
+                                   Label="@_localizer["FrequencyLabel"]"
+                                   Required="true"
+                                   RequiredError="@_localizer["FrequencyRequired"]">
+                            <MudSelectItem Value="DonationFrequency.OnceOff">@_localizer["FrequencyOnceOff"]</MudSelectItem>
+                            <MudSelectItem Value="DonationFrequency.Monthly">@_localizer["FrequencyMonthly"]</MudSelectItem>
+                            <MudSelectItem Value="DonationFrequency.Quarterly">@_localizer["FrequencyQuarterly"]</MudSelectItem>
+                            <MudSelectItem Value="DonationFrequency.Annually">@_localizer["FrequencyAnnually"]</MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                }
+
+                <MudItem xs="12">
+                    <MudCheckBox @bind-Checked="_model.AgreeToTerms"
+                                 For="@(() => _model.AgreeToTerms)"
+                                 Label="@_localizer["AgreeToTermsLabel"]"
+                                 Required="true"
+                                 RequiredError="@_localizer["AgreeToTermsRequired"]" />
+                </MudItem>
+
+                <MudItem xs="12" Class="d-flex justify-end mt-4">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               ButtonType="ButtonType.Submit"
+                               Disabled="_isSubmitting"
+                               Loading="_isSubmitting"
+                               FullWidth="true">
+                        @_localizer[_isSubmitting ? "SubmittingButton" : "SubmitButton"]
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    </MudCardContent>
+</MudCard>
+
+<form method="post" action="@PayFastProcessUrl" style="display:none" @ref="PayFastForm">
+    @foreach (var field in PayFastFormFields)
+    {
+        <input type="hidden" name="@field.Key" value="@field.Value" />
+    }
+</form>

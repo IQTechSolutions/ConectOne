@@ -1,0 +1,15 @@
+﻿@using MudBlazor
+@if (_schoolClasses.Any())
+{
+    <MudGrid Class="mb-5 pt-5" Spacing="2">
+        @foreach (var item in _schoolClasses)
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Class="d-flex flex-row rounded-lg" @onclick="() => OnSchoolClassSelected(item.SchoolClassId)">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> @item.SchoolClass </MudText>
+                    <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

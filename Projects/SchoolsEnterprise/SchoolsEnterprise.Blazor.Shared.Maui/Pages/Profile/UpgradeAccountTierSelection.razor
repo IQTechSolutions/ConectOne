@@ -1,0 +1,18 @@
+﻿@page "/users/{UserId}/roles"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<MobilePageTitle Title="Business Directory"></MobilePageTitle>
+
+<MudGrid Class="mb-5" Spacing="2" Style="padding-top:15px;">
+    @foreach (var item in _serviceTiersByRole)
+    {
+        var role = _roles.FirstOrDefault(c => c.Id == item.Key);
+        <MudItem xs="6" sm="6" md="6">
+            <TileButton Title="@role.Name" FullImage="true" TileClicked="@(() => NavigateToPage($"/users/{UserId}/upgrade/{item.Key}"))" />
+        </MudItem>
+    }
+</MudGrid>

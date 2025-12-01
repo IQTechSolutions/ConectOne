@@ -1,0 +1,22 @@
+﻿.rounded-15 {
+    border-radius: 15px;
+}
+
+.first-card {
+    background-color: #E66B00;
+    background-image: linear-gradient(315deg, #E66B00 0, #FFCC00 100%)
+}
+
+.second-card2 {
+    background-color: #1a2148;
+    background-image: linear-gradient(135deg, #1a2148 50%, #0061B5 100%);
+}
+
+</style >
+
+.third-card {
+    /*background-color: #ED3700;
+            background-image: linear-gradient(135deg, #ED3700 0, #870008 100%);*/
+    background-color: #e1358f;
+    background-image: linear-gradient(315deg, #e1358f 0, #7e6ce7 100%)
+}

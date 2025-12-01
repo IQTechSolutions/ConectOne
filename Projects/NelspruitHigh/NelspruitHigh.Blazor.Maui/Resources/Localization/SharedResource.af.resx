@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Afrikaans" xml:space="preserve">
+    <value>Afrikaans</value>
+  </data>
+  <data name="CreateAccount" xml:space="preserve">
+    <value>Skep Rekening</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>E-pos</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Engels</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>Wagwoord vergeet?</value>
+  </data>
+  <data name="HomePageButton" xml:space="preserve">
+    <value>Tuisblad</value>
+  </data>
+  <data name="InvalidLoginAttempt" xml:space="preserve">
+    <value>Ongeldige aanmeldpoging</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Taal</value>
+  </data>
+  <data name="LoginButton" xml:space="preserve">
+    <value>Meld Aan</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Wagwoord</value>
+  </data>
+  <data name="SignInSubtitle" xml:space="preserve">
+    <value><![CDATA[Meld aan by jou C<strong>one</strong>ct]]></value>
+  </data>
+  <data name="SignInTitle" xml:space="preserve">
+    <value>Teken In</value>
+  </data>
+  <data name="UnderConstructionMessage" xml:space="preserve">
+    <value>Ons ontwikkel nog hierdie deel, kom asseblief later weer. Dankie vir jou geduld.</value>
+  </data>
+  <data name="WelcomeTitle" xml:space="preserve">
+    <value>Welkom</value>
+  </data>
+</root>

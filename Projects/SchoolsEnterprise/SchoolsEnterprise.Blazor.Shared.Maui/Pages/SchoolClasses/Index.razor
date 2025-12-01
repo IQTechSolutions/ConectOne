@@ -1,0 +1,10 @@
+﻿@page "/schoolclasses/{GradeId}"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using SchoolsEnterprise.Blazor.Shared.Maui.Components.SchoolClasses
+
+<MobilePageTitle Title="@($"{_schoolGrade?.SchoolGrade} Classes")"></MobilePageTitle>
+
+<SchoolClassMobileList GradeId="@GradeId" SchoolClassSelected="NavigateToLearners" />

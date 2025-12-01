@@ -2,11 +2,30 @@
 
 namespace GoogleMapsComponents.Maps;
 
+/// <summary>
+/// Represents configuration options for initializing and customizing the behavior, appearance, and controls of a map
+/// instance.
+/// </summary>
+/// <remarks>Use this class to specify map settings such as center location, zoom level, map type, UI controls,
+/// gesture handling, and styling when creating a new map. All properties are optional unless otherwise noted; omitting
+/// a property will use the map provider's default value. Some options can only be set at initialization and cannot be
+/// changed after the map is created. Refer to individual property documentation for details on required values and
+/// constraints.</remarks>
 public class MapOptions
 {
     #region Constructors
 
+    /// <summary>
+    /// Initializes a new instance of the MapOptions class with default settings.
+    /// </summary>
     public MapOptions() { }
+
+    /// <summary>
+    /// Initializes a new instance of the MapOptions class with the specified zoom level, center location, and map type.
+    /// </summary>
+    /// <param name="zoom">The initial zoom level of the map. Must be a non-negative integer.</param>
+    /// <param name="centre">The geographical coordinates representing the center point of the map.</param>
+    /// <param name="mapTypeId">The type of map to display, such as roadmap or satellite.</param>
     public MapOptions(int zoom, LatLngLiteral centre, MapTypeId mapTypeId) 
     {
         Zoom = zoom;
@@ -110,7 +129,6 @@ public class MapOptions
     /// <summary>
     /// The initial Map mapTypeId. Defaults to ROADMAP.
     /// </summary>
-    //[JsonConverter(typeof(StringEnumConverter))]
     [JsonConverter(typeof(EnumMemberConverter<MapTypeId>))]
     public MapTypeId MapTypeId { get; set; }
 
@@ -174,12 +192,6 @@ public class MapOptions
     /// The scrollwheel is enabled by default.
     /// </summary>
     public bool? Scrollwheel { get; set; }
-
-    /// <summary>
-    /// A StreetViewPanorama to display when the Street View pegman is dropped on the map. 
-    /// If no panorama is specified, a default StreetViewPanorama will be displayed in the map's div when the pegman is dropped.
-    /// </summary>
-    //public StreetViewPanorama streetView { get; set; }
 
     /// <summary>
     /// The initial enabled/disabled state of the Street View Pegman control. 

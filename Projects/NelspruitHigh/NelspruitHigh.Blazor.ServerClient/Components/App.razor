@@ -81,7 +81,7 @@
             window.addEventListener('load', hideSplashScreen);
 
             // Fallback in case load fires before this script executes
-            if (document.readyState === 'complete') {
+            if (document.readyState === 'ready') {
                 hideSplashScreen();
             }
         })();

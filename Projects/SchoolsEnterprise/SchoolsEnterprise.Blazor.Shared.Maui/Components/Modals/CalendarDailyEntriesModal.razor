@@ -1,0 +1,20 @@
+﻿@using MudBlazor
+<MudDialog>
+    <DialogContent>
+        <MudTable Items="_events">
+            <HeaderContent>
+                <MudTh>@Localizer["DateHeader"]</MudTh>
+                <MudTh>@Localizer["SubjectHeader"]</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd><strong>@context.StartDate.ToLongDateString()</strong></MudTd>
+                <MudTd>@context.Name</MudTd>
+                <MudTd></MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer["OkButton"]</MudButton>
+    </DialogActions>
+</MudDialog>

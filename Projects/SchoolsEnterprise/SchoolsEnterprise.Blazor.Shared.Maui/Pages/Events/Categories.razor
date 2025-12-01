@@ -1,0 +1,58 @@
+﻿@page "/eventCategories/{categoryId}"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .second-card {
+        background-color: #17D4FF;
+        background-image: linear-gradient(135deg, #17D4FF 0, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@_category.Name"></MobilePageTitle>
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        @if (_subCategories.Any())
+        {
+            @foreach (var category in _subCategories)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="1" Class="d-flex flex-row rounded-lg second-card2" @onclick="@(() => NavigateToPage($"/sections/{category.CategoryId}"))">
+                        <div style="height:50px; width: 50px;">
+                            <MudImage Elevation="0" Src="@(GetCategoryIcon(@category.Name))" Class="align-self-center" Style="height:40px; width: 40px; margin-top:7px;  padding-left:15px;"> </MudImage>
+                        </div>
+
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500; color:white !important;" Class="align-self-center"> @category.Name </MudText>
+                        <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Style=" color:white !important;" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                    </MudCard>
+                </MudItem>
+            }
+        }
+        else
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                        @if (string.IsNullOrEmpty(CategoryId))
+                        {
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">There are no event groups available, that your child are participating in, please check back later</MudText>
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">There are no event groups available for @_category!.Name, that your child are participating in, please check back later</MudText>
+                        }
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

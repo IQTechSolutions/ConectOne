@@ -1,0 +1,176 @@
+﻿@page "/profile"
+
+@attribute [Authorize]
+
+@using ConectOne.Domain.Extensions
+@using IdentityModule.Domain.Constants
+@using IdentityModule.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using SchoolsEnterprise.Blazor.Shared.Maui.Pages.Profile.Components
+
+<MudPaper Elevation="3" Height="150" Class="px-4 mx-n4 mt-n10 pt-10 mud-theme-primary" Style="border-radius: 0px 0px 45px 45px;" Outlined="false">
+    <MudPaper Elevation="0" Class="py-6" Style="background-color: transparent">
+    </MudPaper>
+</MudPaper>
+
+@if (isLoading)
+{
+    <MudGrid Class="mt-n15 pt-0 mb-3">
+        <MudItem xs="12">
+            <MudCard Elevation="1" Class="rounded-lg" Style="margin-bottom:10px;">
+                <MudCardMedia Image="images/static/Lugfoto.jpg" Height="140" />
+                <MudCardContent Class="pt-5" Style="text-align:center">
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Style="padding20px;"/>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+}
+else
+{
+    <MudGrid Class="mt-n15 pt-0 mb-3">
+        <MudItem xs="12">
+            <MudCard Elevation="1" Class="rounded-lg" Style="margin-bottom:10px;">
+                <MudCardMedia Image="images/static/Lugfoto.jpg" Height="140" />
+                <MudCardContent Class="pt-0">
+                    <MudAvatar Style="height: 80px; width: 80px; color:gray;" Class="mt-n10">
+                        @if (_userInfo is not null)
+                        {
+                            @((_userInfo.FirstName + " " + _userInfo.LastName).GetInitials())
+                        }
+                        else
+                        {
+                            <span>SA</span>
+                        }
+                    </MudAvatar>
+                    <div class="d-flex justify-space-between mb-2">
+                        <div>
+                            <MudText Typo="Typo.h6" Style="font-weight: 700;" Class="">@_userInfo?.FirstName @_userInfo?.LastName</MudText>
+                            <MudText Typo="Typo.h6" Style="font-weight: 400;" Class="">@_userInfo?.PhoneNr</MudText>
+                            <MudText Typo="Typo.h6" Style="font-weight: 400;" Class="">@_userInfo?.EmailAddress?.TruncateLongString(30)</MudText>
+                            <AuthorizeView Roles="@RoleConstants.SuperUser">
+                                <MudText Typo="Typo.caption" Color="Color.Primary"><strong>Super Admin</strong></MudText>
+                            </AuthorizeView>
+                            <AuthorizeView Roles="@RoleConstants.Learner">
+                                <MudText Typo="Typo.caption" Color="Color.Primary"><strong>Learner</strong></MudText>
+                            </AuthorizeView>
+                            <AuthorizeView Roles="@RoleConstants.Parent">
+                                <MudText Typo="Typo.caption" Color="Color.Primary"><strong>Parent</strong></MudText>
+                            </AuthorizeView>
+                            <AuthorizeView Roles="@RoleConstants.Teacher">
+                                <MudText Typo="Typo.caption" Color="Color.Primary"><strong>Teacher</strong></MudText>
+                            </AuthorizeView>
+                        </div>
+                        @* <MudButton Size="Size.Small" Href="/users/editor" StartIcon="@Icons.Material.Filled.Edit">Edit</MudButton>  *@
+                    </div>
+
+                    @if(!string.IsNullOrEmpty(_userInfo?.Description))
+                    {
+                        <MudText Typo="Typo.body2">@_userInfo?.Description</MudText>
+                    }
+                </MudCardContent>
+
+            </MudCard>
+            
+            <UpgradeAccountPartial UserId="@_user.GetUserId()"/>
+
+            <MudCard Elevation="1" Class="rounded-lg mb-5">
+                <MudTabs Outlined="true" Centered="true">
+                    @if (_parents.Any())
+                    {
+                        <MudTabPanel Text="Parents">
+                            <AuthorizeView Roles="@RoleConstants.Learner">
+                                <MudCardContent Class="py-3">
+                                    <MudText Typo="Typo.h6" Style="font-weight: 500;" Color="Color.Primary"> Parents </MudText>
+                                    <MudText Class="mb-3" Typo="Typo.caption"> Basic details about you. Set them here. These can be connected to your database and shown on the user profile. </MudText>
+
+                                    <MudGrid Class="mb-5 mt-3" Spacing="2">
+                                        @foreach (var item in _parents)
+                                        {
+                                            <MudItem xs="12" sm="12" md="12">
+                                                <MudCard Elevation="1" Class="rounded-lg" @onclick="@(() => NavigateToParentDetails(item.ParentId!))">
+                                                    <div class="d-flex flex-row rounded-lg">
+                                                        <div style="height:100px; width: 100px;">
+                                                            <MudAvatar Elevation="0" Image="@item.CoverImageUrl" Class="align-self-center" Style="height:85px; width: 85px; margin-top:7px; margin-left:7px;"> </MudAvatar>
+                                                        </div>
+                                                        <div class="align-self-center">
+                                                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> @item.FirstName @item.LastName </MudText>
+                                                        </div>
+                                                        <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                                                    </div>
+                                                </MudCard>
+                                            </MudItem>
+                                        }
+                                    </MudGrid>
+                                </MudCardContent>
+                            </AuthorizeView>
+                        </MudTabPanel>
+                    }
+
+                    @if (_learners.Any())
+                    {
+                        <MudTabPanel Text="Learners">
+                            <AuthorizeView Roles="@RoleConstants.Parent">
+                                <MudCardContent Class="py-3">
+                                    <MudCard Elevation="0" Class="d-flex justify-space-between " Style="background-color: transparent">
+                                        <MudText Typo="Typo.h6" Style="font-weight: 500;" Color="Color.Primary"> Learners </MudText>
+                                        <MudText Class="mb-3" Typo="Typo.caption"> Basic details about you. Set them here. These can be connected to your database and shown on the user profile. </MudText>
+                                        <MudGrid Class="mb-5 mt-3" Spacing="2">
+
+                                            @foreach (var item in _learners)
+                                            {
+                                                <MudItem xs="12" sm="12" md="12">
+                                                    <MudCard Elevation="1" Class="rounded-lg" @onclick="@(() => NavigateToLearnerDetails(item.LearnerId!))">
+                                                        <div class="d-flex flex-row rounded-lg">
+                                                            <div style="height:100px; width: 100px;">
+                                                                <MudAvatar Elevation="0" Image="@item.CoverImageUrl" Class="align-self-center" Style="height:85px; width: 85px; margin-top:7px; margin-left:7px;"> </MudAvatar>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> @item.FirstName @item.LastName </MudText>
+                                                                <MudText Typo="Typo.subtitle1" Style="font-weight: 300;" Class="align-self-center" Color="@Color.Default"> @item.Grade?.SchoolGrade </MudText>
+                                                            </div>
+                                                            <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                                                        </div>
+                                                    </MudCard>
+                                                </MudItem>
+                                            }
+
+                                        </MudGrid>
+                                    </MudCard>
+                                </MudCardContent>
+                            </AuthorizeView>
+                        </MudTabPanel>
+                    }
+                    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseBusinessListingModule"))
+                    {
+                        <MudTabPanel Text="Listings">
+                            <UserListings UserId="@_user.GetUserId()"/>
+                        </MudTabPanel>
+                    }
+                    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("SellAdvertisements"))
+                    {
+
+                        <MudTabPanel Text="Advertisements">
+                            <UserAdvertisements UserId="@_user.GetUserId()"/>
+                        </MudTabPanel>
+                    }
+
+                </MudTabs>
+
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton Href="@($"roles/expansion")" FullWidth="true" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Upgrade">Upgrade Registration</MudButton>
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton Href="@($"users/editor/{_userInfo?.UserId}")" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit">Edit Profile</MudButton>
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton OnClick="OnProfileRemove" FullWidth="true" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Remove Profile</MudButton>
+        </MudItem>
+    </MudGrid>
+}
+

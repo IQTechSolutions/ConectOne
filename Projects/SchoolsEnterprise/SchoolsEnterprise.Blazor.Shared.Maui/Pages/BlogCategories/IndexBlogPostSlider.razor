@@ -1,0 +1,45 @@
+﻿@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .second-card2 {
+        background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (_feed != null && _feed.Any())
+{
+    <MudCarousel Class="mud-width-full" Style="height:180px;" ShowArrows="false" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="true" TData="object">
+        @foreach (var feedEntry in _feed.Take(5))
+        {
+            <MudCarouselItem Transition="Transition.Fade" @onclick="@(() => NavigateToFeed(feedEntry.BlogPostId!))">
+            @if (Configuration["ApplicationConfiguration:NewsFeedWidget"] == "Widget1")
+            {
+                <MudCard Elevation="0" Class="mt-5 rounded-lg">
+                    <MudCardContent>
+                        <div class="mx-3">
+                            <MudText Typo="Typo.h6" Style="font-weight: 300; color:black">@feedEntry.Title</MudText>
+                            <MudText Typo="Typo.caption" Style="color:black">@feedEntry.Description.HtmlToPlainText().TruncateLongString(150)</MudText>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            }
+            else
+            {
+                <MudCard Elevation="0" Class="mt-5 rounded-lg second-card2">
+                    <MudCardContent>
+                        <div class="mx-3">
+                            <MudText Typo="Typo.h6" Style="font-weight: 300; color:white">@feedEntry.Title</MudText>
+                            <MudText Typo="Typo.caption" Style="color:white">@feedEntry.Description.HtmlToPlainText().TruncateLongString(150)</MudText>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            }
+            </MudCarouselItem>
+        }
+    </MudCarousel>
+}

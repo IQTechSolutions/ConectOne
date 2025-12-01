@@ -1,0 +1,47 @@
+﻿@page "/activities"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .second-card {
+        background-color: #17D4FF;
+        background-image: linear-gradient(135deg, #17D4FF 0, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="ACTIVITIES"></MobilePageTitle>
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        @foreach (var item in _productItemList)
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;" @onclick="@(() => NavigateToProductDetail())">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                        <MudGrid>
+                            <MudItem xs="3" Class="second-card rounded-lg" Style="vertical-align:central">
+                                <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:white !important;" Class="text-secondary">26 May 2024</MudText>
+                                <MudDivider></MudDivider>
+                                <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center;" Color="@Color.Warning" Class="text-secondary">14:00</MudText>
+                            </MudItem>
+                            <MudItem xs="9">
+                                <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default" Class="text-secondary">Jnr & Snr Choir - Tygerberg Eisteddfod</MudText>                                
+                                <div class="d-flex flex-row justify-space-between">
+                                    <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Color="Color.Secondary" Class="px-2 rounded-lg">Away</MudChip>
+                                </div>
+                            </MudItem>
+                        </MudGrid>                        
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

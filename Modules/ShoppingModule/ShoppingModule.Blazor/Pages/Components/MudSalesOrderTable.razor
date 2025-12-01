@@ -1,0 +1,54 @@
+﻿@using MudBlazor
+<style>
+	.mud-table-container {
+		overflow: auto;
+	}
+</style>
+
+<MudTable Elevation="25" ServerData="GetSalesOrdersAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="table" RowsPerPage="25">
+
+	<ToolBarContent>
+		<MudSpacer />
+		<MudButton DisableElevation Variant="Variant.Filled" Href="/products/create" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New</MudButton>
+	</ToolBarContent>
+
+	<HeaderContent>
+		<MudTh>Order Nr</MudTh>
+		<MudTh>Customer</MudTh>
+		<MudTh>Item Count</MudTh>
+		<MudTh>Paid</MudTh>
+		<MudTh>Amount Due</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+
+    <RowTemplate>
+		<MudTd>@context.SalesOrderNr</MudTd>
+		<MudTd>@context.UserInfo.FirstName @context.UserInfo.LastName</MudTd>
+		<MudTd>@context.ItemCount</MudTd>
+		<MudTd><strong>@context.Paid</strong></MudTd>
+		<MudTd>@context.TotalIncl</MudTd>
+		<MudTd DataLabel="Actions" Style="text-align: right">
+			<MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+				<MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/salesorders/update/{@context.SalesOrderId}")">Edit</MudMenuItem>
+				<MudMenuItem Icon="@Icons.Material.Filled.StarBorder" Href="@($"/salesorders/changeStatus/{@context.SalesOrderId}")">Change Status</MudMenuItem>
+				<MudMenuItem Icon="@Icons.Material.Filled.Inventory" Href="@($"/salesorders/update/{@context.SalesOrderId}")">Create Invoice</MudMenuItem>
+				<MudMenuItem Icon="@Icons.Material.Filled.Archive" Href="@($"/salesorders/archive/{@context.SalesOrderId}")">Cancel</MudMenuItem>
+			</MudMenu>
+		</MudTd>
+	</RowTemplate>
+
+	<FooterContent>
+		<MudTd colspan="6">
+		    <div class="d-flex">
+			    <MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+				<MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+				<MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+		    </div>
+		</MudTd>
+	</FooterContent>
+
+	<PagerContent>
+		<MudTablePager/>
+	</PagerContent>
+
+</MudTable>

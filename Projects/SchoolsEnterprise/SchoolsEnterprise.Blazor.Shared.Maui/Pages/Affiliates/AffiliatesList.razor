@@ -1,0 +1,74 @@
+@page "/affiliates"
+
+@using FilingModule.Domain.Enums
+@using MudBlazor
+@using Radzen
+@using Radzen.Blazor
+
+@if (_ads.Any())
+{
+    <MudBreakpointProvider>
+        <MudHidden Breakpoint="Breakpoint.MdAndDown">
+            <RadzenCarousel @ref=_carousel @bind-SelectedIndex="@_selectedIndex" Auto="true" Interval="@_interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="height:850px" AllowNavigation="false">
+                <Items>
+
+                    @{
+                        decimal dddd = Convert.ToDecimal(_ads.Count) / 24;
+                        var ceiling = Math.Ceiling(dddd);
+                    }
+                    @for (var i = 0; i < ceiling; i++)
+                    {
+                        <RadzenCarouselItem>
+                            <MudGrid>
+                                @foreach (var group in _ads.Skip(_selectedIndex * 8).Take((_selectedIndex + 1) * 24))
+                                {
+                                    <MudItem xs="3" sm="3" md="3" lg="3" xl="3" Style="text-align:center" @onclick="@(() => { NavigationManager.NavigateTo(@group.Url); })">
+                                        <MudImage Class="ma-2 align-self-center" Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{group.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath}")" Style="height:100px; width:100px;" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </RadzenCarouselItem>
+                    }
+
+                </Items>
+            </RadzenCarousel>
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.LgAndUp">
+            <RadzenCarousel @ref=_carousel2 @bind-SelectedIndex="@_selectedIndex" Auto="true" Interval="@_interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="height:850px" AllowNavigation="false">
+                <Items>
+
+                    @{
+                        decimal dddd = Convert.ToDecimal(_ads.Count) / 18;
+                        var ceiling = Math.Ceiling(dddd);
+                    }
+                    @for (var i = 0; i < ceiling; i++)
+                    {
+                        <RadzenCarouselItem>
+                            <MudGrid>
+                                @foreach (var group in _ads.Skip(_selectedIndex * 6).Take((_selectedIndex + 1) * 18))
+                                {
+                                    <MudItem xs="4" sm="4" md="4" lg="4" xl="4" Style="text-align:center" @onclick="@(() => { NavigationManager.NavigateTo(@group.Url); })">
+                                        <MudImage Class="ma-2 align-self-center" Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{group.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath}")" Style="height:100px; width:100px;" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </RadzenCarouselItem>
+                    }
+
+                </Items>
+            </RadzenCarousel>
+        </MudHidden>
+
+    </MudBreakpointProvider>
+}
+else
+{
+    <MudItem xs="12" sm="6" md="6">
+        <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+            <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No affiliates currently available, please check back later</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+}
+

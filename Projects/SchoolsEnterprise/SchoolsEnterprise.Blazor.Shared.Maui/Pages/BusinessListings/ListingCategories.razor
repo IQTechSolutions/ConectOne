@@ -1,0 +1,57 @@
+﻿@page "/directory/categories"
+@page "/directory/categories/{ParentCategoryId}"
+
+@attribute [Authorize]
+
+@using ConectOne.Blazor.Components
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+<MobilePageTitle Title="Business Directory"></MobilePageTitle>
+
+<MudGrid Class="mb-5" Spacing="2" Style="padding-top:15px;">
+    @if (_categories.Any())
+{
+    @foreach (var item in _categories)
+    {
+        if (_categories.Count > 3)
+        {
+            <MudItem xs="6" sm="6" md="6">
+                @if (item.Images.Any(c => c.ImageType == UploadType.Cover))
+                {
+                    <TileButton Title="@item.Name" FullImage="true" Image="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath?.TrimStart('/')}")" TileClicked="@(() => NavigateToPage(item.SubCategoryCount == 0 ? $"/directory/{item.CategoryId}" : $"/directory/categories/{item.CategoryId}"))"/>
+                }
+                else
+                {
+                    <TileButton Title="@item.Name" Height="@(item.Images.Any(c => c.ImageType == UploadType.Icon) ? "130px" : "auto")" DisplayImage="item.Images.Any(c => c.ImageType == UploadType.Icon)" Image="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Icon)?.RelativePath?.TrimStart('/')}")" TileClicked="@(() => NavigateToPage(item.SubCategoryCount == 0 ? $"/directory/{item.CategoryId}" : $"/directory/categories/{item.CategoryId}"))"/>
+                }
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" sm="12" md="12">
+                @if (item.Images.Any(c => c.ImageType == UploadType.Cover))
+                {
+                    <TileButton Title="@item.Name" FullImage="true" Image="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath?.TrimStart('/')}")" TileClicked="@(() => NavigateToPage(item.SubCategoryCount == 0 ? $"/directory/{item.CategoryId}" : $"/directory/categories/{item.CategoryId}"))"/>
+                }
+                else
+                {
+                    <TileButton Title="@item.Name" Height="@(item.Images.Any(c => c.ImageType == UploadType.Icon) ? "130px" : "auto")" DisplayImage="item.Images.Any(c => c.ImageType == UploadType.Icon)" Image="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Icon)?.RelativePath?.TrimStart('/')}")" TileClicked="@(() => NavigateToPage(item.SubCategoryCount == 0 ? $"/directory/{item.CategoryId}" : $"/directory/categories/{item.CategoryId}"))"/>
+                }
+            </MudItem>
+        }
+    }
+}
+else
+{
+    <MudItem xs="12" sm="6" md="6">
+        <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+            <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No business categories currently defined, please check back later</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+}
+
+</MudGrid>

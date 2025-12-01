@@ -1,0 +1,38 @@
+﻿@using FilingModule.Domain.DataTransferObjects
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+
+@inject IConfiguration Configuration
+
+@if (DocumentLinks is not null && DocumentLinks.Any() || Documents is not null && Documents.Any())
+{
+    <MudCard Elevation="1" Class="mt-5 rounded-lg">
+        <MudCardContent>
+                
+            <MudItem>
+                <MudDivider/>
+            </MudItem>
+
+            <MudItem>
+                <MudText><strong>Documents and Information Links:</strong></MudText>
+                <MudList T="string" Dense="@true" DisableGutters="false">
+                    @foreach (var item in DocumentLinks)
+                    {
+                        <MudListItem Text="@(string.IsNullOrEmpty(item.Split("/").Last()) ?  item.Split("/")[item.Split("/").Length -2] : item.Split("/").Last())" Icon="@Icons.Material.Filled.Attachment" Href="@item" target="_blank" />
+                    }
+                    @foreach (var item in Documents)
+                    {
+                        <MudListItem Text="@item.FileName" Icon="@Icons.Material.Filled.Attachment" Href="@(Configuration.GetValue<string>("ApiConfiguration:BaseApiAddress")+"/"+item.Url)" target="_blank" />
+                    }
+                </MudList>
+            </MudItem>
+                
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+
+    [Parameter] public ICollection<string> DocumentLinks { get; set; } = [];
+    [Parameter] public ICollection<DocumentDto> Documents { get; set; } = [];
+}

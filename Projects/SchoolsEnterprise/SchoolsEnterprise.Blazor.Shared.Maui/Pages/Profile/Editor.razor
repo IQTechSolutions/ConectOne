@@ -1,0 +1,115 @@
+﻿@page "/users/editor"
+@page "/users/editor/{UserId}"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components.ContactNumbers
+@using ConectOne.Blazor.Components.EmailAddresses
+@using IdentityModule.Domain.Constants
+@using IdentityModule.Domain.Entities
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<MudPaper Elevation="3" Height="150" Class="px-4 mx-n4 mt-n10 pt-10 mud-theme-primary" Style="border-radius: 0px 0px 45px 45px;" Outlined="false">
+    <MudPaper Elevation="0" Class="py-6" Style="background-color: transparent">
+
+    </MudPaper>
+</MudPaper>
+
+@if (_loaded)
+{
+    <MudGrid Class="mt-n15 pt-0 mb-3">
+        <MudItem xs="12">
+            <MudCard Elevation="1" Class="rounded-lg">
+                <MudCardContent>
+                    <div class="d-flex mb-3">
+                        <MudAvatar Image="images/pictures/faces/3s.png" Style="height: 70px; width: 70px;">
+                            @if (_userInfo is not null )
+                            {
+                                @(string.IsNullOrEmpty(_userInfo.FirstName) ? "" : char.ToUpper(_userInfo.FirstName[0])) @(string.IsNullOrEmpty(_userInfo.LastName) ? "" : char.ToUpper(_userInfo.FirstName[0]))
+                            }
+                        </MudAvatar>
+                        <div class="mx-3 align-self-center">
+                            <MudText Color="Color.Default" Typo="Typo.h6" Style="font-weight: 700;">@_userInfo.FirstName @_userInfo.LastName</MudText>
+                            <MudText Color="Color.Primary" Typo="Typo.caption" Style="font-weight: 500;">@_userInfo.UserName</MudText>
+                        </div>
+                    </div>
+                    <MudText Typo="Typo.body2">@_userInfo.Description</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <EditForm Model="_userInfo" OnValidSubmit="UpdateAsync">
+        
+        <MudTabs>
+            <MudTabPanel Text="Details">
+                <MudCard Elevation="1" Class="rounded-lg mb-5">
+                    <MudCardContent>
+                        <MudGrid Spacing="2" Class="pb-2">
+                            <MudItem xs="12">
+                                <MudText Typo="Typo.h6" Style="font-weight: 500;" Color="Color.Primary">Basic Info</MudText>
+                                <MudText Typo="Typo.caption">Basic details about you. Set them here. These can be connected to your database and shown on the user profile. </MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField @bind-Value="_userInfo.FirstName" Label="Full Name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField @bind-Value="_userInfo.LastName" Label="Surname" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudCard>
+                                    <ContactNumberList TContactNumberOwner="UserInfo" ParentId="@_userInfo.UserId" ControllerUrlPart="account" />
+                                </MudCard>
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <EmailAddressList TEmailAddressOwner="UserInfo" ParentId="@_userInfo.UserId" ControllerPartUrl="account" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            </MudTabPanel>
+            <MudTabPanel Text="Settings">
+                <MudCard Elevation="1" Class="rounded-lg mb-5">
+                    <MudCardContent Class="py-5">
+                        <MudText Typo="Typo.h6" Style="font-weight: 500;" Color="Color.Primary"> Account Settings </MudText>
+                        <MudText Typo="Typo.caption"> Set your preferences here, these can be connected to a database and shown on the user profile. </MudText>
+                        
+                        @if (_user.IsInRole(RoleConstants.Parent))
+                        {
+                            <div class="d-flex justify-space-between mt-5">
+                                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> Require Consent</MudText>
+                                <MudSwitch T="bool" @bind-Value="@_userInfo.RequireConsent" Color="Color.Tertiary" Class="align-self-center ma-n3" />
+                            </div>
+
+                            <MudDivider Class="my-4"></MudDivider>
+                        }
+
+                        <div class="d-flex justify-space-between mt-5">
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> Notifications</MudText>
+                            <MudSwitch T="bool" @bind-Value="@_userInfo.ReceiveNotifications" Color="Color.Tertiary" Class="align-self-center ma-n3" />
+                        </div>
+
+                        <MudDivider Class="my-4"></MudDivider>
+
+                        <div class="d-flex justify-space-between mt-5">
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> Emails</MudText>
+                            <MudSwitch T="bool" @bind-Value="@_userInfo.RecieveEmails" Color="Color.Tertiary" Class="align-self-center ma-n3" />
+                        </div>
+
+                        <MudDivider Class="my-4"></MudDivider>
+
+                        <div class="d-flex justify-space-between">
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> Messages</MudText>
+                            <MudSwitch T="bool" @bind-Value="@_userInfo.ReceiveMessages" Color="Color.Tertiary" Class="align-self-center ma-n3" />
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudTabPanel>
+        </MudTabs>
+
+        <MudButton OnClick="UpdateAsync" Class="py-2 rounded-lg" Color="Color.Tertiary" FullWidth="true" Variant="Variant.Filled"> Save Information </MudButton>
+
+    </EditForm>
+}
+

@@ -1,0 +1,58 @@
+﻿@page "/Account/ResendEmailConfirmation"
+
+@using IdentityModule.Domain.Entities
+@using Microsoft.AspNetCore.Identity
+@using MudBlazor
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject IConfiguration Configuration
+
+<PageTitle>Resend email confirmation</PageTitle>
+<HeadContent>
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div style="text-align:center">
+        <EditForm Model="Input" FormName="resend-email-confirmation" OnValidSubmit="OnValidSubmitAsync" method="post">
+            <MudItem xs="12" md="12" lg="12" xl="12">
+                <div class="justify-center">
+                    <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:logoUrl")}")" Style="width: 150px;" />
+                </div>
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12" xl="12">
+                <div class="justify-center">
+                    <h2>@($"{Configuration.GetValue<string>("ApplicationConfiguration:ApplicationName")} School Admin")</h2>
+                </div>
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12" xl="12">
+                <StatusMessage Message="@message" />
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12" xl="12">            
+                <div class="justify-center">
+                    <MudText><strong>Reset your password</strong></MudText>
+                </div>
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12" xl="12"> 
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
+                <label for="Input.Email" class="form-label">Email</label>
+                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            </div>
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12" xl="12">  
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12" xl="12">
+                <a href="/" Class="my-4 py-2 rounded-lg btn btn-block" style="background-color: #1b6ec2; ; width:100%; color:white;">Home</a>
+            </MudItem>
+        </EditForm>
+    </div>
+
+@code {
+    
+}

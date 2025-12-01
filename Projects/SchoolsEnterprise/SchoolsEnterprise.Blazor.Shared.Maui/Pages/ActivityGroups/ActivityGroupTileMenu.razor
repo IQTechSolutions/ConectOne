@@ -1,0 +1,21 @@
+﻿@using ConectOne.Blazor.Components
+@using MudBlazor
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+
+        @ChildContent
+
+        @foreach (var category in _categories)
+        {
+            <MudItem xs="4" sm="4" md="4">
+                <TileButton BadgeCount="@category.NotViewedCount" Title="@category.Name" Image="@GetCategoryIcon(@category.Name)" TileClicked="@(() => NavigateToActivityCategories(@category.CategoryId))" />
+            </MudItem>
+        }
+
+    </MudGrid>
+}

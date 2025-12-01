@@ -1,0 +1,142 @@
+﻿@using ConectOne.Domain.Extensions
+@using IdentityModule.Domain.Constants
+@using MessagingModule.Domain.Enums
+@using MudBlazor
+
+@if (!_loaded)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    if (SchoolEvent.AttendanceConsentRequired || SchoolEvent.TransportPermissionRequired)
+    {
+
+        @if (_schoolEventPermissions.Any() && !_user.IsInRole(RoleConstants.Learner))
+        {
+            var permissionsGroupings = _schoolEventPermissions.OrderBy(c => c.ActivityGroup.Name).GroupBy(c => c.ParticipatingActivityGroupId);
+            var gg = permissionsGroupings.Count();
+
+
+            foreach (var permissionGrouping in permissionsGroupings)
+            {
+                var tt = permissionGrouping.Count();
+
+                <MudItem xs="12" sm="12">
+                    <MudCard Style="width:100%">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6" Style="font-weight: 600;">@permissionGrouping.First().ActivityGroup.Name</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudGrid>
+                                @foreach (var permission in _schoolEventPermissions.Where(c => c.ParticipatingActivityGroupId == permissionGrouping.Key))
+                                {
+                                    if (permission.RequireAttendanceConsent)
+                                    {
+                                        <MudItem xs="8" sm="8">
+                                            <MudText>Please advise if <strong>@permission.Learner.ToString()</strong> will be playing for @permissionGrouping.First().ActivityGroup.Name</MudText>
+                                        </MudItem>
+
+                                        <MudItem xs="4" sm="4">
+                                            <MudButton Color="Color.Success" @onclick="async () => await GiveConsent(ConsentTypes.Attendance, SchoolEvent.EventId!, permission.Learner.LearnerId!, ParentId, permission.Learner.LearnerId!, permissionGrouping.Key, null)">Yes</MudButton>
+                                            <MudButton Color="Color.Error" @onclick="async () => await RefuseConsent(ConsentTypes.Attendance, SchoolEvent.EventId!, permission.Learner.LearnerId!, ParentId, permission.Learner.LearnerId!, permissionGrouping.Key)">No</MudButton>
+                                        </MudItem>
+                                    }
+                                    else
+                                    {
+                                        if (permission.AttendanceConsent)
+                                        {
+                                            <MudItem xs="12" sm="12">
+                                                <MudText><strong>Attendance</strong> permission was given and <strong>@permission.Learner.ToString()</strong> will be participating in @permissionGrouping.First().ActivityGroup.Name</MudText>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="12">
+                                                <MudButton Color="Color.Success" @onclick="async () => await RetractConsent(ConsentTypes.Attendance, SchoolEvent.EventId!, permission.Learner.LearnerId, permissionGrouping.Key)">Cancel My Consent</MudButton>
+                                            </MudItem>
+                                        }
+                                        else
+                                        {
+                                            <MudItem xs="12" sm="12">
+                                                <MudText>Permission to <strong>participate</strong> in @permissionGrouping.First().ActivityGroup.Name was denied for <strong>@permission.Learner.FirstName @permission.Learner.LastName</strong>.</MudText>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="12">
+                                                <MudButton Color="Color.Success" @onclick="async () => await RetractConsent(ConsentTypes.Attendance, SchoolEvent.EventId!, permission.Learner.LearnerId, permissionGrouping.Key)">Cancel My Consent</MudButton>
+                                            </MudItem>
+                                        }
+                                    }
+
+
+                                    if (SchoolEvent.AttendanceConsentRequired && permission.AttendanceConsent || !SchoolEvent.AttendanceConsentRequired)
+                                    {
+                                        if (SchoolEvent.TransportPermissionRequired)
+                                        {
+                                            if (permission.RequireTransportConsent)
+                                            {
+                                                <MudItem xs="8" sm="8">
+                                                    <MudText>Please advise if <strong>@permission.Learner.FirstName @permission.Learner.LastName</strong> will be using the provided transport</MudText>
+                                                </MudItem>
+                                                <MudItem xs="4" sm="4">
+                                                    <MudButton Color="Color.Success" @onclick="() => { permission.TransportConsentGiven = true; }">Yes</MudButton>
+                                                    <MudButton Color="Color.Error" @onclick="async () => await RefuseConsent(ConsentTypes.Transport, SchoolEvent.EventId!, permission.Learner.LearnerId!, ParentId, permission.Learner.LearnerId!, permissionGrouping.Key)">No</MudButton>
+                                                </MudItem>
+                                            }
+                                            else
+                                            {
+                                                if (permission.TransportConsent)
+                                                {
+                                                    if (permission.ConsentDirection == null)
+                                                    {
+                                                        <MudItem xs="12" sm="12">
+                                                            <MudText>Please select one of the transport options available</MudText>
+                                                        </MudItem>
+                                                        <MudItem xs="4" sm="4">
+                                                            <MudButton Color="Color.Success" @onclick="async () => await GiveConsent(ConsentTypes.Transport, SchoolEvent.EventId!, permission.Learner.ParticipatingTeamMemberId!, ParentId, permission.Learner.LearnerId!, permissionGrouping.Key, ConsentDirection.ToAndFrom)">To And From</MudButton>
+                                                        </MudItem>
+                                                        <MudItem xs="4" sm="4">
+                                                            <MudButton Color="Color.Success" @onclick="async () => await GiveConsent(ConsentTypes.Transport, SchoolEvent.EventId!, permission.Learner.ParticipatingTeamMemberId!, ParentId, permission.Learner.LearnerId!, permissionGrouping.Key, ConsentDirection.To)">To</MudButton>
+                                                        </MudItem>
+                                                        <MudItem xs="4" sm="4">
+                                                            <MudButton Color="Color.Error" @onclick="() => { permission.TransportConsentGiven = null; }">Cancel</MudButton>
+                                                        </MudItem>
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudItem xs="12" sm="12">
+                                                            <MudText><strong>@permission.Learner.ToString()</strong> will be using the transport provided and will be transported <strong>@_schoolEventPermissions.FirstOrDefault(c => c.ConsentDirection != null).ConsentDirection.GetDescription()</strong> the event.</MudText>
+                                                        </MudItem>
+                                                        <MudItem xs="12" sm="12">
+                                                            <MudButton Color="Color.Success" @onclick="async () => await RetractConsent(ConsentTypes.Transport, SchoolEvent.EventId!, permission.Learner.LearnerId, permissionGrouping.Key)">Cancel My Consent</MudButton>
+                                                        </MudItem>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <MudItem xs="12" sm="12">
+                                                        <MudText>Permission for <strong>transport</strong> to this event was denied for <strong>@permission.Learner.FirstName @permission.Learner.LastName</strong>.</MudText>
+                                                    </MudItem>
+                                                    <MudItem xs="12" sm="12">
+                                                        <MudButton Color="Color.Success" @onclick="async () => await RetractConsent(ConsentTypes.Transport, SchoolEvent.EventId!, permission.Learner.LearnerId, permissionGrouping.Key)">Cancel My Consent</MudButton>
+                                                    </MudItem>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+
+            }
+        }
+    }
+
+
+    @if (_schoolEventPermissions.Any() || _user.IsInRole(RoleConstants.Teacher))
+    {
+        <MudItem xs="12" sm="12">
+            <MudButton Variant="Variant.Outlined" Color="Color.Success" Style="margin-top:15px;" @onclick="NavigateToTeams" FullWidth>View Teams</MudButton>
+        </MudItem>
+    }
+}

@@ -1,0 +1,66 @@
+﻿@page "/sign-up"
+@using ConectOne.Blazor.Layouts
+@using IdentityModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+
+@layout CleanLayout
+
+<MudPaper Elevation="3" Height="150" Class="px-4 mx-n4 mt-n10 pt-10 mud-theme-primary" Style="border-radius: 0px 0px 45px 45px; padding-bottom:40px;" Outlined="false">
+    <MudPaper Elevation="0" Class="py-6" Style="background-color: transparent; text-align:center;">
+        <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:logoUrl")}")" Style="height: 150px;" />
+    </MudPaper>
+</MudPaper>
+
+<MudGrid Class="mt-n15 pt-0">
+    <MudItem xs="12">
+        <EditForm Model="@_userRegistration" OnSubmit="RegisterAsync" class="card card-body bg-light mt-5">
+            <MudCard Elevation="1" Class="rounded-lg py-1">
+                <MudCardContent>
+
+                    <DataAnnotationsValidator/>
+                    @if (_errors != null && _errors.Any())
+                    {
+                        <MudItem xs="12">
+                            @foreach (var item in _errors)
+                            {
+                                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Style="width:100%" Class="mb-3" Icon="Icons.Material.Filled.Error"> @item </MudAlert>
+                            }
+                        </MudItem>
+                    };
+
+                    <MudText Color="Color.Default" Typo="Typo.h6" Style="font-weight: 600;">Sign Up</MudText>
+                    <MudText Class="mb-5" Typo="Typo.body2">Get started in minutes</MudText>
+
+                    <MudTextField Class="mt-3" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.FirstName" Label="Name" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.AccountCircle" />
+                    <MudTextField Class="mt-3" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.LastName" Label="Surname" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.AccountBox" />
+                    <MudTextField Class="mt-3"  Mask="@(new PatternMask("000 000 0000"))" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.PhoneNumber" Label="Phone Nr" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.Phone" />
+                    <MudTextField Class="mt-3" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.Email" Label="Email" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.AlternateEmail" />
+
+                    <MudSelect ToStringFunc="@_roleConverter" T="RoleDto" Label="User Role" @bind-Value="SelectedOption" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                        @foreach (var state in _availableRoles)
+                        {
+                            <MudSelectItem T="RoleDto" Value="@state">@state.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudTextField OnKeyUp="OnKeyUpEvent" InputType="@_passwordInput" @bind-Value="_userRegistration.Password" For="@(() => _userRegistration.Password)" Class="mt-3" Label="Password" Variant="Variant.Filled" Margin="Margin.Dense" T="string" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+                    <MudTextField OnKeyUp="OnKeyUpEvent" InputType="@_passwordConformationInput" @bind-Value="_userRegistration.ConfirmPassword" For="@(() => _userRegistration.ConfirmPassword)" Class="mt-3" Label="Password" Variant="Variant.Filled" Margin="Margin.Dense" T="string" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@_passwordConformationInputIcon" OnAdornmentClick="TogglePasswordConformationVisibility" />
+
+                    <MudButton ButtonType="ButtonType.Submit" Class="my-4 py-2 rounded-lg" Color="Color.Tertiary" FullWidth="true" Variant="Variant.Filled"> Create Account </MudButton>
+
+                    <div class="d-flex justify-center my-5">
+                        <a href="/"><strong>Already Registered? Sign in</strong></a>
+                    </div>
+
+                </MudCardContent>
+            </MudCard>
+        </EditForm>
+    </MudItem>
+    <MudItem xs="12">
+        <div class="d-flex justify-center">
+            <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:caption")}")" Style="width: 100px;" />
+        </div>
+    </MudItem>
+</MudGrid>

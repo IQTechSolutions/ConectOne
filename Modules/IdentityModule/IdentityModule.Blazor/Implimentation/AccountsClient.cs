@@ -4,12 +4,13 @@ using Blazored.LocalStorage;
 using ConectOne.Domain.Constants;
 using ConectOne.Domain.Extensions;
 using ConectOne.Domain.ResultWrappers;
-using IdentityModule.Blazor.Interfaces;
+using IdentityModule.Blazor.StateManagers;
 using IdentityModule.Domain.DataTransferObjects;
 using IdentityModule.Domain.Interfaces;
 using IdentityModule.Domain.RequestFeatures;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
+using ICustomAuthenticationStateProvider = IdentityModule.Blazor.Interfaces.ICustomAuthenticationStateProvider;
 
 namespace IdentityModule.Blazor.Implimentation
 {
@@ -69,6 +70,8 @@ namespace IdentityModule.Blazor.Implimentation
 
             var result = JsonConvert.DeserializeObject<AuthResponse>(content);
 
+            Console.WriteLine(result);
+
             if (!response.IsSuccessStatusCode)
                 return result!;
 
@@ -81,7 +84,7 @@ namespace IdentityModule.Blazor.Implimentation
             }
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
-            await ((ICustomAuthenticationStateProvider)_authStateProvider).NotifyUserAuthentication(result.Token);
+            await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Token);
 
             return result;
         }

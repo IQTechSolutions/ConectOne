@@ -1,0 +1,23 @@
+﻿@using MudBlazor
+@if (_serviceTiersByRole.Count > 0)
+{
+    <MudCard Elevation="25" Class="mt-5 rounded-lg">
+        <MudCardContent>
+            <div class="d-flex">
+                <MudIconButton Class="align-self-center" Icon="fas fa-check-circle" Color="Color.Success" Size="Size.Large"></MudIconButton>
+                <div class="mx-3">
+                    <MudText Typo="Typo.h6" Style="font-weight: 600;" Color="@Color.Default">Upgrade Account</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Default">Your current subscription exprires March 24th, 2025.</MudText>
+                </div>
+            </div>
+            @if (_serviceTiersByRole.Count > 1)
+            {
+                <MudButton OnClick="@(() => { NavigationManager.NavigateTo($"/account/roles/tiers/{_serviceTiersByRole.FirstOrDefault(c => c.Value.Count > 1).Key}"); })" FullWidth="true" Class="my-3 rounded-lg px-1" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Primary">Buy Subscription</MudButton>
+            }
+            else
+            {
+                <MudButton OnClick="@(() => { NavigationManager.NavigateTo($"/account/roles/tiers/{_serviceTiersByRole.FirstOrDefault().Key}"); })" FullWidth="true" Class="my-3 rounded-lg px-1" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Primary">Buy Subscription</MudButton>
+            }
+        </MudCardContent>
+    </MudCard>
+}

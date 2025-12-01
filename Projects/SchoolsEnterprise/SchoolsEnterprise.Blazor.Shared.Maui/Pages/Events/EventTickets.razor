@@ -1,0 +1,40 @@
+﻿@page "/events/tickets"
+@using ConectOne.Blazor.Components
+@using MudBlazor
+
+<MobilePageTitle Title="Event Tickets"></MobilePageTitle>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MudGrid Class="mb-5" Spacing="2" Style="padding-top:15px;">
+        @if (_events.Any())
+        {
+            @foreach (var schoolEvent in _events)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="1" Class=" rounded-lg" Style="height:170px;" @onclick="() => OpenTicketTypes(schoolEvent.EventId)">
+                        <MudCardContent Class="d-flex flex-column align-self-center flex-wrap px-3 py-2" Style="height:170px;">
+                            <MudIconButton Icon="fas fa-swatchbook" Color="Color.Warning" Class="pa-3 align-self-center" Size="Size.Large"></MudIconButton>
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Surface">@schoolEvent.Name</MudText>
+                            <MudText Typo="Typo.caption" Style="font-weight: 300;" Class="mt-auto align-self-center mud-text-secondary" Color="@Color.Default">Tap to view availble Tickets </MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        }
+        else
+        {
+            <MudItem xs="12" sm="6" md="6">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No event tickets currently available, please check back later</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

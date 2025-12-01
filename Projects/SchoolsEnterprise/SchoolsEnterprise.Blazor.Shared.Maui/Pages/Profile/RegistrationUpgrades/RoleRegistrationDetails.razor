@@ -1,0 +1,94 @@
+﻿@page "/roleservice/tiers/{TierId}"
+@using ConectOne.Blazor.Components
+@using FilingModule.Domain.Enums
+@using MudBlazor
+@using ProductsModule.Domain.DataTransferObjects
+
+<MobilePageTitle Title="Shop Categories"></MobilePageTitle>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MudGrid Class="" Spacing="2" Style="margin-top:15px">
+        <MudItem xs="4" sm="4" md="4">
+            <MudCard Elevation="5" Class="rounded-lg">
+                <MudCardContent Class="d-flex flex-column py-5">
+                    <MudIconButton Icon="fas fa-award" Color="Color.Tertiary" Size="Size.Large"></MudIconButton>
+                    <MudText Typo="Typo.h6" Color="Color.Default" Style="font-weight: 600;" Align="Align.Center">365</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Primary" Align="Align.Center" Class="mt-1">Active Days</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" sm="4" md="4">
+            <MudCard Elevation="5" Class="rounded-lg">
+                <MudCardContent Class="d-flex flex-column py-5">
+                    <MudIconButton Icon="fas fa-book" Color="Color.Warning" Size="Size.Large"></MudIconButton>
+                    <MudText Typo="Typo.h6" Color="Color.Default" Style="font-weight: 600;" Align="Align.Center">@_tier.Services.Count</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Primary" Align="Align.Center" Class="mt-1">Services</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" sm="4" md="4">
+            <MudCard Elevation="5" Class="rounded-lg">
+                <MudCardContent Class="d-flex flex-column py-5">
+                    <MudIconButton Icon="fas fa-bookmark" Color="Color.Secondary" Size="Size.Large"></MudIconButton>
+                    <MudText Typo="Typo.h6" Color="Color.Default" Style="font-weight: 600;" Align="Align.Center">@_tier.Order</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Primary" Align="Align.Center" Class="mt-1">Display Order</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <MudCard Elevation="25" Class="my-5 rounded-lg">
+        @{
+            var vvvv = _tier.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover) is null ? "_content/ProductsModule.Blazor/images/NoImage.jpg" : $"{Configuration["ApiConfiguration:BaseApiAddress"]}//{_tier.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath?.Replace("\\", "/")}";
+        }
+        <MudCardMedia Image="@vvvv" Height="400" />
+        <MudCardContent>
+            <MudGrid Class="mb-3" Spacing="0">
+                <MudItem xs="12">
+                    <MudText Color="Color.Default" Style="font-weight: 600;" Typo="Typo.h6">@_tier.Name</MudText>
+                    <MudText Color="Color.Default" Typo="Typo.caption">@_tier.Description</MudText>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+
+    <MudCard Elevation="25" Class="mt-5 rounded-lg">
+        <MudCardContent>
+            @if (_tier.Services.Any())
+            {
+                <div class="d-flex">
+                    <div class="mx-3">
+                        <MudPaper Width="300px">
+                            <MudText Color="Color.Default" Style="font-weight: 400;" Typo="Typo.h6">Included Services</MudText>
+                            <hr/>
+                            <MudList T="ServiceDto">
+                                @foreach (var item in _tier.Services)
+                                {
+                                    <MudListItem>
+                                        <AvatarContent>
+                                            <MudAvatar>
+                                                <MudImage Src="images/mony.jpg"/>
+                                            </MudAvatar>
+                                        </AvatarContent>
+                                        <ChildContent>
+                                            <div style="color:black">
+                                                @item.Name
+                                            </div>
+                                        </ChildContent>
+                                    </MudListItem>
+                                }
+                            </MudList>
+                        </MudPaper>
+                    </div>
+                </div>
+            }
+            
+            <MudButton FullWidth="true" Class="my-3 rounded-lg px-1" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Success" OnClick="AddToCartAsync">Add To Cart</MudButton>
+        </MudCardContent>
+    </MudCard>
+}

@@ -6,8 +6,6 @@
 @implements MudBlazor.IBrowserViewportObserver
 @implements IAsyncDisposable
 
-
-
 <RadzenCarousel @ref=_affiliateCarousel @bind-SelectedIndex="@_selectedIndex" AllowPaging="false"  Auto="true" Interval="@Interval" PagerOverlay="false" ButtonShade="Shade.Default" Style="@($"height:{_affiliateCarouselHeight}")" AllowNavigation="false">
     <Items>
 

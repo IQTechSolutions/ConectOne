@@ -1,0 +1,20 @@
+﻿@page "/grades"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using SchoolsEnterprise.Blazor.Shared.Maui.Components.SchoolGrades
+
+<MobilePageTitle Title="Grades"></MobilePageTitle>
+
+<SchoolGradeMobileList SchoolGradeSelected="NavigateToSchoolClass" />
+
+@code{
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    private void NavigateToSchoolClass(string gradeId)
+    {
+        NavigationManager.NavigateTo($"/schoolclasses/{gradeId}");
+    }
+ }

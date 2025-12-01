@@ -1,0 +1,66 @@
+﻿@page "/users/listings/{UserId}"
+@page "/users/listings"
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<MudCard Elevation="25" Class="my-5 rounded-lg">
+    <MudCardContent>
+        <MudGrid Class="mb-3" Spacing="1">
+            <MudItem xs="12">
+                <MudText Color="Color.Default" Style="font-weight: 600;" Typo="Typo.h6">Your Business Listing</MudText>
+                <MudText Color="Color.Default" Typo="Typo.caption">Currently running business listing. Renew them before they expire, before they expire.</MudText>
+            </MudItem>
+            
+            @{
+                var listings = DisplayTopPerformers ? _listings.Take(3).ToList() : _listings;
+                foreach (var listing in listings)
+                {
+                    <MudItem xs="12" sm="12" md="12" @onclick="@(() => { NavigationManager.NavigateTo($"/directory/update/{listing.Id}"); })">
+                        <MudCard Elevation="0" Class="d-flex flex-row justify-space-between rounded-lg pa-0 align-center">
+                            <div class="d-flex flex-grow-1">
+                                <MudCardMedia Image="@(listing.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover) is null ? "_content/ProductsModule.Blazor/images/NoImage.jpg" :
+                                                                                                       $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{listing.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath?.TrimStart('/').Replace('\\','/')}")" Class="rounded-lg align-self-center" Style="height: 60px; min-width: 60px; max-width: 60px; " />
+                                <MudCardContent Class="px-3">
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Color="@Color.Default">@listing.Heading</MudText>
+                                    <MudText Typo="Typo.caption" Color="@GetRemainingColor(listing)">@listing.BuildTimeRemainingDescription()</MudText>
+                                    <MudProgressLinear Color="@GetProgressColor(listing)" Value="@listing.GetActiveProgressPercentage()" />
+                                </MudCardContent>
+                            </div>
+                            <div class="d-flex align-center gap-2 px-3">
+                                <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Small" Class="rounded-lg"
+                                           OnClick="@(() => RenewListingAsync(listing))">
+                                    Renew
+                                </MudButton>
+                                <MudIconButton @onclick="@(() => { NavigationManager.NavigateTo($"/directory/update/{listing.Id}"); })" Icon="fas fa-play-circle" Color="Color.Primary" Size="Size.Small"></MudIconButton>
+                            </div>
+                        </MudCard>
+                    </MudItem>
+                }
+            }
+        </MudGrid>
+    </MudCardContent>
+    <MudCardActions>
+        <MudGrid Spacing="2">
+            @if (_listings.Count() > 3)
+            {
+                
+                <MudItem xs="6">
+                    <MudButton FullWidth="true" Class="rounded-lg" Size="Size.Medium" Variant="Variant.Filled" OnClick="@(() => { NavigationManager.NavigateTo($"/directory/create"); })" Color="Color.Primary">Create Listing</MudButton>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton FullWidth="true" Class="rounded-lg" OnClick="@(() => NavigationManager.NavigateTo("/directory/peruser", true))" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Success">View All</MudButton>
+                </MudItem>
+            }
+            else
+            {
+                <MudItem xs="12">
+                    <MudButton FullWidth="true" Class="rounded-lg" Size="Size.Medium" Variant="Variant.Filled" OnClick="@(() => { NavigationManager.NavigateTo($"/directory/create"); })" Color="Color.Primary">Create Listing</MudButton>
+                </MudItem>
+            }
+
+        </MudGrid>
+    </MudCardActions>
+</MudCard>

@@ -1,0 +1,16 @@
+﻿@page "/learners/{LearnerId}/reporting"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<MobilePageTitle Title="@($"{_learner.FirstName} {_learner.LastName} Reports")"></MobilePageTitle>
+
+<MudGrid Class="mb-5 pt-5" Spacing="2">    
+    <MudItem xs="12" sm="12" md="12">
+        <MudCard Elevation="1" Class="d-flex flex-row rounded-lg">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> No reports currently available for @_learner.FirstName @_learner.LastName, please check back again later </MudText>
+        </MudCard>
+    </MudItem>   
+</MudGrid>

@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+<MudCard Elevation="25">
+    @if(DisplayImage)
+    {
+        <MudCardContent>
+            <div class="d-flex justify-center mb-4">
+                @if (Src == null)
+                {
+                    <MudImage Src="@PlaceHolder" @attributes="AdditionalAttributes" Fluid="true" />
+                }
+                else
+                {
+                    <MudImage Src="@Src" @attributes="AdditionalAttributes" Style="width:100%" />
+                }
+            </div>
+            @* <MudText Align="Align.Center">@Caption</MudText>
+            <MudText Align="Align.Center">@SubText</MudText> *@
+        </MudCardContent>
+    }
+    
+    @if (CanEditImage)
+    {
+       
+        <MudCardActions Class="d-flex justify-center">
+            <MudFileUpload T="IBrowserFile" FilesChanged="UploadCoverImageAsync">
+            <ActivatorContent>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary">@ButtonText</MudButton>
+            </ActivatorContent>
+            </MudFileUpload>
+        </MudCardActions>
+        
+    }
+
+</MudCard>

@@ -1,0 +1,32 @@
+﻿@page "/schoolclasses/{ClassId}/learners"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<MobilePageTitle Title="@($"{_schoolClass.SchoolClass} Learners")"></MobilePageTitle>
+
+@if (_learners.Any())
+{
+    <MudGrid Class="mb-5 pt-5" Spacing="2">
+        @foreach (var item in _learners)
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Class="rounded-lg" @onclick="@(() => NavigateToLearnerDetails(item.LearnerId!))">
+                    <div class="d-flex flex-row rounded-lg">
+                        <div style="height:100px; width: 100px;">
+                            <MudAvatar Elevation="0" Image="@item.CoverImageUrl" Class="align-self-center" Style="height:85px; width: 85px; margin-top:7px; margin-left:7px;"> </MudAvatar>
+                        </div>
+                        <div class="align-self-center">
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Default"> @item.FirstName @item.LastName </MudText>
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 300;" Class="align-self-center" Color="@Color.Default"> @item.Grade?.SchoolGrade </MudText>
+                        </div>
+
+                        <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                    </div>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

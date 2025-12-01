@@ -1,0 +1,18 @@
+﻿@page "/users/upgrade/{RoleId}"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<MobilePageTitle Title="Business Directory"></MobilePageTitle>
+
+<MudGrid Class="mb-5" Spacing="2" Style="padding-top:15px;">
+    @foreach (var item in _serviceTiers)
+    {
+        <MudItem xs="6" sm="6" md="6">
+            <TileButton Title="@item.Name" FullImage="true" TileClicked="UpgradeToTier" />
+        </MudItem>
+    }
+
+</MudGrid>

@@ -12,7 +12,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AdvertisingModule\AdvertisingModule.Domain\AdvertisingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\BusinessModule\BusinessModule.Domain\BusinessModule.Domain.csproj" />
+    <ProjectReference Include="..\..\SchoolsModule\SchoolsModule.Domain\SchoolsModule.Domain.csproj" />
+    <ProjectReference Include="..\ShoppingModule.Application\ShoppingModule.Application.csproj" />
+    <ProjectReference Include="..\ShoppingModule.Domain\ShoppingModule.Domain.csproj" />
   </ItemGroup>
 
 </Project>

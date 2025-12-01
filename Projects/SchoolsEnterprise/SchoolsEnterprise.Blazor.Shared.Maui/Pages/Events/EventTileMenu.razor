@@ -1,0 +1,36 @@
+﻿@using ConectOne.Blazor.Components
+@using MudBlazor
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        
+        @if (ChildContent is null && !_categories.Any())
+        {
+            <MudItem xs="12" sm="6" md="6">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No activity categories currently defined, please check back later</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+        else
+        {
+            @ChildContent
+
+            @foreach (var category in _categories)
+            {
+                <MudItem xs="4" sm="4" md="4">
+                    <TileButton BadgeCount="@category.NotViewedCount" Title="@category.Name" Image="@GetCategoryIcon(@category.Name)" TileClicked="@(() => NavigateToEventCategories(@category.CategoryId))"/>
+                </MudItem>
+            }
+        }
+
+        
+
+    </MudGrid>
+}

@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+
+<BottomNavMenuItem Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Cottage" IconColor="Color.Primary" Title="@Localizer["HomeLabel"]"></BottomNavMenuItem>
+<BottomNavMenuItem Href="/commscenter" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Chat" IconColor="Color.Primary" Title="@Localizer["MessagingLabel"]"></BottomNavMenuItem>
+<BottomNavMenuItem Href="/evers" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.WebStories" IconColor="Color.Primary" Title="@EversButtonText"></BottomNavMenuItem>
+@if (Configuration.GetValue<bool>("CompanyConfiguration:UseBusinessListingModule"))
+{
+    <BottomNavMenuItem Href="/directory" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Store" IconColor="Color.Primary" Title="@Localizer["DirectoryLabel"]"></BottomNavMenuItem>
+}
+@if (Configuration.GetValue<bool>("CompanyConfiguration:UseEcommerceModule"))
+{
+    <BottomNavMenuItem Href="/shop" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Shop" IconColor="Color.Primary" Title="@Localizer["ShopLabel"]"></BottomNavMenuItem>
+}
+

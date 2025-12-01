@@ -1,0 +1,11 @@
+﻿@page "/salesOrders/history"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using ShoppingModule.Blazor.Pages.Components
+@using ShoppingModule.Domain.Enums
+
+<MobilePageTitle Title="@($"Active Sales Orders")"></MobilePageTitle>
+
+<MudSalesOrderTable OrderStatus="OrderStatus.Completed" />

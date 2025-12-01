@@ -1,0 +1,86 @@
+﻿@page "/messages"
+@page "/messages/entity"
+@page "/messages/bytype/{MessageType:int}"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .second-card {
+        background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@TitleText"/>
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+
+        @if(_messageList.Any())
+        {
+            @foreach (var item in _messageList)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="1" Outlined="false" Class="rounded-lg" @onclick="@(() => NavigateToMessageDetails(item.MessageId!, item.NotificationId))">
+                        <MudCardContent Class="py-2" Style=" width: 100%">
+                            <MudGrid>
+                                <MudItem xs="4">
+                                    <ListItemTimeBadge Date="@item.CreatedTime!.Value"/>
+                                </MudItem>
+                                <MudItem xs="8">
+                                    <MudGrid>
+                                        <MudItem xs="12">
+                                            <MudText Typo="Typo.subtitle1" Style="font-weight: 300;" Color="@Color.Dark" Class="text-secondary">@item.Subject</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8" Style="padding-top:0px;">
+                                            @if (item.Read)
+                                            {
+                                                <MudText Typo="Typo.subtitle1" Color="@Color.Dark" Class="text-secondary"><small>Reads : @item.ReadTime?.ToShortDateString()</small></MudText>
+                                            }
+                                            else
+                                            {
+                                                <MudText Typo="Typo.subtitle1" Color="@Color.Dark" Class="text-secondary"><small>Sent : @item.CreatedTime?.ToShortDateString()</small></MudText>
+                                            }
+                                        </MudItem>
+                                        <MudItem xs="4" Style="padding-top:0px;">
+                                            @if (item.Read)
+                                            {
+                                                <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Color="Color.Primary" Class="px-2 rounded-lg">Read</MudChip>
+                                            }
+                                            else
+                                            {
+                                                <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Style="color:grey" Class="px-2 rounded-lg"><strong style="color:black">Unread</strong></MudChip>
+                                            }
+                                        </MudItem>
+                                        <MudItem xs="12" Style="float:right">
+                                            <MudButton Variant="Variant.Outlined" @onclick="@(() => RemoveNotification(item.MessageId))"  Color="Color.Error">Delete</MudButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        }
+        else
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No messages available, please check back later</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+
+    </MudGrid>
+}

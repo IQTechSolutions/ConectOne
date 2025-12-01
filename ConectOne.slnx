@@ -74,6 +74,18 @@
     <Project Path="Modules/ShoppingModule/ShoppingModule.Infrastructure/ShoppingModule.Infrastructure.csproj" Id="a8c480a7-06a5-4050-bf7c-efe772b54187" />
   </Folder>
   <Folder Name="/Projects/" />
+  <Folder Name="/Projects/EversdalPrimary/">
+    <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.Maui/EversdalPrimary.Blazor.Maui.csproj" Id="6afe97ff-e4af-4d56-921e-654e8d75cf32" />
+    <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.Pwa/EversdalPrimary.Blazor.Pwa.csproj" Id="9888bd8a-1f79-4276-a20d-9490800d4cb0" />
+    <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.ServerClient/EversdalPrimary.Blazor.ServerClient.csproj" Id="f90ec5ed-d034-4bec-aafe-26cc00c9168b" />
+  </Folder>
+  <Folder Name="/Projects/KiburiOnline/">
+    <Project Path="Projects/KiburiOnline/GeckoAfrica.Blazor.ServerClient/GeckoAfrica.Blazor.ServerClient.csproj" Id="ec93e024-00de-49df-b991-eacf35d46720" />
+    <Project Path="Projects/KiburiOnline/KiburiOnline.Base/KiburiOnline.Base.csproj" Id="752ba6d3-2c63-4c59-a4e4-ea0a8ec275c3" />
+    <Project Path="Projects/KiburiOnline/KiburiOnline.Blazor.ServerClient/KiburiOnline.Blazor.ServerClient.csproj" Id="4f0d01bf-4446-4c5b-a4b2-ea7eed1482b3" />
+    <Project Path="Projects/KiburiOnline/KiburiOnline.Blazor.Shared/KiburiOnline.Blazor.Shared.csproj" Id="0856fe76-7a72-46d1-9306-71fd757b8dd1" />
+    <Project Path="Projects/KiburiOnline/Progolf.Blazor.ServerClient/Progolf.Blazor.ServerClient.csproj" Id="8c97b146-9988-46aa-9242-ad17b13180a0" />
+  </Folder>
   <Folder Name="/Projects/NelspruitHigh/">
     <Project Path="Projects/NelspruitHigh/NelspruitHigh.Blazor.Maui/NelspruitHigh.Blazor.Maui.csproj" />
     <Project Path="Projects/NelspruitHigh/NelspruitHigh.Blazor.Pwa/NelspruitHigh.Blazor.Pwa.csproj" />
@@ -81,7 +93,15 @@
   </Folder>
   <Folder Name="/Projects/SchoolsEnterprise/">
     <Project Path="Projects/SchoolsEnterprise/SchoolsEnterprise.Base/SchoolsEnterprise.Base.csproj" Id="60106784-5ee3-4181-905b-613c4f917a46" />
+    <Project Path="Projects/SchoolsEnterprise/SchoolsEnterprise.Blazor.Shared.Maui/SchoolsEnterprise.Blazor.Shared.Maui.csproj" Id="f738ee66-b865-450c-b1f3-fa2120629351" />
     <Project Path="Projects/SchoolsEnterprise/SchoolsEnterprise.Blazor.Shared/SchoolsEnterprise.Blazor.Shared.csproj" Id="a63c9ed1-e0aa-4de6-9195-bfb84cc4465e" />
+  </Folder>
+  <Folder Name="/Projects/TidyTasks/">
+    <Project Path="Projects/TidyTasks/TidyTasks.Base/TidyTasks.Base.csproj" Id="b0325a90-edc7-4a99-8b97-ef5075e2ea30" />
+    <Project Path="Projects/TidyTasks/TidyTasks.Blazor.Maui/TidyTasks.Blazor.Maui.csproj" Id="7ed24351-37d7-478b-97ed-60b1ede296dd" />
+    <Project Path="Projects/TidyTasks/TidyTasks.Blazor.Pwa/TidyTasks.Blazor.Pwa.csproj" Id="5e2f1b67-2c5f-4b4c-a357-f1d2ef7267b9" />
+    <Project Path="Projects/TidyTasks/TidyTasks.Blazor.ServerClient/TidyTasks.Blazor.ServerClient.csproj" Id="626fe509-881a-4707-b8cf-48cef5fb26d3" />
+    <Project Path="Projects/TidyTasks/TidyTasks.Blazor.Shared/TidyTasks.Blazor.Shared.csproj" Id="4bf72a66-daaf-46e0-bae5-56d852b4fe77" />
   </Folder>
   <Folder Name="/Vendors/">
     <Project Path="Vendors/PayFast/PayFast.csproj" Id="f93c09c0-6604-4fbf-a599-c26889942061" />

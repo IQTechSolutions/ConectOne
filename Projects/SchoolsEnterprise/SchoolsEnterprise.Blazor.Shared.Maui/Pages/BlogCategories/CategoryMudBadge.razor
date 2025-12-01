@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+@if (Category.UnreadNotifications == 0)
+{
+
+    <MudImage Src="@GetCategoryIcon(Category.Name)" Class="align-self-center" Style="height: 50px; width: 50px;" />
+    <MudText Typo="Typo.subtitle2" Color="Color.Default" Style="@($" color:{Colors.Shades.White}; font-weight: 500;")" Align="Align.Center" Class="mt-3">@Category.Name</MudText>
+                            
+}
+else
+{
+    <div style="width:50px;" class="align-self-center">
+        <MudBadge Origin="Origin.TopRight" Content="Category.UnreadNotifications" Overlap="true" Color="Color.Error" Class="align-self-center">
+            <MudImage Src="@GetCategoryIcon(Category.Name)" Class="align-self-center" Style="height: 50px; width: 50px;"/>
+        </MudBadge>
+    </div>
+    <MudText Typo="Typo.subtitle2" Color="Color.Default" Style="@($" color:{Colors.Shades.White}; font-weight: 500;")" Align="Align.Center" Class="mt-3">@Category.Name</MudText>
+}

@@ -1,0 +1,71 @@
+﻿@page "/evers/{categoryId}"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+<style>
+    .second-card {
+        background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner/>
+}
+else
+{
+    <MobilePageTitle Title="@_category.Name"/>
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        @if (_blogPosts.Any())
+        {
+            @foreach (var item in _blogPosts)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="1" Outlined="false" Class="rounded-lg" @onclick="@(() => NavigateToBlogPost(item.BlogPostId))">
+                        <MudCardContent Class="py-2" Style=" width: 100%">
+                            <MudGrid>
+                                <MudItem xs="4" >
+                                    <ListItemTimeBadge Date="@item.CreatedTime!.Value"/>
+                                </MudItem>
+                                <MudItem xs="8">
+                                    <MudGrid>
+                                        <MudItem xs="12">
+                                            <MudText Typo="Typo.subtitle1" Style="font-weight: 300;" Color="@Color.Dark" Class="text-secondary"><strong>@item.Title.TruncateLongString(25)</strong></MudText>
+                                            <MudText Typo="Typo.body1" Color="@Color.Default" Class="text-secondary">@item.Description.HtmlToPlainText().TruncateLongString(50)</MudText>
+                                            
+                                                @if (!item.Read)
+                                                {
+                                                    <div>
+                                                        <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Style="color:gray" Class="px-2 rounded-lg">Unread</MudChip>
+                                                    </div>
+                                                }
+                                            
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        }
+        else
+        {
+            <MudItem xs="12" sm="6" md="6">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No feeds available, please check back later</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+
+
+    </MudGrid>
+}

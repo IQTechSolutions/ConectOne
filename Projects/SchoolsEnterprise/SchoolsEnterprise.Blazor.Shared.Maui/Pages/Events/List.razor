@@ -1,0 +1,79 @@
+﻿@page "/eventslist"
+@page "/eventslist/{CategoryId}"
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .second-card {
+        background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@PageTitle"></MobilePageTitle>
+
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+    @if (_eventList.Any())
+    {
+        @foreach (var item in _eventList)
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Outlined="false" Class="rounded-lg" @onclick="@(() => NavigateToEventDetails(item.EventId!))">
+                    <MudCardContent Class="" Style="width: 100%">
+                        <MudGrid>
+                            <MudItem xs="4">
+                                <div class="second-card rounded-lg">
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:white !important;" Class="text-secondary">@item.StartDate.Day @item.StartDate.Month.GetAbbreviatedMonth() <br/> @item.StartDate.Year</MudText>
+                                    <MudDivider></MudDivider>
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center;" Color="@Color.Warning" Class="text-secondary">@item.StartDate.ToShortTimeString()</MudText>
+                                </div>
+                            </MudItem>
+                            <MudItem xs="8">
+                                <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default" Class="text-secondary">@item.Name</MudText>
+                                <div>
+                                    @if (item.HomeEvent)
+                                    {
+                                        <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Color="Color.Primary" Class="px-2 rounded-lg">Home</MudChip>
+                                    }
+                                    else
+                                    {
+                                        <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Style="color:grey" Class="px-2 rounded-lg">Away</MudChip>
+                                    }
+                                </div>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    }
+    else
+    {
+        <MudItem xs="12" sm="12" md="12">
+            <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                    @if (string.IsNullOrEmpty(CategoryId))
+                    {
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No events available, please check back later</MudText>
+                    }
+                    else
+                    {
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No events for @_category!.Name available, please check back later</MudText>
+                    }
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    }
+    </MudGrid>
+}

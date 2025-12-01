@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\BloggingModule\BloggingModule.Domain\BloggingModule.Domain.csproj" />
     <ProjectReference Include="..\..\BusinessModule\BusinessModule.Domain\BusinessModule.Domain.csproj" />
     <ProjectReference Include="..\..\CalendarModule\CalendarModule.Domain\CalendarModule.Domain.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Application\FilingModule.Application.csproj" />
     <ProjectReference Include="..\..\IdentityModule\IdentityModule.Domain\IdentityModule.Domain.csproj" />
     <ProjectReference Include="..\..\MessagingModule\MessagingModule.Domain\MessagingModule.Domain.csproj" />
     <ProjectReference Include="..\..\ProductsModule\ProductsModule.Domain\ProductsModule.Domain.csproj" />

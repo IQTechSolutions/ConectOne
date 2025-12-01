@@ -1,0 +1,30 @@
+﻿@page "/roles/expansion"
+@using ConectOne.Blazor.Components
+@using MudBlazor
+
+<MobilePageTitle Title="Packages"></MobilePageTitle>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MudGrid Class="mb-5" Spacing="2" Style="padding-top:15px;">
+        @foreach (var tier in _availableRoles)
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudLink OnClick="@(() => NavigateToCategoryPage(tier.Id))">
+                    <MudCard Elevation="1" Class="rounded-lg" Style="height:170px;">
+                        <MudCardContent Class="d-flex flex-column align-self-center flex-wrap px-3 py-2" Style="height:170px;">
+                            <MudIconButton Icon="fas fa-swatchbook" Color="Color.Warning" Class="pa-3 align-self-center" Size="Size.Large"></MudIconButton>
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Surface">@tier.Name</MudText>
+                            <MudText Typo="Typo.subtitle2" Class="align-self-center" Color="@Color.Primary"><strong>@tier.Description</strong></MudText>
+                            <MudText Typo="Typo.caption" Style="font-weight: 300;" Class="mt-auto align-self-center mud-text-secondary" Color="@Color.Default">Tap to Register </MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudLink>
+            </MudItem>
+        }
+    </MudGrid>
+}

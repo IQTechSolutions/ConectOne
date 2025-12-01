@@ -1,0 +1,112 @@
+﻿@page "/events/{EventId}"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="Event Info"></MobilePageTitle>
+
+    <MudCard Elevation="1" Class="mt-5 rounded-lg">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6" Style="font-weight: 600;"><strong>@_schoolEvent.Name</strong></MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="12" Style="background-color:lightgray; margin-left:20px;">
+                    <MudGrid>
+                        <MudItem xs="2"><MudText><strong>From:</strong></MudText></MudItem>
+                        <MudItem xs="10"><MudText>@_schoolEvent.StartDate.Day @_schoolEvent.StartDate.Month.GetMonthFromMonthNr(), @_schoolEvent.StartDate.ToShortTimeString()</MudText></MudItem>
+                        <MudItem xs="2"><MudText><strong>To:</strong></MudText></MudItem>
+                        <MudItem xs="10"><MudText>@_schoolEvent.EndDate.Day @_schoolEvent.EndDate.Month.GetMonthFromMonthNr(), @_schoolEvent.EndDate.ToShortTimeString()</MudText></MudItem>
+                    </MudGrid>
+                </MudItem>
+                
+                    @if (!_schoolEvent.HomeEvent)
+                    {
+                        
+                            <MudItem xs="12" Style="background-color:lightgray; margin-left:20px;">
+                                <MudText>
+                                    @if (!string.IsNullOrEmpty(_schoolEvent.Address))
+                                    { 
+                                        <strong>Directions: </strong>  @_schoolEvent.Address 
+                                    }
+                                    <MudLink @onclick="ShowHideMap"> @(string.IsNullOrEmpty(_schoolEvent.GoogleMapLink) ? "" : "(View Map)")  </MudLink>
+                                </MudText>
+                            </MudItem>
+
+                            @if (_mapVisible)
+                            {
+                                <GoogleMapsComponents.GoogleMap Width="100%" Height="200px" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+                            }
+                        
+
+                        if (_schoolEvent.TransportPermissionRequired)
+                        {
+                            <MudItem xs="12" Style="background-color:lightgray;  margin-left:20px;">
+                                <MudText>
+                                    <strong>Transport: </strong>
+                                <MudLink Href="#"> Available <small>(Consent Required)</small>  </MudLink>
+                                </MudText>
+                            </MudItem>
+                        }
+                    }
+                @if (!string.IsNullOrEmpty(_schoolEvent.Details))
+                {
+                    <MudItem xs="12" Style="background-color:lightgray; margin-left:20px;">
+                        <MudText><strong>Details:</strong></MudText>
+                        <MudText Style="padding-bottom:10px;">@((MarkupString)_schoolEvent.Details!)</MudText>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12" Style="background-color:lightgray; margin-left:20px;">
+                        <MudText><strong>Details:</strong></MudText>
+                        <MudText Style="padding-bottom:10px;">Nop details available</MudText>
+                    </MudItem>
+                }
+                
+
+                @if (_schoolEvent.DocumentLinks.Any())
+                {
+                    <MudItem>
+                        <MudDivider/>
+                    </MudItem>
+                    <MudItem>
+                        <MudCard>
+                            <MudCardHeader>
+                                <MudText Typo="Typo.h6">Program and Information Links:</MudText>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                @if (_schoolEvent.DocumentLinks.Any())
+                                {
+                                    <MudList T="string" Dense="@true" DisableGutters="false">
+                                        @foreach (var item in _schoolEvent.DocumentLinks)
+                                        {
+                                            <MudListItem Text="@item.Split("/").Last()" Icon="@Icons.Material.Filled.Attachment" Href="@item" target="_blank" />
+                                        }
+                                    </MudList>
+                                }
+                            </MudCardContent>
+                        </MudCard>
+                        
+                    </MudItem>
+                }
+
+                <AttendanceConsentRequired ParentId="@_parent?.ParentId" SchoolEvent="@_schoolEvent"></AttendanceConsentRequired>
+                
+                
+                
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+}

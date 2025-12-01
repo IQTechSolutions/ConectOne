@@ -1,0 +1,30 @@
+﻿@page "/blog/details/{BlogId}"
+@page "/blog/details/{BlogId}/{NotificationId}"
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@_blogPost?.Title"></MobilePageTitle>
+
+    <MudCard Elevation="1" Class="mt-5 rounded-lg">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6" Style="font-weight: 600;">@_blogPost?.Description</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Class="mt-3" Typo="Typo.subtitle1" Style="font-weight: 300;">@((MarkupString)_blogPost?.Content!)</MudText>
+        </MudCardContent>
+    </MudCard>
+
+    <DocumentLinkList DocumentLinks="_blogPost?.DocumentLinks"/>
+}

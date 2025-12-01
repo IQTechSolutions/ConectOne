@@ -1,0 +1,33 @@
+﻿@page "/activityGroups/activityGroupOptions"
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="Groups available for Attendace Check"></MobilePageTitle>
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        @foreach (var group in _activityGroups)
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Class="d-flex flex-row rounded-lg second-card" @onclick="@(() => NavigateToAttendance(group.ActivityGroupId))">
+                    <div style="height:50px; width: 50px; padding:5px;">
+                        <MudAvatar Class="me-2" Color="Color.Info" Size="Size.Small" Style="width:100%; height:100%;">
+                            @group.Name.GetInitials()
+                        </MudAvatar>
+                    </div>
+
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500; color:black !important;" Class="align-self-center"> @group.Name </MudText>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

@@ -1,0 +1,193 @@
+﻿@page "/checkout"
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using ShoppingModule.Domain.Enums
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<MobilePageTitle Title="Check Out"></MobilePageTitle>
+
+<MudCard Elevation="1" Class="rounded-lg">
+    <MudCardContent>
+        <MudGrid Class="mb-3">
+            <MudItem xs="12">
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Order Summary</MudText>
+                <MudText Typo="Typo.caption">Finished Shopping? Let's checkout!</MudText>
+            </MudItem>
+
+            @foreach (var item in ShoppingCart.ShoppingCart.CartItems)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="0" Class="d-flex flex-row justify-space-between rounded-lg pa-0" Style="height:120px;">
+                        <MudCardContent Class="pa-0">
+                            <MudGrid Spacing="1">
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Color="Color.Primary">@item.ProductName</MudText>
+                                    <MudText Typo="Typo.caption" Style="font-weight: 500;" Color="Color.Primary">@item.ShortDescription.TruncateLongString(75)</MudText>
+                                </MudItem>
+                                <MudItem xs="6" Style="float:right;">
+                                    <MudNumericField @bind-Value="@item.Qty" Label="Qty" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Style="width:75px;"/>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.h6" Style="font-weight: 600; padding-right:10px;" Color="@Color.Error">@item.PriceIncl.ToString("C")</MudText>
+                                </MudItem>
+                            </MudGrid>
+
+
+                        </MudCardContent>
+                        <MudCardMedia Image="@(!string.IsNullOrEmpty(item.ThumbnailUrl) ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}//{item.ThumbnailUrl}" : "_content/ProductsModule.Blazor/images/NoImage.jpg")" Class="rounded-lg ml-1" Style="height: 100px; min-width: 100px; max-width: 100px; "/>
+                    </MudCard>
+                </MudItem>
+
+                @if (item != ShoppingCart.ShoppingCart.CartItems.Last())
+                {
+                    <MudItem xs="12">
+                        <MudDivider></MudDivider>
+                    </MudItem>
+                }
+            }
+
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+<EditForm Model="CheckoutModel" OnValidSubmit="ProcessPaymentAsync">
+
+    <MudCard Elevation="1" Class="rounded-lg mt-5">
+        <MudCardContent>
+            <MudGrid Class="mb-3">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="Color.Primary">Payment Method</MudText>
+                    <MudText Typo="Typo.caption">Please select your payment method. </MudText>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudSelect T="PaymentMethod" @bind-Value="CheckoutModel.PaymentMethod" Label="Payment type" Strict="true" Variant="Variant.Outlined" Margin="Margin.Dense" Format="F2" OffsetY="true">
+                        <MudSelectItem Value="@(PaymentMethod.Eft)">Electronic Transfer</MudSelectItem>
+                        <MudSelectItem Value="@(PaymentMethod.Card)">PayFast Secure Card Payment</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+
+    @if (CheckoutModel.PaymentMethod == PaymentMethod.Card)
+    {
+        <MudCard Elevation="1" Class="rounded-lg mt-5">
+            <MudCardContent>
+                <MudGrid Spacing="1" Class="mb-3">
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="Color.Primary">PayFast Payment</MudText>
+                        <MudText Typo="Typo.caption">You will be securely redirected to PayFast to complete your card payment.</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    }
+
+    <MudCard Elevation="1" Class="rounded-lg mt-5">
+        <MudCardContent>
+            <MudGrid Spacing="1" Class="mb-3">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="Color.Primary">Invoice Details</MudText>
+                    <MudText Typo="Typo.caption">Let fill your invoice detail for contact info, shipping address ! </MudText>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.FirstName" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.LastName" Label="Last Name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.CompanyName" Label="Company Name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.Email" Label="Email" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.PhoneNr" Label="Phone Nr" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.ShippingAddress.StreetName" Label="Street Name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.ShippingAddress.City" Label="City" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.ShippingAddress.Suburb" Label="Suburb" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="CheckoutModel.ShippingAddress.Province" Label="Province" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudSelect T="string" Label="Country" Strict="true" Variant="Variant.Outlined" Margin="Margin.Dense" Format="F2" OffsetY="true">
+                        <MudSelectItem Value="@("South Africa")"/>
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+
+    <MudPaper Elevation="0" Class="px-4 mx-n4 my-5 py-5 mud-theme-primary" Outlined="false" Square="true">
+        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align: center;">Submit Order</MudText>
+        <MudText Typo="Typo.caption" Style="text-align: center;">After tapping the purchase button we'll immediately start processing your order </MudText>
+
+        <MudCard Class="rounded-lg my-5">
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">Total</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500; text-align: right;" Color="@Color.Default">@ShoppingCart.ShoppingCart.SubTotalExcl.ToString("C")</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">Taxes</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500; text-align: right;" Color="@Color.Default">@ShoppingCart.ShoppingCart.TotalVat.ToString("C")</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">Shipping</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500; text-align: right;" Color="@Color.Success">@ShoppingCart.ShoppingCart.Shipping.ToString("C")</MudText>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudDivider Class="mb-3"></MudDivider>
+                    </MudItem>
+
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.h6" Style="font-weight: 600;">Grand Total</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.h6" Style="font-weight: 600; text-align: right;" Color="@Color.Error">@ShoppingCart.ShoppingCart.TotalDue.ToString("C")</MudText>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudDivider Class="mb-3"></MudDivider>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudContainer Fixed="true" Class="px-0">
+                            <MudButton ButtonType="ButtonType.Submit" FullWidth="true" Class="rounded-lg" Variant="Variant.Filled" Style="@($"color:{Colors.Shades.White};")">Purchase Now</MudButton>
+                        </MudContainer>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudPaper>
+
+</EditForm>
+
+<div class="d-none">
+    <form method="post" action="@PayFastProcessUrl" @ref="PayFastForm">
+        @if (PayFastFormFields.Any())
+        {
+            @foreach (var field in PayFastFormFields)
+            {
+                <input type="hidden" name="@field.Key" value="@field.Value" />
+            }
+        }
+    </form>
+</div>

@@ -1,0 +1,18 @@
+﻿@page "/salesOrders/{OrderStatus:int}"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using ShoppingModule.Blazor.Pages.Components
+@using ShoppingModule.Domain.Enums
+
+<MobilePageTitle Title="@($"{((OrderStatus)OrderStatus).GetDescription()} Sales Orders")"></MobilePageTitle>
+
+<MudSalesOrderTable OrderStatus="@((OrderStatus)OrderStatus)" />
+
+@code {
+
+    [Parameter] public int OrderStatus { get; set; } = 0;
+
+}

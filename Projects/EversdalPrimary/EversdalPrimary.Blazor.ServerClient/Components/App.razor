@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <ResourcePreloader />
+    <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    <link rel="stylesheet" href="@Assets["EversdalPrimary.Blazor.ServerClient.styles.css"]" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="_content/SchoolsEnterprise.Blazor.Shared/css/loader.css" rel="stylesheet" />
+    <link rel="stylesheet" href="_content/Cropper.Blazor/cropper.min.css" />
+    <link id="theme" rel="stylesheet" href="_content/Radzen.Blazor/css/material.css" />
+
+    <style>
+        .rz-html-editor-content ul {
+            padding-left: 20px;
+        }
+
+        .rz-html-editor-content ol {
+            padding-left: 20px;
+        }
+
+        .rz-html-editor-content ul li {
+            padding-left: 5px;
+            list-style-type: initial;
+            display: revert;
+        }
+
+        .rz-html-editor-content ol li {
+            padding-left: 5px;
+            list-style-type: auto;
+            display: revert;
+        }
+    </style>
+
+    <ImportMap />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <HeadOutlet @rendermode="@PageRenderMode" />
+</head>
+
+<body>
+
+<div id="splash-screen">
+    <img class="splash-logo" src="eversdalLogo.png" alt="Eversdal Primary School logo" />
+    <div class="splash-loader" aria-label="Loading"></div>
+</div>
+
+<Routes @rendermode="@PageRenderMode"/>
+<ReconnectModal/>
+
+<script src="@Assets["_framework/blazor.web.js"]"></script>
+<script src="@Assets["Components/Account/Shared/PasskeySubmit.razor.js"]" type="module"></script>
+<script src="_content/Cropper.Blazor/cropper.min.js"></script>
+<script src="_content/FilingModule.Blazor/js/filing.js"></script>
+<script src="_content/SchoolsEnterprise.Blazor.Shared/js/chatinterop.js"></script>
+<script src="_content/SchoolsEnterprise.Blazor.Shared/js/scroll.js"></script>
+<script src="_content/SchoolsEnterprise.Blazor.Shared/js/sounds.js"></script>
+<script src="_content/GoogleMapsComponents/js/objectManager.js"></script>
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+<script src="_content/FilingModule.Blazor/js/filing.js"></script>
+<script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2ipt9_RbWUdKwhIJ7hJe3hTujVZCk0ZQ&v=3&libraries=places,visualization,drawing&callback=Function.prototype"></script>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
+
+<script>
+        (() => {
+            const hideSplashScreen = () => {
+                const splash = document.getElementById('splash-screen');
+                if (!splash) {
+                    return;
+                }
+
+                splash.classList.add('hidden');
+                window.setTimeout(() => splash.remove(), 400);
+            };
+
+            // Hide once the page and static assets are ready
+            window.addEventListener('load', hideSplashScreen);
+
+            // Fallback in case load fires before this script executes
+            if (document.readyState === 'ready') {
+                hideSplashScreen();
+            }
+        })();
+    </script>
+</body>
+
+</html>
+
+@code {
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private IComponentRenderMode? PageRenderMode => HttpContext.AcceptsInteractiveRouting() ? InteractiveServer : null;
+}
+

@@ -1,0 +1,9 @@
+﻿@using MudBlazor
+@if (_schoolGrade == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudText Typo="Typo.caption" Color="@Color.Dark" Class="text-secondary">@Text</MudText>
+}

@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-EversdalPrimary_Blazor_ServerClient-8b6ee712-28d9-4964-8994-247be63eea89</UserSecretsId>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\EversdalIndex.jpg" />
+    <Content Remove="wwwroot\eversdalLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\EversdalIndex.jpg" />
+    <None Include="wwwroot\eversdalLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="MudBlazor.ThemeManager" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\AdvertisingModule\AdvertisingModule.Blazor\AdvertisingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Base\ConectOne.Blazor\ConectOne.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BloggingModule\BloggingModule.Blazor\BloggingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BusinessModule\BusinessModule.Blazor\BusinessModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\CalendarModule\CalendarModule.Blazor\CalendarModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\FilingModule\FilingModule.Blazor\FilingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Application\IdentityModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Blazor\IdentityModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Domain\IdentityModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\MessagingModule\MessagingModule.Blazor\MessagingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\ProductsModule\ProductsModule.Blazor\ProductsModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Blazor\SchoolsModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Domain\SchoolsModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\ShoppingModule\ShoppingModule.Blazor\ShoppingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\SchoolsEnterprise\SchoolsEnterprise.Blazor.Shared\SchoolsEnterprise.Blazor.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

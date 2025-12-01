@@ -5,6 +5,7 @@ using GroupingModule.Domain.Interfaces;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SchoolsModule.Domain.Entities;
+using SchoolsModule.Domain.Interfaces.ActivityGroups;
 
 namespace SchoolsModule.Blazor.Modals
 {
@@ -17,7 +18,7 @@ namespace SchoolsModule.Blazor.Modals
         /// <summary>
         /// Injected HTTP provider for making API requests.
         /// </summary>
-        [Inject] public ICategoryService<ActivityGroup> ActivityGroupCategoryService { get; set; } = null!;
+        [Inject] public IActivityGroupCategoryService ActivityGroupCategoryService { get; set; } = null!;
 
         /// <summary>
         /// The parent category for which the event is being added.

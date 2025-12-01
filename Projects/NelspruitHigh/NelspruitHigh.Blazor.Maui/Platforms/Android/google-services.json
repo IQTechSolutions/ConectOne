@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "441752630722",
+    "project_id": "nelspruithigh-104ab",
+    "storage_bucket": "nelspruithigh-104ab.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441752630722:android:e297ca019808ed50a8925b",
+        "android_client_info": {
+          "package_name": "com.connectone.nelspruithigh.blazor.maui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBylsUu0IfyMFMqv0rSVxr5gmEd7h2G46w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

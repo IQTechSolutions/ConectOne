@@ -1,0 +1,87 @@
+﻿@page "/activityCategories"
+@page "/activityCategories/{CategoryId}"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .second-card2 {
+        background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@(string.IsNullOrEmpty(_category?.Name) ? Localizer["AllCategoriesTitle"].Value : _category!.Name)"></MobilePageTitle>
+    
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        <MudItem xs="4" sm="4" md="4">
+            <MudCard Elevation="5" Class="rounded-15 second-card2" @onclick="@(() => NavigateToEvents())">
+                <MudCardContent Class="d-flex flex-column mb-1 mt-1 px-1 py-5">
+                    <MudImage Src="/images/static/icons2/eventsicon.svg" Class="align-self-center" Style="height: 50px; width: 50px;" />
+                    <MudText Typo="Typo.subtitle2" Color="Color.Default" Style="@($" color:{Colors.Shades.White}; font-weight: 500;")" Align="Align.Center" Class="mt-3">@Localizer["EventsLabel"]</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" sm="4" md="4">
+            <MudCard Elevation="5" Class="rounded-15 second-card2" @onclick="@(() => NavigateToCommsCenter())">
+                <MudCardContent Class="d-flex flex-column mb-1 mt-1 px-1 py-5">
+                    <MudImage Src="/images/static/icons2/communication.svg" Class="align-self-center" Style="height: 50px; width: 50px;" />
+                    <MudText Typo="Typo.subtitle2" Color="Color.Default" Style="@($" color:{Colors.Shades.White}; font-weight: 500;")" Align="Align.Center" Class="mt-3">@Localizer["CommsCenterLabel"]</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" sm="4" md="4">
+            <MudCard Elevation="5" Class="rounded-15 second-card2" @onclick="@(() => NavigateToSettings())">
+                <MudCardContent Class="d-flex flex-column mb-1 mt-1 px-1 py-5">
+                    <MudImage Src="/images/static/icons2/activitiesicon.svg" Class="align-self-center" Style="height: 50px; width: 50px;" />
+                    <MudText Typo="Typo.subtitle2" Color="Color.Default" Style="@($" color:{Colors.Shades.White}; font-weight: 500;")" Align="Align.Center" Class="mt-3">@Localizer["ActivitiesLabel"]</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    if(_categories.Any())
+    {
+        <MudGrid Class="mb-5 pt-5" Spacing="2">
+            @foreach (var item in _categories)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="1" Class="d-flex flex-row rounded-lg second-card2" @onclick="@(() => NavigateToActivityCategory(item.CategoryId))">
+                        <div style="height:50px; width: 50px;">
+                            <MudImage Elevation="0" Src="@(GetCategoryIcon(@item.Name))" Class="align-self-center" Style="height:40px; width: 40px; margin-top:7px;  padding-left:15px;"> </MudImage>
+                        </div>
+
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500; color:white !important;" Class="align-self-center"> @item.Name </MudText>
+                        <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Style=" color:white !important;" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    if (_teams.Any())
+    {
+        <MudGrid Class="mb-5 pt-5" Spacing="2">
+            @foreach (var item in _teams)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="1" Class="d-flex flex-row rounded-lg" @onclick="@(() => NavigateToActivityGroup(item.ActivityGroupId!))">
+                        <div style="height:50px; width: 50px;">
+                            <MudImage Elevation="0" Src="@(GetCategoryIcon(@item.Name))" Class="align-self-center" Style="height:40px; width: 40px; margin-top:7px;  padding-left:15px;"> </MudImage>
+                        </div>
+
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500; color:white !important;" Class="align-self-center"> @item.Name </MudText>
+                        <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Style=" color:white !important;" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+}

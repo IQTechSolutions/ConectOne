@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\ConectOne.Application\ConectOne.Application.csproj" />
+    <ProjectReference Include="..\..\IdentityModule\IdentityModule.Domain\IdentityModule.Domain.csproj" />
+    <ProjectReference Include="..\ShoppingModule.Domain\ShoppingModule.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

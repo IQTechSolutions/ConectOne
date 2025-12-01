@@ -1,0 +1,166 @@
+﻿@page "/directory/update/{ListingId}"
+@page "/directory/update/{ListingId}/{ProfileEntry}"
+@page "/directory/create"
+@page "/directory/create/{ProfileEntry}"
+
+@attribute [Authorize]
+
+@using BusinessModule.Domain.DataTransferObjects
+@using BusinessModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using FilingModule.Blazor.Components
+@using FilingModule.Domain.Enums
+@using GroupingModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<MobilePageTitle Title="Business Directory"></MobilePageTitle>
+
+<EditForm Model="_listing" OnValidSubmit="UpdateAsync">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <MudGrid>
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudGrid>
+                <MudItem xs="3" sm="3" md="3" lg="3">
+                </MudItem>
+                <MudItem xs="6" sm="6" md="6" lg="6">
+                    <MudSingleUpload OnFileAccepted="CoverImageChanged" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(BusinessListing)" ParentId="@_listing.Id"/>
+                </MudItem>
+                <MudItem xs="3" sm="3" md="3" lg="3">
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <MudCard Style="width:100%">
+                        <MudCardContent>
+                            <MudGrid Style="width:100%">
+
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudTextField Label="Heading" @bind-Value="_listing.Heading" For="@(() => _listing.Heading)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudTextField Label="Slogan" @bind-Value="_listing.Slogan" For="@(() => _listing.Slogan)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudTextField Label="Description" @bind-Value="_listing.Description" Margin="Margin.Dense" Variant="Variant.Outlined" Lines="3"/>
+                                </MudItem>
+
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudSelect ToStringFunc="@_categoryConverter" T="CategoryDto" Label="Categories" MultiSelection="true" @bind-SelectedValues="@_listing.Categories" Variant="Variant.Outlined">
+                                        @foreach (var state in _availableCategories)
+                                        {
+                                            <MudSelectItem T="CategoryDto" Value="@state">@state.Name</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudSelect ToStringFunc="@_listingTierConverter" T="ListingTierDto" Label="Listing Tier" @bind-Value="_selectedListingTier" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                        @foreach (var state in _availableListingTiers)
+                                        {
+                                            <MudSelectItem T="ListingTierDto" Value="@state">@state.Name</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudTextField Label="Phone Nr" @bind-Value="_listing.PhoneNumber" For="@(() => _listing.PhoneNumber)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                    <MudTextField Label="Email" @bind-Value="_listing.Email" For="@(() => _listing.Email)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+
+                                @if (_selectedListingTier?.Id != "-1")
+                                {
+                                    <MudItem xs="12" sm="12" md="12" lg="12">
+                                        <MudTextField Label="Address" @bind-Value="_listing.Address" For="@(() => _listing.Address)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                    </MudItem>
+                                    <MudItem xs="12" sm="12" md="12" lg="12">
+                                        <MudTextField Label="Website Url" @bind-Value="_listing.WebsiteUrl" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+
+        @if (_selectedListingTier is not null && _selectedListingTier.Id != "-1" && _selectedListingTier.AllowServiceAndProductListing)
+        {
+            <MudItem xs="12" sm="12" md="12" lg="12">
+                <DataAnnotationsValidator/>
+                <MudTabs Outlined="true" Centered="true">
+                    <MudTabPanel Text="Services">
+                        <MudGrid>
+                            <MudItem xs="12" sm="12" md="12" lg="12">
+                                <MudTable Items="@_listing.Services" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                                    <HeaderContent>
+                                        <MudTh>Name</MudTh>
+                                        <MudTh>Price</MudTh>
+                                        <MudTh>Description</MudTh>
+                                        <MudTh></MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate Context="product">
+                                        <MudTd DataLabel="Nr">@product.Name</MudTd>
+                                        <MudTd DataLabel="Sign">@product.Price</MudTd>
+                                        <MudTd DataLabel="Name">@product.Description.TruncateLongString(75)</MudTd>
+                                        <MudTd>
+                                            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => EditListingService(product))">Edit</MudMenuItem>
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => RemoveListingService(product.Id!))">Delete</MudMenuItem>
+                                            </MudMenu>
+                                        </MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12" lg="12">
+                                <MudButton Color="Color.Primary" FullWidth="true" OnClick="@AddListingService" Variant="Variant.Filled">Add Listing Service</MudButton>
+                            </MudItem>
+                        </MudGrid>
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="Products">
+                        <MudGrid>
+                            <MudItem xs="12" sm="12" md="12" lg="12">
+                                <MudTable Items="@_listing.Products" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                                    <HeaderContent>
+                                        <MudTh>Name</MudTh>
+                                        <MudTh>Price</MudTh>
+                                        <MudTh>Description</MudTh>
+                                        <MudTh></MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate Context="product">
+                                        <MudTd DataLabel="Nr">@product.Name</MudTd>
+                                        <MudTd DataLabel="Sign">@product.Price</MudTd>
+                                        <MudTd DataLabel="Name">@product.Description.TruncateLongString(75)</MudTd>
+                                        <MudTd>
+                                            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => EditListingProduct(product))">Edit</MudMenuItem>
+                                                <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => RemoveListingProduct(product.Id))">Delete</MudMenuItem>
+                                            </MudMenu>
+                                        </MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12" lg="12">
+                                <MudButton Color="Color.Primary" FullWidth="true" OnClick="@AddListingProduct" Variant="Variant.Filled">Add Listing Product</MudButton>
+                            </MudItem>
+                        </MudGrid>
+                    </MudTabPanel>
+                </MudTabs>
+            </MudItem>
+        }
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

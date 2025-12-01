@@ -1,0 +1,44 @@
+﻿ @page "/calendar"
+ @using CalendarModule.Domain.DataTransferObjects
+ 
+@using ConectOne.Blazor.Components
+@using MudBlazor
+@using Radzen.Blazor
+
+<style>
+    .second-card {
+        background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@PageTitle"></MobilePageTitle>
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        <MudItem xs="12" sm="12" md="12">
+    <MudHidden Breakpoint="Breakpoint.Xs">
+        <RadzenScheduler @ref=@_scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="CalendarEntryDto" Data=@_eventList StartProperty="StartDate" 
+                         EndProperty="EndDate" ShowHeader="true" TextProperty="Name" SelectedIndex="2" SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect
+                         AppointmentRender=@OnAppointmentRender DaySelect="@OnDaySelect" AppointmentMove=@OnAppointmentMove MoreSelect="OnMoreSelectAsyncTask">
+            <RadzenDayView />
+            <RadzenWeekView />
+            <RadzenMonthView />
+        </RadzenScheduler>
+    </MudHidden>
+            <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
+                <RadzenScheduler @ref=@_scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="CalendarEntryDto" Data=@_eventList StartProperty="StartDate" 
+                                 EndProperty="EndDate" ShowHeader="true" TextProperty="Name" SelectedIndex="0" SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect
+                                 AppointmentRender=@OnAppointmentRender DaySelect="@OnDaySelect" AppointmentMove=@OnAppointmentMove MoreSelect="OnMoreSelectAsyncTask">
+                    <RadzenDayView />
+                </RadzenScheduler>
+            </MudHidden>
+    
+        </MudItem>
+    </MudGrid>
+}

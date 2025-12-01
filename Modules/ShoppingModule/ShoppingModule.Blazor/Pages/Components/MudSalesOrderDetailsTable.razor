@@ -1,0 +1,38 @@
+﻿@using MudBlazor
+@using ShoppingModule.Application.ViewModels
+
+<MudTable T="SalesOrderDetailViewModel" Items="Items">
+    <HeaderContent>
+        <MudTh>Product</MudTh>
+        <MudTh Style="width:170px;">Qty</MudTh>
+        <MudTh>Cost</MudTh>
+        <MudTh>Discount</MudTh>
+        <MudTh>Tax</MudTh>
+        <MudTh>Sub Total</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ProductName</MudTd>
+        <MudTd Style="width:170px;">
+            <MudButton Size="Size.Small" OnClick="@(() => IncreaseQty(@context))">+</MudButton>@context.Qty<MudButton Size="Size.Small" Color="Color.Error" OnClick="@(() => DecreaseQty(@context))">-</MudButton>
+        </MudTd>
+        <MudTd>@context.PriceExcl.ToString("C")</MudTd>
+        <MudTd>R0.00</MudTd>
+        <MudTd>@context.TotalVat.ToString("C")</MudTd>
+        <MudTd>@context.TotalPriceIncl.ToString("C")</MudTd>
+    </RowTemplate>
+    <FooterContent>
+        <MudTd colspan="4"></MudTd>
+        <MudTd>
+            <MudText>Tax</MudText>
+            <MudText>Discount</MudText>
+            <MudText>Shipping</MudText>
+            <MudText>Sub-Total</MudText>
+        </MudTd>
+        <MudTd>
+            <MudText>@Items.Sum(c => c.Qty * c.PriceVat).ToString("C")</MudText>
+            <MudText>R0.00</MudText>
+            <MudText>R0.00</MudText>
+            <MudText>@Items.Sum(c => c.Qty * c.TotalPriceIncl).ToString("C")</MudText>
+        </MudTd>
+    </FooterContent>
+</MudTable>

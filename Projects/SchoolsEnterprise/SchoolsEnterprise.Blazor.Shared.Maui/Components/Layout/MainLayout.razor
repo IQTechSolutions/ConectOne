@@ -1,0 +1,126 @@
+﻿﻿@using System.Security.Claims
+
+@using ConectOne.Blazor.Layouts
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using MudBlazor.ThemeManager
+@using SchoolsEnterprise.Blazor.Shared.Maui.Components.Menus
+@inherits LayoutComponentBase
+
+@layout CleanLayout
+
+<MudThemeProvider Theme="_themeManager.Theme" />
+
+<MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
+
+<MudAppBar Elevation="_themeManager.AppBarElevation">
+
+    <MudIconButton Href="back" Icon="@Icons.Material.Filled.ArrowBack" Color="Color.Inherit" Edge="Edge.Start"/>
+
+    <MudSpacer/>
+    
+    @if (Configuration.GetValue<bool>("CompanyConfiguration:FullWithLogo"))
+    {
+        <MudImage Style="margin-left:50px; width:70px; height:30px; padding-top:15px;" Src="@(Configuration.GetValue<string>("CompanyConfiguration:LogoLightRelativePath"))"></MudImage>
+    }
+    else
+    {
+        <MudImage Style="margin-left:50px; width:70px; height:70px; padding-top:15px;" Src="@(Configuration.GetValue<string>("CompanyConfiguration:LogoLightRelativePath"))"></MudImage>
+    }
+    
+    @if (!Configuration.GetValue<bool>("ApplicationConfiguration:UseEcommerceModule") || CartStateProvider.ShoppingCart?.ItemCount == 0)
+    {
+        <MudSpacer/>
+    }
+
+    @* <MudIconButton Icon="@Icons.Material.TwoTone.Wallet" Color="Color.Inherit" Href="/" />        
+    <MudIconButton Icon="@Icons.Material.TwoTone.Message" Color="Color.Inherit" Href="/"/> *@
+    
+    @if (Configuration.GetValue<bool>("ApplicationConfiguration:UseEcommerceModule") && CartStateProvider.ShoppingCart?.ItemCount > 0)
+    {
+        <MudBadge Origin="Origin.TopRight" Content="@_cartItemCount" Overlap="true" Color="Color.Error" Style="margin-top:15px;">
+            <MudIconButton Icon="@Icons.Material.TwoTone.ShoppingCart" Color="Color.Inherit" Href="/cart" Style="margin-top:-15px;" />
+        </MudBadge>
+    }
+
+    @if (string.IsNullOrEmpty(_blogPostNotificationCount) || _notificationCount == "0")
+    {
+        <MudIconButton Icon="@Icons.Material.TwoTone.Notifications" Color="Color.Inherit" Href="/commscenter"/>
+    }
+    else
+    {
+        <MudBadge Origin="Origin.TopRight" Content="@_notificationCount" Overlap="true" Color="Color.Error" Style="margin-top:15px;">
+            <MudIconButton Icon="@Icons.Material.TwoTone.Notifications" Color="Color.Inherit" Href="/commscenter" Style="margin-top:-15px;"/>
+        </MudBadge>
+    }
+
+    @if (string.IsNullOrEmpty(_blogPostNotificationCount) || _blogPostNotificationCount == "0")
+    {
+        <MudIconButton Icon="@Icons.Material.TwoTone.WebStories" Color="Color.Inherit" Href="/evers"/>
+    }
+    else
+    {
+        <MudBadge Origin="Origin.TopRight" Content="@_blogPostNotificationCount" Overlap="true" Color="Color.Error" Style="margin-top:15px;">
+            <MudIconButton Icon="@Icons.Material.TwoTone.WebStories" Color="Color.Inherit" Href="/evers" Style="margin-top:-15px;" />
+        </MudBadge>
+    }
+
+    <MudIconButton Icon="@Icons.Material.TwoTone.Palette" Color="Color.Inherit" OnClick="@((MouseEventArgs e) => OpenThemeManager(true))" />
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="@((MouseEventArgs e) => DrawerToggle())"/>
+</MudAppBar>
+
+<MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Class="rounded-t-l-lg rounded-b-l-lg" ClipMode="_themeManager.DrawerClipMode" Elevation="_themeManager.DrawerElevation" Variant="@DrawerVariant.Temporary">
+   
+    <MudDrawerContainer>
+        <MudCard Elevation="0" Class="pa-0" Square="true" Style="background-color: transparent">
+            <MudCardContent Class="d-flex flex-column justify-start py-3">
+                <MudGrid>
+                    @if (Configuration.GetValue<bool>("CompanyConfiguration:FullWithLogo"))
+                    {
+                        <MudItem xs="12">
+                            <MudImage Src="@(Configuration.GetValue<string>("CompanyConfiguration:LogoRelativePath"))" Style="height: auto; width: 100%" />
+                        </MudItem>
+                    }
+                    else
+                    {
+                        <MudItem xs="5">
+                            <MudImage Src="@(Configuration.GetValue<string>("CompanyConfiguration:LogoRelativePath"))" Style="height: auto; width: 100%" />
+                        </MudItem>
+                        <MudItem xs="7" Class="text-center">
+                            <h5 style="@( string.IsNullOrEmpty(Configuration.GetValue<string>("CompanyConfiguration:SchoolTypeNameRight")) ? "padding-top:20px;" : "")">
+                                @(Configuration.GetValue<string>("CompanyConfiguration:SchoolTypeNameLeft")) <strong>@(Configuration.GetValue<string>("CompanyConfiguration:SchoolTypeNameRight")?.ToUpper())</strong> @(Configuration.GetValue<string>("CompanyConfiguration:SchoolName"))
+                            </h5>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+
+        <NavMenu OnLogOut="SignOut"/>
+        
+        <div style="position: fixed; bottom: 0px;">
+            <MudCard Elevation="0" Class="pa-0" Square="true" Style="background-color: transparent">
+                <MudCardContent Class="d-flex flex-column justify-start py-3">
+                    <MudImage Src="_content/SchoolsEnterprise.Blazor.Shared.Maui/images/static/PoweredByConnectLogo.png" Style="height: auto; width: 100%" />
+                </MudCardContent>
+            </MudCard>
+        </div>
+
+    </MudDrawerContainer>
+
+</MudDrawer>
+
+<MudMainContent>
+
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5 mb-15 pt-0 pb-8">
+        @Body
+    </MudContainer>
+
+    <div class="my-8"></div>
+
+    <BottomNavMenu>
+        <BottomMenu />
+    </BottomNavMenu>
+
+</MudMainContent>
+

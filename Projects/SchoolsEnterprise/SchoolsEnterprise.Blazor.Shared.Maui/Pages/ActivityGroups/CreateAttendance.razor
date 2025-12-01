@@ -1,0 +1,16 @@
+@page "/activities/activitygroups/attendance/{ActivityGroupId}"
+
+@using ConectOne.Blazor.Components
+@using MudBlazor
+@using SchoolsModule.Blazor.Pages.Attendance
+@using SchoolsModule.Domain.Enums
+
+@if (_loaded)
+{
+    <MobilePageTitle Title="@($"Record attendance for {_activityGroup?.Name}")"></MobilePageTitle>
+    <AttendanceList GroupId="@ActivityGroupId" Date="@DateTime.Now" AttendanceType="AttendanceType.ActivityGroup" GroupName="@(_activityGroup?.Name ?? string.Empty)" />
+}
+else
+{
+    <MudProgressCircular Indeterminate="true" />
+}

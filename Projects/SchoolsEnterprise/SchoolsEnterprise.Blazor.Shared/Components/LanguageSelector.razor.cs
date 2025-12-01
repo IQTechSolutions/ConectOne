@@ -12,7 +12,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Components
     public partial class LanguageSelector
     {
         /// <summary>
-        /// Gets or sets the <see cref="ClientPreferenceManager"/> instance used to manage client-specific preferences.
+        /// Gets or sets the <see cref="IClientPreferenceManager"/> instance used to manage client-specific preferences.
         /// </summary>
         [Inject] public IClientPreferenceManager ClientPreferenceManager { get; set; } = null!;
 

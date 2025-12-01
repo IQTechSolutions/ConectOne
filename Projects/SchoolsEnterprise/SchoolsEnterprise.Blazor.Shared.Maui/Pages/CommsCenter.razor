@@ -1,0 +1,59 @@
+﻿@page "/commscenter"
+
+@attribute [Authorize]
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using NeuralTech.Base.Enums
+
+<MobilePageTitle Title="Comms Center"></MobilePageTitle>
+
+<MudGrid Class="mb-5" Spacing="2" Style="padding-top:15px;">
+    
+    <MudItem xs="12" sm="12" md="12">
+        <TileButton Title="Notifications" BadgeCount="_notificationCount" Image="/images/static/icons2/Notifications.svg" TileClicked="@(() => NavigateToPage("/notifications"))"/>
+    </MudItem>
+
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Global Messages" BadgeCount="_globalNotificationCount" Image="/images/static/icons2/commsWhite.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.Global}"))"/>
+    </MudItem>
+
+    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("AllowRoleCommunication"))
+    {
+
+        <MudItem xs="6" sm="6" md="6">
+            <TileButton Title="User Group" BadgeCount="_gradeNotificationCount" Image="/images/static/icons2/STAFF.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.RoleMessage}"))"/>
+        </MudItem>
+    }
+
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Grade" BadgeCount="_gradeNotificationCount" Image="/images/static/icons2/GR.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.Grade}"))" />
+    </MudItem>
+
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Class" BadgeCount="_classNotificationCount" Image="/images/static/icons2/classicon.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.SchoolClass}"))"  />
+    </MudItem>
+    
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Learners" BadgeCount="_learnerNotificationCount" Image="/images/static/icons2/STAFF.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.Learner}"))" />
+    </MudItem>
+    
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Parents" BadgeCount="_parentNotificationCount" Image="/images/static/icons2/STAFF.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.Parent}"))" />
+    </MudItem>
+    
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Teachers" BadgeCount="_teacherNotificationCount" Image="/images/static/icons2/EVERNET.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.BlogPost}"))"  />
+    </MudItem>
+
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Events" BadgeCount="_eventNotificationCount" Image="/images/static/icons2/eventsicon.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.Event}"))"  />
+    </MudItem>
+
+    <MudItem xs="6" sm="6" md="6">
+        <TileButton Title="Activities" BadgeCount="_activityNotificationCount" Image="/images/static/icons2/activitiesicon.svg" TileClicked="@(() => NavigateToPage($"/notifications/bytype/{(int)MessageType.ActivityGroup}"))" />
+    </MudItem>
+    
+</MudGrid>

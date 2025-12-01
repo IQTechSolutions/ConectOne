@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Layout\MainLayout.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\pictures\faces\.DS_Store" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cropper.Blazor" Version="1.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="MudBlazor.ThemeManager" Version="3.0.0" />
+    <PackageReference Include="Radzen.Blazor" Version="8.3.4" />
+    <PackageReference Include="Toolbelt.Blazor.HttpClientInterceptor" Version="10.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\AdvertisingModule\AdvertisingModule.Application\AdvertisingModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\AdvertisingModule\AdvertisingModule.Blazor\AdvertisingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Base\ConectOne.Application\ConectOne.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Base\ConectOne.Blazor\ConectOne.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BloggingModule\BloggingModule.Application\BloggingModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BusinessModule\BusinessModule.Application\BusinessModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BusinessModule\BusinessModule.Blazor\BusinessModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\CalendarModule\CalendarModule.Application\CalendarModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\CalendarModule\CalendarModule.Blazor\CalendarModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\FilingModule\FilingModule.Application\FilingModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\FilingModule\FilingModule.Blazor\FilingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Application\IdentityModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Blazor\IdentityModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\MessagingModule\MessagingModule.Application\MessagingModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\MessagingModule\MessagingModule.Blazor\MessagingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\ProductsModule\ProductsModule.Application\ProductsModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Application\SchoolsModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Blazor\SchoolsModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\ShoppingModule\ShoppingModule.Application\ShoppingModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\ShoppingModule\ShoppingModule.Blazor\ShoppingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Vendors\Google\GoogleMapsComponents\GoogleMapsComponents.csproj" />
+    <ProjectReference Include="..\..\..\Vendors\PayFast\PayFast.csproj" />
+  </ItemGroup>
+
+</Project>

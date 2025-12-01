@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using MudBlazor
+@inherits ConectOne.Blazor.Settings.MudBaseSelectItem
+
+<NavLink @onclick="@HandleNavigation" @attributes="@Attributes" Match="@Match" ActiveClass="active-nav">
+    
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <MudIcon Icon="@Icon" Color="@IconColor"/>
+    }
+
+    @if (Parent.ShowMenuTitle)
+    {
+        <span>@Title</span>
+    }
+
+    <strong></strong>
+
+</NavLink>

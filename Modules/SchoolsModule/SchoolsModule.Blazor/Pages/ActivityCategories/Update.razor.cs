@@ -43,7 +43,7 @@ namespace SchoolsModule.Blazor.Pages.ActivityCategories
         /// <summary>
         /// Gets or sets the service used to manage categories for activity groups.
         /// </summary>
-        [Inject] public ICategoryService<ActivityGroup> ActivityGroupCategoryService { get; set; } = null!;
+        [Inject] public IActivityGroupCategoryService ActivityGroupCategoryService { get; set; } = null!;
 
         /// <summary>
         /// Injected dialog service for displaying dialogs.

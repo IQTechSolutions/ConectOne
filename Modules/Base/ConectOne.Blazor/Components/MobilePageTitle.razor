@@ -1,0 +1,16 @@
+﻿@using MudBlazor
+
+<MudPaper Height="150" Class="px-4 mx-n4 mt-n10 pt-10 py-5 mud-theme-primary" Style="border-radius: 0px 0px 45px 45px;" Outlined="false">
+    <MudPaper Elevation="0" Class="mud-theme-primary d-flex">
+        <MudText Color="Color.Default" Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; width:100%;">@Title.ToUpper()</MudText>
+    </MudPaper>
+</MudPaper>
+
+@code {
+
+    /// <summary>
+    /// The title of the mobile page.
+    /// </summary>
+    [Parameter] public string Title { get; set; }
+
+}

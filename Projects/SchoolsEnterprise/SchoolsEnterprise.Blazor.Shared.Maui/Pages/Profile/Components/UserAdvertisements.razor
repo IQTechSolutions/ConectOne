@@ -1,0 +1,48 @@
+﻿@using MudBlazor
+<MudCard Elevation="25" Class="my-5 rounded-lg">
+    <MudCardContent>
+        <MudGrid Class="mb-3" Spacing="1">
+            <MudItem xs="12">
+                <MudText Color="Color.Default" Style="font-weight: 600;" Typo="Typo.h6">Your Adds</MudText>
+                <MudText Color="Color.Default" Typo="Typo.caption">Your running adds. Renew learning before they expire.</MudText>
+            </MudItem>
+            @{
+                var adds = DisplayTopPerformers ? _adds.Take(3).ToList() : _adds;
+                foreach (var add in adds)
+                {
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudCard Elevation="0" Class="d-flex flex-row justify-space-between rounded-lg pa-0">
+                            <div class="d-flex">
+                                <MudCardMedia Image="/images/pictures/28.jpg" Class="rounded-lg align-self-center" Style="height: 60px; min-width: 60px; max-width: 60px; " />
+                                <MudCardContent Class="px-3">
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Color="@Color.Default">Mobile PWA</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Primary">1 hour, 24 minutes</MudText>
+                                    <MudProgressLinear Color="Color.Error" Value="30" />
+                                </MudCardContent>
+                            </div>
+                            <MudIconButton Icon="fas fa-play-circle" Color="Color.Primary" Size="Size.Small"></MudIconButton>
+                        </MudCard>
+                    </MudItem>
+                }
+            }            
+        </MudGrid>
+    </MudCardContent>
+    <MudCardActions>
+        <MudGrid Spacing="2">
+            <MudItem xs="12">
+                <MudButton FullWidth="true" Class="rounded-lg" Size="Size.Medium" Variant="Variant.Filled" OnClick="@(() => { NavigationManager.NavigateTo($"/advertising/tiers/0"); })" Color="Color.Primary">Start Web Campaign</MudButton>
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton FullWidth="true" Class="rounded-lg" Size="Size.Medium" Variant="Variant.Filled" OnClick="@(() => { NavigationManager.NavigateTo($"/advertising/tiers/1"); })" Color="Color.Primary">Stadium Adds</MudButton>
+            </MudItem>
+            @if (_adds.Count() > 3)
+            {
+                <MudItem xs="12">
+                    <MudButton FullWidth="true" Class="rounded-lg" OnClick="@(() => NavigationManager.NavigateTo("/advertisements/list/peruser", true))" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Success">View All</MudButton>
+                </MudItem>
+            }
+        </MudGrid>
+
+
+    </MudCardActions>
+</MudCard>

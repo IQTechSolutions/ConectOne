@@ -1,0 +1,19 @@
+﻿@using MudBlazor
+@if (_events.Count > 0)
+{
+    <MudText Typo="Typo.h6" Style="font-weight: 300; color:black">Important Event Tickets</MudText>
+    @foreach (var schoolEvent in _events)
+    {
+        <MudCard Elevation="25" Class="mt-5 rounded-lg">
+            <MudCardContent>
+                <div class="d-flex">
+                    <MudIconButton Class="align-self-center" Icon="fas fa-check-circle" Color="Color.Success" Size="Size.Large"></MudIconButton>
+                    <div class="mx-3">
+                        <MudText Typo="Typo.h6" Style="font-weight: 600;" Color="@Color.Default">Buy @schoolEvent.Name Ticket</MudText>
+                    </div>
+                </div>
+                <MudButton OnClick="@(() => { NavigationManager.NavigateTo($"/events/tickets/{schoolEvent.EventId}"); })" FullWidth="true" Class="my-3 rounded-lg px-1" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Primary">View Available Tickets</MudButton>
+            </MudCardContent>
+        </MudCard>
+    }
+}

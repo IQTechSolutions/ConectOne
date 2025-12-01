@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AccountSignInAlert" xml:space="preserve">
+    <value>Kennisgewing vir aanmelding</value>
+  </data>
+  <data name="AppInfo" xml:space="preserve">
+    <value>Toepinligting</value>
+  </data>
+  <data name="AuthenticationMethod" xml:space="preserve">
+    <value>Verifikasiewyse</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Verander wagwoord</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Instellings</value>
+  </data>
+  <data name="SecureQuestions" xml:space="preserve">
+    <value>Veiligheidsvrae</value>
+  </data>
+  <data name="SignInWithFingerprint" xml:space="preserve">
+    <value>Teken in met vingerafdruk</value>
+  </data>
+</root>

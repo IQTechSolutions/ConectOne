@@ -1,0 +1,37 @@
+﻿@page "/shop/categories"
+
+@using AdvertisingModule.Domain.Enums
+@using ConectOne.Blazor.Components
+@using MudBlazor
+
+<MobilePageTitle Title="Shop Categories"></MobilePageTitle>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MudGrid Class="mb-5" Spacing="2" Style="padding-top:15px;">
+        @foreach (var category in _categories.Where(c => c.Featured))
+        {
+            <MudItem xs="@_columnSize" sm="@_columnSize" md="@_columnSize">
+                <TileButton Title="@category.Name" Image="@category.IconImageUrl" TileClicked="@(() => NavigateToCategoryPage(category.CategoryId))" />
+            </MudItem>
+        }
+
+        <MudItem xs="@_columnSize" sm="@_columnSize" md="@_columnSize">
+            <TileButton Title="Web Advertising" Image="/images/static/icons2/commsWhite.svg" TileClicked="@(() => { NavigationManager.NavigateTo($"/advertising/tiers/{(int)AdvertisementType.Website}"); })" />
+        </MudItem>
+        <MudItem xs="@_columnSize" sm="@_columnSize" md="@_columnSize">
+            <TileButton Title="Sport Advertising" Image="/images/static/icons2/mydocuments.svg" TileClicked="@(() => { NavigationManager.NavigateTo($"/advertising/tiers/{(int)AdvertisementType.Stadium}"); })" />
+        </MudItem>
+
+        @foreach (var category in _categories.Where(c => !c.Featured))
+        {
+            <MudItem xs="@_columnSize" sm="@_columnSize" md="@_columnSize">
+                <TileButton Title="@category.Name" Image="@category.IconImageUrl" TileClicked="@(() => NavigateToCategoryPage(category.CategoryId))" />
+            </MudItem>
+        }
+    </MudGrid>
+}

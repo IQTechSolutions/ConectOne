@@ -1,0 +1,25 @@
+﻿@page "/commerce/thank-you"
+@using ConectOne.Blazor.Components
+@using MudBlazor
+@using SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
+
+@layout MainLayout
+
+<MobilePageTitle Title="Thank You"></MobilePageTitle>
+
+<MudPaper Elevation="1" Class="pa-3" Outlined="false">
+<MudGrid Class="" Spacing="0">
+    <MudItem xs="12" sm="12" md="12">
+        <section class="section novi-bg novi-bg-img section-xl bg-default text-center">
+            <div class="container">
+                <h3>Thank you for your purchase, we will process your purchase as soon as possible.</h3>
+                <div class="row justify-content-lg-center">
+                </div>
+            </div>
+        </section>
+    </MudItem>
+        <MudItem xs="12" sm="12" md="12">
+            <MudButton Href="/" FullWidth="true" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Upgrade">Back To Home Page</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>

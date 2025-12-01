@@ -1,0 +1,85 @@
+﻿@page "/notifications/bytype/{MessageType:int}"
+@page "/notifications"
+
+@attribute [Authorize]
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+<style>
+    .second-card {
+        background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@TitleText"></MobilePageTitle>
+
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        @if (_notificationList != null && _notificationList.Any())
+        {
+            @foreach (var item in _notificationList)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" @onclick="@(() => NavigateToNotificationDetails(item.NotificationUrl!, item.NotificationId!))">
+                        <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="width: 100%">
+                            <MudGrid>
+                                <MudItem xs="4">
+                                    <ListItemTimeBadge Date="@item.Created!.Value"/>
+                                </MudItem>
+                                <MudItem xs="8">
+                                    <MudGrid>
+                                        <MudItem xs="12">
+                                            <MudText Typo="Typo.body1" Color="@Color.Dark" Class="text-secondary"><strong>@item.Title.TruncateLongString(50)</strong></MudText>
+                                            @* @if (item.MessageType == NeuralTech.Base.Enums.MessageType.Grade)
+                                            {
+                                                <SchoolGradeAndLearnerInfoListComponent SchoolGradeId="@item.EntityId" ParentId="@item.ReceiverId" />
+                                            }
+                                            @if (item.MessageType == NeuralTech.Base.Enums.MessageType.SchoolClass)
+                                            {
+                                                <SchoolClassAndLearnerInfoListComponent SchoolClassId="@item.EntityId" ParentId="@item.ReceiverId" />
+                                            } *@
+                                            <MudText Typo="Typo.body2" Color="@Color.Dark" Class="text-secondary">@item.ShortDescription.TruncateLongString(60)</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8" Style="padding-top:0px;">
+                                            @if (item.Read)
+                                            {
+                                                <MudText Typo="Typo.subtitle1" Color="@Color.Dark" Class="text-secondary"><small>Read : @item.ReadTime?.ToShortDateString()</small></MudText>
+                                            }
+                                            else
+                                            {
+                                                <MudChip T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Style="color:grey" Class="px-2 rounded-lg"><strong style="color:black">Unread</strong></MudChip>
+                                            }
+                                        </MudItem>
+                                        <MudItem xs="4" Style="padding-top:0px;">
+                                            <div class="d-flex flex-row justify-space-between">
+                                                <MudButton T="string" Variant="Variant.Filled" Size="Size.Small" Label="true" Color="Color.Error" OnClick="@(() => DeleteNotification(item.NotificationId!))" Class="px-2 rounded-lg">Delete</MudButton>
+                                            </div>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        }
+        else
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No notifications available, please check back later</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

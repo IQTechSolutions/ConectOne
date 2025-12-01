@@ -1,0 +1,61 @@
+﻿@page "/advertisements/list/peruser"
+
+@attribute [Authorize]
+
+@using ConectOne.Blazor.Components
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+<MobilePageTitle Title="Advertisement Directory"></MobilePageTitle>
+
+@if (_advertisements.Any())
+{
+@foreach (var item in _advertisements)
+{
+    <MudGrid>
+        <MudItem xs="12">
+            <MudCard Elevation="1" Class="rounded-lg py-1">
+                <MudCardContent>
+                    <div class="d-flex mb-3">
+                        @if (item.Images.Any(c => c.ImageType == UploadType.Cover))
+                        {
+                            <MudAvatar Square="true">
+                                <MudImage Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath.TrimStart('/')}")"></MudImage>
+                            </MudAvatar>
+                        }
+                        <div class="mx-3">
+                            <MudText Color="Color.Default" Typo="Typo.h6" Style="font-weight: 600;">@item.Title</MudText>
+                            <div class="d-flex mt-2">
+
+                                <MudIcon Class="mr-1"Icon="@Icons.Material.Filled.Email" Size="Size.Small"></MudIcon>
+                                <MudText Class="mr-1 align-self-center" Color="Color.Default" Typo="Typo.caption" Style="font-weight: 500;">@item.AdvertisementTier</MudText>
+
+                                <MudIcon Class="mr-1" Icon="@Icons.Material.Filled.Phone" Size="Size.Small"></MudIcon>
+                                <MudText Class="align-self-center" Color="Color.Default" Typo="Typo.caption" Style="font-weight: 500;">@item.StartDate</MudText>
+
+                                <MudIcon Class="mr-1" Icon="@Icons.Material.Filled.Web" Size="Size.Small"></MudIcon>
+                                <MudText Class="align-self-center" Color="Color.Default" Typo="Typo.caption" Style="font-weight: 500;">@item.Status</MudText>
+                            </div>
+                        </div>
+                    </div>
+                    <MudText Typo="Typo.body2">@item.Description</MudText>
+                    <MudButton Class="mt-3 rounded-lg" Color="Color.Tertiary" Href="@($"listingDetails/{item.Id}")" FullWidth="true" Variant="Variant.Filled"> View Details </MudButton>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+}
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" sm="12" md="12">
+            <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No listings available, please check back later</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+}

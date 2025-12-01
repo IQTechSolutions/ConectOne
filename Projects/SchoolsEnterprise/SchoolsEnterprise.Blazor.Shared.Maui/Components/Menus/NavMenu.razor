@@ -1,0 +1,81 @@
+﻿  
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using ShoppingModule.Domain.Enums
+
+@attribute [Authorize]
+
+<MudNavMenu>
+    <MudNavLink OnClick="NavigateToDashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Dashboard">@Localizer["DashboardLabel"]</MudNavLink>
+    <MudNavLink OnClick="NavigateToMakeADonation" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Wallet">@Localizer["MakeADonationLabel"]</MudNavLink>
+    @if (listingCount > 0 || advertisementCount > 0)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.EventAvailable" Title="@Localizer["Account"]" Expanded="false">
+            <MudNavLink OnClick="NavigateToProfilePage" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Person">@Localizer["ProfileLabel"]</MudNavLink>
+            @if (advertisementCount > 0)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/advertisements/list/peruser", true))" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Add">@Localizer["AdvertisementsLabel"]</MudNavLink>
+            }
+            @if (listingCount > 0)
+            {
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("/directory/peruser", true))" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Business">@Localizer["BusinessListingsLabel"]</MudNavLink>
+            }
+        </MudNavGroup>
+    }
+    else
+    {
+        <MudNavLink OnClick="NavigateToProfilePage" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Person">@Localizer["ProfileLabel"]</MudNavLink>
+    }
+    
+    @if (Configuration.GetValue<bool>("ApplicationConfiguration:UseBusinessListingModule"))
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.EventAvailable" Title="@Localizer["OrdersTitle"]" Expanded="false">
+            <MudNavLink Href="/salesOrders/activityGroupOptions">@Localizer["InvoicesLabel"]</MudNavLink>
+            <MudNavLink OnClick="@(() => { NavigationManager.NavigateTo($"/salesOrders/{(int)OrderStatus.Processing}", true); })">@Localizer["ActiveLabel"]</MudNavLink>
+            <MudNavLink OnClick="@(() => { NavigationManager.NavigateTo($"/salesOrders/{(int)OrderStatus.PaymentPending}", true); })">@Localizer["Pending"]</MudNavLink>
+            <MudNavLink OnClick="@(() => { NavigationManager.NavigateTo($"/salesOrders/{(int)OrderStatus.ReadyForCollection}", true); })">@Localizer["ReadyToCollectLabel"]</MudNavLink>
+            <MudNavLink OnClick="@(() => { NavigationManager.NavigateTo($"/salesOrders/{(int)OrderStatus.Completed}", true); })">@Localizer["HistoryLabel"]</MudNavLink>
+        </MudNavGroup>
+    }
+    <MudNavGroup Icon="@Icons.Material.Outlined.ChatBubbleOutline" Title="@Localizer["CommunicationTitle"]" Expanded="false">
+        <MudNavLink OnClick="NavigateToCommsCenterPage" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Notifications">@Localizer["CommsCenterLabel"]</MudNavLink>
+        <MudNavLink OnClick="NavigateToChatGroupPage" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.ChatBubble">@Localizer["ChatCenterLabel"]</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Icon="@Icons.Material.Outlined.EventAvailable" Title="@Localizer["EventsTitle"]" Expanded="false">
+        <MudNavLink OnClick="NavigateToEventsPage">@Localizer["ActiveLabel"]</MudNavLink>
+        <MudNavLink OnClick="NavigateToEventTicketsPage">@Localizer["TicketsLabel"]</MudNavLink>
+    </MudNavGroup>
+
+    @if (Configuration.GetValue<bool>("ApplicationConfiguration:UseBusinessListingModule"))
+    {
+        <MudNavLink Href="/directory/categories" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.ListAlt">@Localizer["DirectoryLabel"]</MudNavLink>
+    }
+    @if (Configuration.GetValue<bool>("ApplicationConfiguration:UseEcommerceModule"))
+    {
+        <MudNavLink Href="/shop/categories" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Shop">@Localizer["ShopLabel"]</MudNavLink>
+    }
+
+    <MudNavLink Href="@Configuration["ApplicationConfiguration:SchoolWebAddress"]" Target="_blank" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.TwoTone.OpenInBrowser">@Localizer["WebsiteLabel"]</MudNavLink>
+    <MudNavLink Href="@Configuration["ApplicationConfiguration:ContactUsAddress"]" Target="_blank" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.TwoTone.Email">@Localizer["ContactUsLabel"]</MudNavLink>
+
+    @if(_user is not null && _user.IsInRole("Teacher"))
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.EventAvailable" Title="@Localizer["ClassesTitle"]" Expanded="false">
+            <MudNavLink Href="/schoolClass/attendanceOptions" Match="NavLinkMatch.All">@Localizer["AttendanceLabel"]</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Outlined.EventAvailable" Title="@Localizer["ActivitiesTitle"]" Expanded="false">
+            <MudNavLink Href="/activityGroups/activityGroupOptions" Match="NavLinkMatch.All">@Localizer["TeamsLabel"]</MudNavLink>
+            <MudNavLink Href="/activityGroups/attendanceOptions" Match="NavLinkMatch.All">@Localizer["AttendanceLabel"]</MudNavLink>
+        </MudNavGroup>
+    }
+    <MudNavLink Href="/settings" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Settings">@Localizer["SettingsLabel"]</MudNavLink>
+    <MudNavLink OnClick="SignOut" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Lock">@Localizer["SignOutLabel"]</MudNavLink>
+
+    @if (!string.IsNullOrWhiteSpace(_appVersion))
+    {
+        <MudDivider Class="my-4" />
+        <MudText Typo="Typo.caption" Class="nav-menu-version">@($"Version {_appVersion}")</MudText>
+    }
+</MudNavMenu>

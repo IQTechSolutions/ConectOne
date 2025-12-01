@@ -1,0 +1,109 @@
+﻿@using MudBlazor
+
+<style>
+    @@import url('https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css');
+
+    .tile-button__icon-preview {
+        background-color: rgba(0, 0, 0, 0.35);
+        border-radius: 8px;
+        color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tile-button__icon-preview--full {
+        border-radius: 12px;
+        width: 100%;
+    }
+
+    .tile-button__icon-preview i {
+        line-height: 1;
+    }
+</style>
+
+<MudCard Elevation="@Elevation" Class="@CardContainerClass" @onclick="TileClicked">
+    <MudCardContent Class="@CardContentClass" Style="@($"height:{Height};")">
+
+        @if (FullImage)
+        {
+            @if (BadgeCount == 0)
+            {
+                @if (HasFontIcon)
+                {
+                    <div class="tile-button__icon-preview tile-button__icon-preview--full align-self-center" style="@FullImageIconStyle">
+                        <i class="@FontIconClass" aria-hidden="true"></i>
+                    </div>
+                }
+                else
+                {
+                    <MudImage Src="@Image" Class="align-self-center" Style="height:100%"/>
+                }
+            }
+            else
+            {
+                <div class="align-self-center">
+                    <MudBadge Origin="Origin.TopRight" Content="BadgeCount" Overlap="true" Color="Color.Error" Style="margin-top:15px;">
+                        @if (HasFontIcon)
+                        {
+                            <div class="tile-button__icon-preview tile-button__icon-preview--full" style="@FullImageIconStyle">
+                                <i class="@FontIconClass" aria-hidden="true"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <MudImage Src="@Image" Class="align-self-center" Style="height:100%"/>
+                        }
+                    </MudBadge>
+                </div>
+            }
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(Image) && DisplayImage)
+            {
+                @if (BadgeCount == 0)
+                {
+                    @if (HasFontIcon)
+                    {
+                        <span class="tile-button__icon-preview" style="@IconPreviewStyle">
+                            <i class="@FontIconClass" aria-hidden="true"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <MudImage Src="@Image" Class="align-self-center" Style="@GetImageStyle"/>
+                    }
+                }
+                else
+                {
+                    <div style="@BadgeContainerStyle" class="align-self-center">
+                        <MudBadge Origin="Origin.TopRight" Content="BadgeCount" Overlap="true" Color="Color.Error" Style="margin-top:15px;">
+                            @if (HasFontIcon)
+                            {
+                                <span class="tile-button__icon-preview" style="@IconPreviewStyle">
+                                    <i class="@FontIconClass" aria-hidden="true"></i>
+                                </span>
+                            }
+                            else
+                            {
+                                <MudImage Src="@Image" Class="align-self-center" Style="@GetImageStyle"/>
+                            }
+                        </MudBadge>
+                    </div>
+                }
+            }
+
+            @if (!string.IsNullOrEmpty(SubTitle))
+            {
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 500; color:white;" Class="align-self-center">@Title</MudText>
+                <MudText Typo="Typo.caption" Style="font-weight: 300; color:white;" Class="mt-auto align-self-center mud-text-secondary">@SubTitle</MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.subtitle2" Color="Color.Default" Style="@($" color:{Colors.Shades.White}; font-weight:500;")" Align="Align.Center" Class="mt-3">@Title</MudText>
+            }
+        }
+        
+    </MudCardContent>
+</MudCard>

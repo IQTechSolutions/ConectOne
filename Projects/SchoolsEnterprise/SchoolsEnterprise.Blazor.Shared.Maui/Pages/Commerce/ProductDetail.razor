@@ -1,0 +1,150 @@
+﻿@page "/shopping/productdetail/{productId}"
+
+@using ConectOne.Blazor.Components
+@using FilingModule.Domain.Enums
+@using MudBlazor
+@using ProductsModule.Domain.DataTransferObjects
+
+
+
+@if (_product != null)
+{
+    <MobilePageTitle Title="@_product?.Details?.Name"></MobilePageTitle>
+
+    <MudCard Elevation="1" Class="rounded-lg">
+        @{
+            var vvvv = _product.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover) is null ? "_content/ProductsModule.Blazor/images/NoImage.jpg" : $"{Configuration["ApiConfiguration:BaseApiAddress"]}//{_product.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath?.Replace("\\", "/")}";
+        }
+        <MudCardMedia Image="@vvvv" Height="400"/>
+        <MudCardContent>
+            <MudGrid Spacing="2">
+                <MudItem xs="12">
+                    <div class="d-flex align-content-center justify-space-between">
+                        <MudPaper Elevation="0" Class="align-self-center">
+                            <MudText Typo="Typo.h6" Style="font-weight: 600;">@_product.Details.DisplayName</MudText>
+                            <MudText Typo="Typo.body2">@_product.Details.ShortDescription</MudText>
+                        </MudPaper>
+                        @if (!_product.Variants.Any())
+                        {
+                            <MudPaper Elevation="0" Class="align-self-center">
+                                <MudText Typo="Typo.h6" Style="font-weight: 600; align-self-center" Color="@Color.Error">@_product.Pricing.SellingPrice.ToString("C")</MudText>
+                            </MudPaper>
+                        }
+                        
+                    </div>
+                </MudItem>
+
+                <MudItem xs="6">
+                    <div class="d-flex align-content-center">
+                        @* <MudPaper Elevation="0" Class="">
+                        <MudText Typo="Typo.body2">Brand</MudText>
+                        <MudText Typo="Typo.subtitle1" Color="@Color.Primary">Blazor</MudText>
+                    </MudPaper> *@
+                        <div class="mx-2"></div>
+                        <MudStack>
+                            <MudPaper Elevation="0" Class="">
+                                <MudText Typo="Typo.body2">Product Type(s)</MudText>
+                                <MudText Typo="Typo.subtitle1" Color="@Color.Primary">@(_product.Categories == null || !_product.Categories.Any() ? "" : string.Join(",", _product.Categories.Select(c => c.Name)))</MudText>
+                            </MudPaper>
+                       
+                            <MudPaper Elevation="0" Class="">
+                                <MudNumericField Style="width:75px;" @bind-Value="_qty" Label="Qty"></MudNumericField>
+                            </MudPaper>
+                        </MudStack>
+                    </div>
+                </MudItem>
+                <MudItem xs="6">
+                    <div class="d-flex align-content-center">
+                        <MudStack>
+                            @foreach (var item in _product.Variants)
+                            {
+                                @if (item.Variants.Any())
+                                {
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">@item.Name</MudText>
+                                    <div class="d-flex align-content-center" style="padding-left:15px;">
+                                        <MudRadioGroup T="ProductDto" @bind-Value="SelectedOption">
+                                            @foreach (var item2 in item.Variants)
+                                            {
+                                                <MudRadio Value="@item2" Color="Color.Primary"><MudText Typo="Typo.body2">@item2.Name - @_product.Pricing.SellingPrice.ToString("C")</MudText></MudRadio>
+                                            }
+                                        </MudRadioGroup>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <MudRadioGroup T="ProductDto" @bind-Value="SelectedOption">
+                                        <MudRadio Value="@item" Color="Color.Primary">@item.Name - @_product.Pricing.SellingPrice.ToString("C")</MudRadio>
+                                    </MudRadioGroup>
+                                }
+                            }
+                        </MudStack>
+                        
+                    </div>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDivider></MudDivider>
+                </MudItem>
+
+                <MudItem xs="12" Class="d-flex align-content-center justify-space-between">
+                    <MudPaper Elevation="0" Class="">
+                        <MudText Typo="Typo.body1">Ratings &amp; Reviews</MudText>
+                        <MudRating ReadOnly="true" SelectedValue="4"/>
+                    </MudPaper>
+                    <MudPaper Elevation="0" Class="align-self-center">
+                        <MudIconButton Icon="@Icons.Material.Filled.Favorite" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-1"/>
+                        <MudIconButton Icon="@Icons.Material.Filled.Share" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-1"/>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDivider></MudDivider>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudContainer Fixed="true" Class="px-0">
+                        <MudButton FullWidth="true" Class="rounded-lg" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => AddToCartAsync(_qty))">Add To Cart</MudButton>
+                    </MudContainer>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+
+    <MudCard Elevation="1" Class="rounded-lg mt-5">
+        <MudCardContent>
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Product Overview</MudText>
+            <MudText Typo="Typo.caption">@_product.Details.Description</MudText>
+            <MudDivider Class="my-3"></MudDivider>
+            <MudGrid>
+                @foreach (var item in _product.MetaDataCollection)
+                {
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.subtitle1" Color="@Color.Primary">@item.Name.ToUpper()</MudText>
+                    </MudItem>
+                    <MudItem xs="8">
+                        <MudText Typo="Typo.body2">@item.Value</MudText>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+    
+    @if (_product.Images.Any(c => c.ImageType == UploadType.Image))
+    {
+        <MudCard Elevation="1" Class="rounded-lg mt-5">
+            <MudCardContent>
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Product Gallery</MudText>
+                <MudText Typo="Typo.caption">A gallery showcasing our product in a better view for you to see.</MudText>
+                <MudDivider Class="my-3"></MudDivider>
+                <MudGrid Spacing="1" Class="d-flex align-content-center justify-space-xs-between flex-wrap pa-0">
+                    @foreach (var image in _product.Images.Where(c => c.ImageType == UploadType.Image))
+                    {
+                        <MudItem xs="6" md="6" lg="4">
+                            <MudImage Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}//{image.RelativePath?.Replace("\\", "/")}")" Fluid="true" Class="rounded-lg" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    }
+}

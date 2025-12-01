@@ -1,0 +1,36 @@
+﻿@page "/event/{EventId}/teams"
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<style>
+    .second-card {
+           background-color: #1a2148;
+        background-image: linear-gradient(135deg, #1a2148 50, #0061B5 100%);
+    }
+</style>
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@Title"></MobilePageTitle>
+      
+    <MudGrid Class="mb-5 mt-3" Spacing="2">
+        @foreach (var item in _activityGroups)
+        {
+            <MudItem xs="12" sm="12" md="12">
+                <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:60px;" @onclick="@(() => NavigateToTeamMembers(item.ActivityGroupId!))">
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:60px; width: 100%">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default" Class="text-secondary">@item.Name - @item.AgeGroup!.Name</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+  
+}

@@ -1,0 +1,77 @@
+﻿@page "/cart"
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MobilePageTitle Title="Shopping Cart"></MobilePageTitle>
+
+<MudCard Elevation="1" Class="rounded-lg">
+    <MudCardContent>
+        <MudGrid Class="mb-3">
+            @foreach (var item in ShoppingCart.ShoppingCart.CartItems)
+            {
+                <MudItem xs="11" sm="11" md="11">
+                    <MudCard Elevation="0" Class="d-flex flex-row justify-space-between rounded-lg pa-0" Style="height:120px;">
+                        <MudCardContent Class="pa-0">
+                            <MudGrid Spacing="1">
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Color="Color.Primary">@item.ProductName</MudText>
+                                    <MudText Typo="Typo.caption" Style="font-weight: 500;" Color="Color.Primary">@item.ShortDescription.TruncateLongString(75)</MudText>
+                                </MudItem>
+                                <MudItem xs="6" Style="float:right;">
+                                    <MudNumericField @bind-Value="@item.Qty" Label="Qty" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Style="width:75px;"/>
+                                    
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.h6" Style="font-weight: 600; padding-right:10px; padding-top:10px;" Color="@Color.Error">@item.PriceIncl.ToString("C") <small style="font-weight: 200; font-size:12px;">each</small></MudText>
+                                </MudItem>
+                            </MudGrid>
+
+
+                        </MudCardContent>
+                        <MudCardMedia Image="@(!string.IsNullOrEmpty(item.ThumbnailUrl) ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}//{item.ThumbnailUrl}".Replace("\\", "/") : "_content/ProductsModule.Blazor/images/NoImage.jpg")" Class="rounded-lg ml-1" Style="height: 100px; min-width: 100px; max-width: 100px; " />
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="1" sm="1" md="1" Style="padding-left:0px;">
+                    <MudIconButton Style="float:right; padding-top:40px;" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" aria-label="delete" OnClick="@(() => RemoveCartItem(item))"/>
+                </MudItem>
+
+                @if (item != ShoppingCart.ShoppingCart.CartItems.Last())
+                {
+                    <MudItem xs="12">
+                        <MudDivider></MudDivider>
+                    </MudItem>
+                }
+            }
+
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+<MudPaper Elevation="0" Class="px-4 mx-n4 my-5 py-5 mud-theme-primary" Outlined="false" Square="true">
+    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Align="Align.Center">Cart Summary</MudText>
+    <MudText Typo="Typo.caption" Style="font-weight: 600;" Align="Align.Center">Taxes and Shipping will be added in Check Out screen</MudText>
+
+    <MudCard Class="rounded-lg my-5">
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudText Typo="Typo.h6" Style="font-weight: 600;">Total</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText Typo="Typo.h6" Style="font-weight: 600; text-align: right;" Color="@Color.Error">@ShoppingCart.ShoppingCart.TotalDue.ToString("C")</MudText>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDivider Class="mb-3"></MudDivider>
+                </MudItem>
+                
+                <MudItem xs="12">
+                    <MudContainer Fixed="true" Class="px-0">
+                        <MudButton FullWidth="true" Class="rounded-lg" Color="Color.Primary" Variant="Variant.Filled" @onclick="@(() => NavigateToCheckout())">Proceed To Checkout</MudButton>
+                    </MudContainer>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+</MudPaper>

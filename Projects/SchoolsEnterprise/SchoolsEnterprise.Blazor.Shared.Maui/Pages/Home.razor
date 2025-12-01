@@ -1,0 +1,124 @@
+﻿@page "/dashboard"
+@page "/"
+
+@attribute [Authorize]
+
+@using AdvertisingModule.Blazor.Components.Mobile
+@using ConectOne.Blazor.Components
+@using SchoolsEnterprise.Blazor.Shared.Maui.Pages.BlogCategories
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using SchoolsEnterprise.Blazor.Shared.Maui.Pages.ActivityGroups
+@using SchoolsEnterprise.Blazor.Shared.Maui.Pages.Profile.Components
+@using SchoolsEnterprise.Blazor.Shared.Maui.Pages.Events.Components
+
+@inject IConfiguration Configuration
+
+<style>
+    
+</style>
+
+<MudPaper Elevation="3" Height="200" Class="px-4 mx-n4 mt-n10 py-10 mud-theme-primary" Style="border-radius: 0px 0px 45px 45px;" Outlined="false">
+    <MudPaper Elevation="0" Class="py-0">
+        
+    </MudPaper>
+</MudPaper>
+
+<MudGrid Class="mt-n15 pt-0 mb-1">
+    <MudItem xs="12">
+        <MudImage Src="@(Configuration.GetValue<string>("CompanyConfiguration:IndexImage"))" Class="rounded-lg mr-5" Style="width:100%;" Height="160"></MudImage>
+    </MudItem>
+</MudGrid>
+
+@if (_expiringListings?.Any() == true)
+{
+    foreach (var listing in _expiringListings)
+    {
+        <MudAlert Severity="Severity.Warning" Variant="Variant.Filled" Elevation="6" Class="rounded-lg my-3 d-flex flex-column flex-md-row align-md-center justify-space-between gap-3">
+            <div>
+                <MudText Typo="Typo.subtitle2" Style="font-weight:600;">@listing.Heading listing expires soon</MudText>
+                <MudText Typo="Typo.body2">Expires in @listing.BuildTimeRemainingDescription(). Renew now to keep your listing live.</MudText>
+            </div>
+            <MudButton Color="Color.Warning" Variant="Variant.Filled" Class="rounded-lg" OnClick="@(() => RenewListingAsync(listing))">Renew listing</MudButton>
+        </MudAlert>
+    }
+}
+
+<ActivityGroupTileMenu>
+    
+    <MudItem xs="4" sm="4" md="4">
+        <TileButton Title='@Localizer["Comms"]' Image="/images/static/icons2/commsWhite.svg" TileClicked="@(() => NavigateToCommCenter())" />
+    </MudItem>
+
+    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseCustomCalandar"))
+    {
+        <MudItem xs="4" sm="4" md="4">
+            <TileButton Title='@Localizer["Calendar"]' Image="/images/static/icons2/Calendar.svg" TileClicked="@(() => NavigationManager.NavigateTo($"https://www.eversdal.org.za/calendar"))" />
+        </MudItem>
+
+    }
+    else
+    {
+        <MudItem xs="4" sm="4" md="4">
+            <TileButton Title='@Localizer["Calendar"]' Image="/images/static/icons2/Calendar.svg" TileClicked="@(() => NavigateToCalendar())" />
+        </MudItem>
+    }
+
+    <MudItem xs="4" sm="4" md="4">
+        <TileButton Title='@Localizer["ClikkMall"]' Image="/images/school/clickmall6.png" TileClicked="@(() => NavigationManager.NavigateTo($"https://affiliation.software/flysafair/c68198"))" />
+    </MudItem>
+
+</ActivityGroupTileMenu>
+
+<UpgradeAccountPartial/>
+
+
+
+@if (_featuredCategories != null && _featuredCategories.Any())
+{
+    @foreach (var featuredCategory in _featuredCategories)
+    {
+        if (featuredCategory.DisplayAsSliderItem)
+        {
+            <IndexBlogPostSlider CategoryId="@featuredCategory.CategoryId" />
+        }
+        else
+        {
+            @if (Configuration["ApplicationConfiguration:NewsFeedWidget"] == "Widget1")
+            {
+                <MudCard Elevation="1" Class="mt-5 rounded-lg">
+                    <MudCardContent>
+                        <div class="d-flex">
+                            <MudIconButton Class="align-self-center" Icon="fas fa-shop" Color="Color.Primary" Size="Size.Large"></MudIconButton>
+                            <div class="mx-3">
+                                <MudText Typo="Typo.h6" Style="font-weight: 300;" Color="@Color.Default">@featuredCategory.Name</MudText>
+                                <MudText Typo="Typo.caption" Color="Color.Default">@featuredCategory.Description</MudText>
+                            </div>
+                        </div>
+                        <MudButton Href="@($"/evers/{featuredCategory.CategoryId}")" FullWidth="true" Class="my-3 rounded-lg px-1" Size="Size.Medium" Variant="Variant.Filled" Color="Color.Primary">@Localizer["GoToCategory", featuredCategory.Name]</MudButton>
+                    </MudCardContent>
+                </MudCard>
+            }
+            else
+            {
+                <MudCard Elevation="1" Class="mt-5 rounded-lg second-card2">
+                    <MudCardContent>
+                        <div class="d-flex">
+                            <MudIconButton Class="align-self-center" Icon="fas fa-shop" Style="color: white" Size="Size.Large"></MudIconButton>
+                            <div class="mx-3">
+                                <MudText Typo="Typo.h6" Style="font-weight: 300; color:white">@featuredCategory.Name</MudText>
+                                <MudText Typo="Typo.caption" Style=" color:white">@featuredCategory.Description</MudText>
+                            </div>
+                        </div>
+                        <MudButton Href="@($"/evers/{featuredCategory.CategoryId}")" FullWidth="true" Class="my-3 rounded-lg px-1" Size="Size.Medium" Style="color:black; background-color:white">@Localizer["GoToCategory", featuredCategory.Name]</MudButton>
+                    </MudCardContent>
+                </MudCard>
+            }
+        }
+    }
+}
+
+<AffiliateAndAddDisplayComponent />
+
+<FeaturedEventTicketsPartial/>

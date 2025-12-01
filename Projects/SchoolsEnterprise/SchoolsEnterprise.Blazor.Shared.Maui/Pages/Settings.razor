@@ -1,0 +1,98 @@
+﻿@page "/settings2"
+
+@attribute [Authorize]
+
+@using ConectOne.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+
+@inject IStringLocalizer<Settings> Localizer
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@Localizer["PageTitle"]"></MobilePageTitle>
+
+    <MudPaper Elevation="1" Class="pa-3" Outlined="false">
+        <MudGrid Class="" Spacing="0">
+            <MudItem xs="12" sm="12" md="12">
+                <MudPaper Elevation="0" Class="d-flex justify-space-between" Style="background-color: transparent">
+                    <div class="d-flex align-self-center">
+                        <MudIcon Icon="@Icons.Material.TwoTone.Fingerprint" Color="Color.Error" Class="mx-0 my-5 align-self-center" Size="Size.Medium"></MudIcon>
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mx-3 align-self-center" Color="@Color.Default"> @Localizer["SignInWithFingerprint"]</MudText>
+                    </div>
+                    <MudSwitch T="bool" Checked="true" Color="Color.Tertiary" Class=" align-self-center" />
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="12">
+                <MudPaper Elevation="0" Class="d-flex justify-space-between" Style="background-color: transparent">
+                    <div class="d-flex align-self-center">
+                        <MudIcon Icon="@Icons.Material.TwoTone.Warning" Color="Color.Error" Class="mx-0 my-5 align-self-center" Size="Size.Medium"></MudIcon>
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mx-3 align-self-center" Color="@Color.Default"> @Localizer["AccountSignInAlert"] </MudText>
+                    </div>
+                    <MudSwitch T="bool" Checked="false" Color="Color.Tertiary" Class=" align-self-center" />
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudDivider></MudDivider>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudPaper Elevation="0" Class="d-flex justify-space-between" Style="background-color: transparent">
+                    <div class="d-flex align-self-center">
+                        <MudIcon Icon="@Icons.Material.TwoTone.Security" Color="Color.Error" Class="mx-0 my-5 align-self-center" Size="Size.Medium"></MudIcon>
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mx-3 align-self-center" Color="@Color.Default"> @Localizer["AuthenticationMethod"] </MudText>
+                    </div>
+                    <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Color="Color.Default" Class=" align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudDivider></MudDivider>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudPaper Elevation="0" Class="d-flex justify-space-between" Style="background-color: transparent">
+                    <div class="d-flex align-self-center">
+                        <MudIcon Icon="@Icons.Material.TwoTone.Password" Color="Color.Success" Class="mx-0 my-5 align-self-center" Size="Size.Medium"></MudIcon>
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mx-3 align-self-center" Color="@Color.Default"> @Localizer["ChangePassword"] </MudText>
+                    </div>
+                    <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Color="Color.Default" Class=" align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudDivider></MudDivider>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudPaper Elevation="0" Class="d-flex justify-space-between" Style="background-color: transparent">
+                    <div class="d-flex align-self-center">
+                        <MudIcon Icon="@Icons.Material.TwoTone.LiveHelp" Color="Color.Secondary" Class="mx-0 my-5 align-self-center" Size="Size.Medium"></MudIcon>
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mx-3 align-self-center" Color="@Color.Default"> @Localizer["SecureQuestions"] </MudText>
+                    </div>
+                    <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Color="Color.Default" Class=" align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudDivider></MudDivider>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="12">
+                <MudPaper Elevation="0" Class="d-flex justify-space-between" Style="background-color: transparent">
+                    <div class="d-flex align-self-center">
+                        <MudIcon Icon="@Icons.Material.TwoTone.AppSettingsAlt" Color="Color.Primary" Class="mx-0 my-5 align-self-center" Size="Size.Medium"></MudIcon>
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 500;" Class="mx-3 align-self-center" Color="@Color.Default"> @Localizer["AppInfo"] </MudText>
+                    </div>
+                    <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Color="Color.Default" Class="align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+}

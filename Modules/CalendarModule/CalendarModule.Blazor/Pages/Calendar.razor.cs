@@ -18,6 +18,7 @@ using MudBlazor;
 using Radzen;
 using Radzen.Blazor;
 using SchoolsModule.Domain.Entities;
+using SchoolsModule.Domain.Interfaces.ActivityGroups;
 using SchoolsModule.Domain.Interfaces.SchoolEvents;
 using SchoolsModule.Domain.RequestFeatures;
 using DialogOptions = MudBlazor.DialogOptions;
@@ -57,7 +58,7 @@ namespace CalendarModule.Blazor.Pages
         [Inject] public IDialogService DialogService { get; set; } = null!;
         [Inject] public NavigationManager NavigationManager { get; set; } = null!;
 
-        [Inject] public ICategoryService<ActivityGroup> ActivityGroupCategoryService { get; set; } = null!;
+        [Inject] public IActivityGroupCategoryService ActivityGroupCategoryService { get; set; } = null!;
 
         [Inject] public IAppointmentService AppointmentService { get; set; } = null!;
 

@@ -1,0 +1,70 @@
+﻿@page "/sign-in"
+
+
+@using ConectOne.Blazor.Layouts
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using SchoolsEnterprise.Blazor.Shared.Maui.Components.Shared
+
+@layout CleanLayout
+
+<div class="d-flex justify-center pa-5">
+    <EditForm Model="@_userAuthentication" OnValidSubmit="LoginNowAsync" class="card card-body bg-light mt-5">
+        <MudGrid Style="max-width:500px;">
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:logoUrl")}")" Style="width: 70%;" />
+                </div>
+            </MudItem>
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <MudItem xs="12">
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Style="width:100%" Class="mb-3" Icon="Icons.Material.Filled.Error"> @_errorMessage </MudAlert>
+                </MudItem>
+            }
+
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <h2>@Localizer["ApplicationHeading", Configuration.GetValue<string>("ApplicationConfiguration:ApplicationName") ?? string.Empty]</h2>
+                </div>
+            </MudItem>
+
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <MudText><strong>@Localizer["LoginInstructions"]</strong></MudText>
+                </div>
+            </MudItem>
+
+            <MudItem xs="12">
+                <div class="d-flex justify-center" style="margin-bottom:1rem;">
+                    <LanguageSelector2 />
+                </div>
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudTextField T="string" Label='@Localizer["Email"]' Variant="Variant.Outlined" OnKeyUp="OnKeyUpEvent"
+                              @bind-Value="_userAuthentication.Email" For="@(() => _userAuthentication.Email)" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Label='@Localizer["Password"]' Variant="Variant.Outlined" OnKeyUp="OnKeyUpEvent"
+                              @bind-Value="_userAuthentication.Password" For="@(() => _userAuthentication.Password)"
+                              InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+            </MudItem>
+            <MudItem xs="12" Class="d-flex justify-space-between align-center">
+                <MudLink Href="/register">@Localizer["CreateAccount"]</MudLink> <MudLink Href="/forgot-password3">@Localizer["ForgotPassword"]</MudLink>
+            </MudItem>
+            <MudItem xs="12" Class="d-flex justify-center">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Style="width: 100%;">@Localizer["SignIn"]</MudButton>
+            </MudItem>
+
+            <MudItem xs="12">
+                <div class="d-flex justify-center">
+                    <MudImage Src="@($"{Configuration.GetValue<string>("EmailConfiguration:caption")}")" Style="width: 100px;" />
+                </div>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+</div>

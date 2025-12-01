@@ -1,0 +1,133 @@
+﻿@page "/learners/{LearnerId}"
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+<MudPaper Elevation="3" Height="150" Class="px-4 mx-n4 mt-n10 pt-10 mud-theme-primary" Style="border-radius: 0px 0px 45px 45px;" Outlined="false">
+    <MudPaper Elevation="0" Class="py-6" Style="background-color: transparent">
+
+    </MudPaper>
+</MudPaper>
+@if(_loaded)
+{
+    <MudGrid Class="mt-n15 pt-0 mb-3">
+        <MudItem xs="12">
+            <MudCard Elevation="1" Class="rounded-lg">
+                <MudCardMedia Image="images/pictures/28w.jpg" Height="140" />
+                <MudCardContent Class="pt-0">
+                    <MudAvatar Style="height: 80px; width: 80px;" Class="mt-n10">
+                        <MudImage Src="images/pictures/faces/3s.png" />
+                    </MudAvatar>
+                    <div class="d-flex justify-space-between mb-2">
+                        <div>
+                            <MudText Typo="Typo.h6" Style="font-weight: 700;" Class="">@_learner.FirstName @_learner.LastName</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Primary"><strong>Grade</strong> 7 <strong>Class</strong> A</MudText>
+                        </div>
+                        <MudButton Class="align-self-center rounded-lg py-0" Color="Color.Primary" Variant="Variant.Outlined">Edit</MudButton>
+                    </div>
+                    <MudText Typo="Typo.caption" Color="Color.Primary"><strong>Parents & Gaurdians</strong></MudText>
+                    <MudDivider></MudDivider>
+                    <div class="d-flex mb-2">
+                        <MudAvatar>
+                            <MudImage Src="images/mony.jpg"></MudImage>
+                        </MudAvatar>
+                        <MudText Typo="Typo.caption" Style="font-weight: 700; padding-left:15px;" Class=" align-self-center ">@_learner.FirstName @_learner.LastName</MudText>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <MudAvatar>
+                            <MudImage Src="images/mony.jpg"></MudImage>
+                        </MudAvatar>
+                        <MudText Typo="Typo.caption" Style="font-weight: 700; padding-left:15px;" Class=" align-self-center ">@_learner.FirstName @_learner.LastName</MudText>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <MudAvatar>
+                            <MudImage Src="images/mony.jpg"></MudImage>
+                        </MudAvatar>
+                        <MudText Typo="Typo.caption" Style="font-weight: 700; padding-left:15px;" Class=" align-self-center ">@_learner.FirstName @_learner.LastName</MudText>
+                    </div>
+                    <MudText Typo="Typo.body2">@(string.IsNullOrEmpty(_learner.Description) ? "No description currently available, edit to change" : _learner.Description)</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Class="mt-7 mb-3" Spacing="2">
+        <MudItem xs="12" sm="12" md="12">
+            <MudPaper Elevation="0" Class="d-flex pa-0">
+                <MudIconButton Icon="fad fa-list" Variant="Variant.Filled" Class="ml-0 align-self-center" Color="Color.Error" Size="Size.Medium"></MudIconButton>
+                <MudPaper Elevation="0" Class="pa-0 mx-5 align-self-center">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default">Reports</MudText>
+                </MudPaper>
+                <MudPaper Elevation="0" Class="pa-0 mr-0 ml-auto align-self-center">
+                    <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudDivider></MudDivider>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudPaper Elevation="0" Class="d-flex pa-0">
+                <MudIconButton Icon="fad fa-check" Variant="Variant.Filled" Class="ml-0 align-self-center" Color="Color.Success" Size="Size.Medium"></MudIconButton>
+                <MudPaper Elevation="0" Class="pa-0 mx-5 align-self-center">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default">Behaviour</MudText>
+                </MudPaper>
+                <MudPaper Elevation="0" Class="pa-0 mr-0 ml-auto align-self-center">
+                    <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudDivider></MudDivider>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudPaper Elevation="0" Class="d-flex pa-0">
+                <MudIconButton Icon="fad fa-gem" Variant="Variant.Filled" Class="ml-0 align-self-center" Color="Color.Info" Size="Size.Medium"></MudIconButton>
+                <MudPaper Elevation="0" Class="pa-0 mx-5 align-self-center">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default">Notifications</MudText>
+                </MudPaper>
+                <MudPaper Elevation="0" Class="pa-0 mr-0 ml-auto align-self-center">
+                    <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudDivider></MudDivider>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudPaper Elevation="0" Class="d-flex pa-0">
+                <MudIconButton Icon="fad fa-bolt" Variant="Variant.Filled" Class="ml-0 align-self-center" Color="Color.Warning" Size="Size.Medium"></MudIconButton>
+                <MudPaper Elevation="0" Class="pa-0 mx-5 align-self-center">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default">Attendance</MudText>
+                </MudPaper>
+                <MudPaper Elevation="0" Class="pa-0 mr-0 ml-auto align-self-center">
+                    <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudDivider></MudDivider>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudPaper Elevation="0" Class="d-flex pa-0">
+                <MudIconButton Icon="fad fa-mobile-alt" Variant="Variant.Filled" Class="ml-0 align-self-center" Color="Color.Success" Size="Size.Medium"></MudIconButton>
+                <MudPaper Elevation="0" Class="pa-0 mx-5 align-self-center">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;" Color="@Color.Default">Medical Information</MudText>
+                </MudPaper>
+                <MudPaper Elevation="0" Class="pa-0 mr-0 ml-auto align-self-center">
+                    <MudIcon Icon="@Icons.Material.TwoTone.ArrowRight" Color="Color.Default" Class="mx-3 ml-auto align-self-center" Size="Size.Medium"></MudIcon>
+                </MudPaper>
+            </MudPaper>
+        </MudItem>
+
+    </MudGrid>
+}

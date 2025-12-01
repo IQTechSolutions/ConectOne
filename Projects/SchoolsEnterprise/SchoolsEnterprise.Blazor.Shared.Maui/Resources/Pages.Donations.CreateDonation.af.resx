@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="AgreeToTermsLabel" xml:space="preserve">
+    <value>Ek stem in tot die donasievoorwaardes en privaatheidsbeleid.</value>
+  </data>
+	<data name="AgreeToTermsRequired" xml:space="preserve">
+    <value>Bevestig asseblief dat jy die voorwaardes aanvaar voordat jy voortgaan.</value>
+  </data>
+	<data name="AmountHelper" xml:space="preserve">
+    <value>Voer die bedrag in wat jy wil skenk.</value>
+  </data>
+	<data name="AmountLabel" xml:space="preserve">
+    <value>Donasiebedrag</value>
+  </data>
+	<data name="AmountRequired" xml:space="preserve">
+    <value>Voer asseblief die bedrag in wat jy wil skenk.</value>
+  </data>
+	<data name="DesignationHelper" xml:space="preserve">
+    <value>Kies die fonds of inisiatief wat jy wil ondersteun.</value>
+  </data>
+	<data name="DesignationLabel" xml:space="preserve">
+    <value>Donasie-toewysing</value>
+  </data>
+	<data name="DonorInformationDescription" xml:space="preserve">
+    <value>Vertel ons hoe ons jou oor hierdie bydrae kan kontak.</value>
+  </data>
+	<data name="DonorInformationHeading" xml:space="preserve">
+    <value>Skinkerbesonderhede</value>
+  </data>
+	<data name="DonationDetailsDescription" xml:space="preserve">
+    <value>Kies hoe jy wil hê ons moet jou bydrae aanwend.</value>
+  </data>
+	<data name="DonationDetailsHeading" xml:space="preserve">
+    <value>Donasie besonderhede</value>
+  </data>
+	<data name="DonationDesignationFacilities" xml:space="preserve">
+    <value>Fasiliteite &amp; instandhouding</value>
+  </data>
+	<data name="DonationDesignationGeneral" xml:space="preserve">
+    <value>Algemene fonds</value>
+  </data>
+	<data name="DonationDesignationOther" xml:space="preserve">
+    <value>Ander</value>
+  </data>
+	<data name="DonationDesignationScholarship" xml:space="preserve">
+    <value>Beursfonds</value>
+  </data>
+	<data name="DonationDesignationSports" xml:space="preserve">
+    <value>Sportprogramme</value>
+  </data>
+	<data name="EmailLabel" xml:space="preserve">
+    <value>E-posadres</value>
+  </data>
+	<data name="EmailRequired" xml:space="preserve">
+    <value>Verskaf asseblief 'n geldige e-posadres.</value>
+  </data>
+	<data name="FrequencyAnnually" xml:space="preserve">
+    <value>Jaarliks</value>
+  </data>
+	<data name="FrequencyLabel" xml:space="preserve">
+    <value>Donasie-frekwensie</value>
+  </data>
+	<data name="FrequencyMonthly" xml:space="preserve">
+    <value>Maandeliks</value>
+  </data>
+	<data name="FrequencyOnceOff" xml:space="preserve">
+    <value>Eenmalig</value>
+  </data>
+	<data name="FrequencyQuarterly" xml:space="preserve">
+    <value>Kwartaaliks</value>
+  </data>
+	<data name="FrequencyRequired" xml:space="preserve">
+    <value>Kies asseblief hoe gereeld ons hierdie donasie moet verhaal.</value>
+  </data>
+	<data name="FullNameLabel" xml:space="preserve">
+    <value>Volle naam</value>
+  </data>
+	<data name="FullNameRequired" xml:space="preserve">
+    <value>Laat ons weet van wie die donasie afkomstig is.</value>
+  </data>
+	<data name="GenericError" xml:space="preserve">
+    <value>Ons kon nie jou donasie nou verwerk nie. Probeer asseblief weer later.</value>
+  </data>
+	<data name="IsAnonymousLabel" xml:space="preserve">
+    <value>Maak hierdie donasie anoniem</value>
+  </data>
+	<data name="IsRecurringLabel" xml:space="preserve">
+    <value>Stel 'n herhalende donasie op</value>
+  </data>
+	<data name="MessageHelper" xml:space="preserve">
+    <value>Deel 'n boodskap van ondersteuning of enige instruksies vir ons span.</value>
+  </data>
+	<data name="MessageLabel" xml:space="preserve">
+    <value>Boodskap aan die skool (opsioneel)</value>
+  </data>
+	<data name="PageDescription" xml:space="preserve">
+    <value>Voltooi die onderstaande vorm om 'n donasie aan Nelspruit Hoërskool te beloof.</value>
+  </data>
+	<data name="PageHeading" xml:space="preserve">
+    <value>Ondersteun Nelspruit Hoërskool</value>
+  </data>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Skep donasie</value>
+  </data>
+	<data name="PhoneLabel" xml:space="preserve">
+    <value>Telefoonnommer</value>
+  </data>
+	<data name="SubmittingButton" xml:space="preserve">
+    <value>Dien tans in…</value>
+  </data>
+	<data name="SubmitButton" xml:space="preserve">
+    <value>Dien donasie in</value>
+  </data>
+	<data name="SuccessMessage" xml:space="preserve">
+    <value>Dankie! Jou donasiebelofte is suksesvol ingedien.</value>
+  </data>
+</root>

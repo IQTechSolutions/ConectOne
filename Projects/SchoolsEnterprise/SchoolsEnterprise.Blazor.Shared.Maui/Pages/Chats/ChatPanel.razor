@@ -1,0 +1,30 @@
+﻿@page "/chats/{GroupId}/{GroupName}"
+@page "/chats/{GroupId}"
+
+@using ConectOne.Blazor.Components
+@using MessagingModule.Blazor.Components
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize]
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@GroupName"></MobilePageTitle>
+
+    <div class="d-flex flex-grow-1 flex-row">
+        <MudPaper Elevation="0" Class="py-4 flex-grow-1">
+            <MudToolBar Dense="true">
+                <MudButton OnClick="ShowGroupsAsync" FullWidth="true" Icon="@Icons.Material.Outlined.Group" Color="Color.Inherit" Class="ml-3" Variant="Variant.Outlined">Chat Groups/Contacts</MudButton>
+            </MudToolBar>
+            <div style="flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; height:65vh">
+                <MessageList Messages="_messages" CurrentUserId="@_currentUserId" CurrentUserName="@_currentUserDisplayName" ReadTimes="_messageReadTimes" />
+            </div>
+            <MessageInput BusySending="@_busySending" OnSendMessage="SendMessageAsync"/>
+        </MudPaper>
+    </div>
+}

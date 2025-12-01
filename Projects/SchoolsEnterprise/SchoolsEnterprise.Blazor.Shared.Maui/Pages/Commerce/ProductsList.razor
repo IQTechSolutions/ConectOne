@@ -1,0 +1,71 @@
+﻿@page "/products/{CategoryId}"
+
+@using ConectOne.Blazor.Components
+@using FilingModule.Domain.Enums
+@using GroupingModule.Domain.DataTransferObjects
+@using MudBlazor
+
+@if (!_loaded)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <MobilePageTitle Title="@_selectedCategory.Name"></MobilePageTitle>
+
+    <MudPaper Class="my-3">
+        <MudSelect ToStringFunc="@_categoryConverter" T="CategoryDto" Class="my-0" Label="VChoose your taste" Value="_selectedCategory" ValueChanged="OnCategorySelectionChanged" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Filled">
+            @foreach (var state in _categories)
+            {
+                <MudSelectItem T="CategoryDto" Value="@state">@state.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </MudPaper>
+
+    <MudText Color="Color.Default" Class="mt-5 mb-3" Typo="Typo.h6">@_selectedCategory.Name</MudText>
+
+    <!-- Select menu item -->
+    <MudGrid Class="mb-5" Spacing="2">
+        @if (_products.Any())
+    {
+        @foreach (var item in _products)
+        {
+            <MudItem xs="12" sm="6" md="6">
+                <MudCard Elevation="1" Class="d-flex flex-row rounded-lg" Style="height:150px;" @onclick="@(() => NavigateToProductDetail(item.ProductId))">
+                    <MudImage Style="margin-left:15px;height:120px; min-width: 120px; max-width:120px;" Elevation="1" Src="@(item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover) is null ? item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath : $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath?.TrimStart('/')}")" Class="rounded-lg align-self-center"/>
+                    <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:150px; width: 100%">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Color="@Color.Default">@item.Name</MudText>
+                        <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+                            <MudText Typo="Typo.body1">@item.ShortDescription</MudText>
+                        </MudHidden>
+                        <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="false">
+                            <MudText Typo="Typo.caption">@item.ShortDescription</MudText>
+                        </MudHidden>
+                        <div class="d-flex flex-row justify-space-between">
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-center" Color="@Color.Secondary">@item.Pricing.PriceIncl.ToString("C")</MudText>
+                            @if (item.Variants.Any())
+                            {
+                                <MudButton StartIcon="@Icons.Material.Filled.AddCircleOutline" Class="align-self-center pa-2" Color="Color.Secondary" Size="Size.Medium" Variant="Variant.Outlined" OnClick="@(() => AddToCartAsync(item, 1))">Add To Cart</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton StartIcon="@Icons.Material.Filled.Info" Class="align-self-center pa-2" Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => NavigateToProductDetail(item.ProductId))" Size="Size.Medium">More Info</MudButton>
+                            }
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    }
+    else
+    {
+        <MudItem xs="12" sm="6" md="6">
+            <MudCard Elevation="1" Outlined="false" Class="d-flex flex-row rounded-lg" Style="height:120px;">
+                <MudCardContent Class="d-flex justify-space-around flex-column py-2" Style="height:120px; width: 100%">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:black !important;" Class="text-secondary">No products available, please check back later</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    }
+    </MudGrid>
+}

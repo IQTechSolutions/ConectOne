@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AgreeToTermsLabel" xml:space="preserve">
+    <value>I agree to the donation terms and privacy policy.</value>
+  </data>
+  <data name="AgreeToTermsRequired" xml:space="preserve">
+    <value>Please confirm that you accept the terms before continuing.</value>
+  </data>
+  <data name="AmountHelper" xml:space="preserve">
+    <value>Enter the amount you would like to contribute.</value>
+  </data>
+  <data name="AmountLabel" xml:space="preserve">
+    <value>Donation amount</value>
+  </data>
+  <data name="AmountRequired" xml:space="preserve">
+    <value>Please enter the amount you wish to donate.</value>
+  </data>
+  <data name="DesignationHelper" xml:space="preserve">
+    <value>Select the fund or initiative you would like to support.</value>
+  </data>
+  <data name="DesignationLabel" xml:space="preserve">
+    <value>Donation designation</value>
+  </data>
+  <data name="DonorInformationDescription" xml:space="preserve">
+    <value>Tell us how we can reach you about this pledge.</value>
+  </data>
+  <data name="DonorInformationHeading" xml:space="preserve">
+    <value>Donor information</value>
+  </data>
+  <data name="DonationDetailsDescription" xml:space="preserve">
+    <value>Choose how you would like your contribution to be used.</value>
+  </data>
+  <data name="DonationDetailsHeading" xml:space="preserve">
+    <value>Donation details</value>
+  </data>
+  <data name="DonationDesignationFacilities" xml:space="preserve">
+    <value>Facilities &amp; maintenance</value>
+  </data>
+  <data name="DonationDesignationGeneral" xml:space="preserve">
+    <value>General fund</value>
+  </data>
+  <data name="DonationDesignationOther" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="DonationDesignationScholarship" xml:space="preserve">
+    <value>Scholarship fund</value>
+  </data>
+  <data name="DonationDesignationSports" xml:space="preserve">
+    <value>Sports programmes</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Please enter a valid email address.</value>
+  </data>
+  <data name="FrequencyAnnually" xml:space="preserve">
+    <value>Annually</value>
+  </data>
+  <data name="FrequencyLabel" xml:space="preserve">
+    <value>Donation frequency</value>
+  </data>
+  <data name="FrequencyMonthly" xml:space="preserve">
+    <value>Monthly</value>
+  </data>
+  <data name="FrequencyOnceOff" xml:space="preserve">
+    <value>Once-off</value>
+  </data>
+  <data name="FrequencyQuarterly" xml:space="preserve">
+    <value>Quarterly</value>
+  </data>
+  <data name="FrequencyRequired" xml:space="preserve">
+    <value>Please choose how often we should collect this donation.</value>
+  </data>
+  <data name="FullNameLabel" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="FullNameRequired" xml:space="preserve">
+    <value>Let us know who the donation is from.</value>
+  </data>
+  <data name="GenericError" xml:space="preserve">
+    <value>We could not process your donation right now. Please try again shortly.</value>
+  </data>
+  <data name="IsAnonymousLabel" xml:space="preserve">
+    <value>Make this donation anonymous</value>
+  </data>
+  <data name="IsRecurringLabel" xml:space="preserve">
+    <value>Set up a recurring donation</value>
+  </data>
+  <data name="MessageHelper" xml:space="preserve">
+    <value>Share a message of support or any instructions for our team.</value>
+  </data>
+  <data name="MessageLabel" xml:space="preserve">
+    <value>Message to the school (optional)</value>
+  </data>
+  <data name="PageDescription" xml:space="preserve">
+    <value>Complete the form below to pledge a donation to Nelspruit High School.</value>
+  </data>
+  <data name="PageHeading" xml:space="preserve">
+    <value>Support Nelspruit High School</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Create donation</value>
+  </data>
+  <data name="PhoneLabel" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="SubmittingButton" xml:space="preserve">
+    <value>Submitting…</value>
+  </data>
+  <data name="SubmitButton" xml:space="preserve">
+    <value>Submit donation</value>
+  </data>
+  <data name="SuccessMessage" xml:space="preserve">
+    <value>Thank you! Your donation pledge has been submitted.</value>
+  </data>
+</root>
