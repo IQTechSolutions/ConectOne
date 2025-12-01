@@ -40,19 +40,6 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-        var baseAddress = $"{builder.Configuration["ApiConfiguration:BaseApiAddress"]}/api/";
-
-        builder.Services.AddVendorServices()
-            .AddSchoolMauiServices(baseAddress)
-            .ConfigureMauiLocalization()
-            .ConfigureMauiAuthentication();
-
-        builder.Services.AddSingleton<LocalizationService>();
-
-        builder.UseMauiApp<App>().RegisterFirebaseServices().ConfigureFonts(fonts =>
-        {
-            fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-        });
 
         var appSettingFileName = "SchoolsEnterprise.Blazor.Maui.wwwroot.appsettings.json";
 #if DEBUG
@@ -66,6 +53,20 @@ public static class MauiProgram
             var config = new ConfigurationBuilder().AddJsonStream(appSettingsStream).Build();
             builder.Configuration.AddConfiguration(config);
         }
+
+        var baseAddress = $"{builder.Configuration["ApiConfiguration:BaseApiAddress"]}/api/";
+
+        builder.Services.AddVendorServices()
+            .AddSchoolMauiServices(baseAddress)
+            .ConfigureMauiLocalization()
+            .ConfigureMauiAuthentication();
+
+        builder.Services.AddSingleton<LocalizationService>();
+
+        builder.UseMauiApp<App>().RegisterFirebaseServices().ConfigureFonts(fonts =>
+        {
+            fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+        });
 
         builder.Services.AddMauiBlazorWebView();
 
