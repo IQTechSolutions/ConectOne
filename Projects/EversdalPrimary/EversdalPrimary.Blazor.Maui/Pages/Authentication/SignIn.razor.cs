@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
+using Microsoft.Maui.ApplicationModel;
 using Plugin.Firebase.CloudMessaging;
 
 namespace EversdalPrimary.Blazor.Maui.Pages.Authentication
@@ -93,6 +94,7 @@ namespace EversdalPrimary.Blazor.Maui.Pages.Authentication
             }
             else
             {
+                await RequestNotificationPermissionAsync();
                 await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
                 var token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
                 var deviceToken = new DeviceTokenDto(result.UserId, token);
@@ -107,6 +109,22 @@ namespace EversdalPrimary.Blazor.Maui.Pages.Authentication
                 else
                     NavigationManager.NavigateTo("/", true);
             }
+        }
+
+        private static async Task RequestNotificationPermissionAsync()
+        {
+#if ANDROID || IOS
+            var status = await Permissions.CheckStatusAsync<Permissions.Notifications>();
+            if (status is PermissionStatus.Denied or PermissionStatus.Unknown)
+            {
+                status = await Permissions.RequestAsync<Permissions.Notifications>();
+            }
+
+            if (status != PermissionStatus.Granted)
+            {
+                return;
+            }
+#endif
         }
     }
 }
