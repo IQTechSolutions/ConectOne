@@ -82,7 +82,7 @@ namespace ConectOne.Infrastructure.Interfaces
         /// <returns>
         /// An <see cref="IBaseResult"/> indicating success or failure, along with any relevant messages.
         /// </returns>
-        Task<IBaseResult> DeleteContactNumberAsync(string parentId, string contactNrId, bool trackChanges);
+        Task<IBaseResult> DeleteContactNumberAsync(string contactNrId);
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace ConectOne.Infrastructure.Interfaces
         /// of all email addresses linked to <paramref name="parentId"/>. 
         /// Returns a fail result on error.
         /// </returns>
-        Task<IBaseResult<IEnumerable<EmailAddressDto>>> AllEmailAddressesAsync(string parentId, bool trackChanges);
+        Task<IBaseResult<IEnumerable<EmailAddressDto>>> AllEmailAddressesAsync(string parentId);
 
         /// <summary>
         /// Retrieves a specific email address by its unique identifier.
@@ -115,7 +115,7 @@ namespace ConectOne.Infrastructure.Interfaces
         /// An <see cref="IBaseResult{EmailAddressDto}"/> describing the requested email record, 
         /// or a fail result with messages if not found or an error occurs.
         /// </returns>
-        Task<IBaseResult<EmailAddressDto>> EmailAddressAsync(string emailAddressId, bool trackChanges);
+        Task<IBaseResult<EmailAddressDto>> EmailAddressAsync(string emailAddressId);
 
         /// <summary>
         /// Finds an email address record by its email string (e.g., "john.doe@domain.com").
@@ -129,7 +129,7 @@ namespace ConectOne.Infrastructure.Interfaces
         /// An <see cref="IBaseResult{EmailAddressDto}"/> with the details of the email address 
         /// if found; otherwise, a fail result with error messages.
         /// </returns>
-        Task<IBaseResult<EmailAddressDto>> EmailAddressByAddressAsync(string emailAddress, bool trackChanges);
+        Task<IBaseResult<EmailAddressDto>> EmailAddressByAddressAsync(string emailAddress);
 
         /// <summary>
         /// Creates a new email address linked to a parent entity, specified in 
@@ -170,7 +170,7 @@ namespace ConectOne.Infrastructure.Interfaces
         /// An <see cref="IBaseResult"/> representing the success/failure of the operation 
         /// and any relevant messages.
         /// </returns>
-        Task<IBaseResult> DeleteEmailAddressAsync(string parentId, string emailAddressId);
+        Task<IBaseResult> DeleteEmailAddressAsync(string emailAddressId);
 
         #endregion
     }

@@ -83,39 +83,24 @@ namespace NelspruitHigh.Blazor.Maui.Pages.Authentication
         /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task LoginNowAsync()
         {
-            // Reset authentication error display
             _errorMessage = null;
-
-            // Attempt to login using the provided user authentication data
             var result = await AccountsProvider.Login(_userAuthentication.ToAuthRequest());
 
-            // Check if authentication was successful
             if (!result.IsSuccessfulAuth)
             {
-                // If authentication failed, display the error message
                 _errorMessage = string.IsNullOrEmpty(result.ErrorMessage) ? "Invalid Login Attempt" : result.ErrorMessage;
-
-                // Trigger UI update
                 StateHasChanged();
             }
             else
             {
                 await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
                 var token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
-                Console.WriteLine($"FCM token: {token}");
-
-                // If authentication was successful, set the device token if available
-                //if (Preferences.ContainsKey("DeviceToken"))
-                //{
-                //    await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
-
-                //    var deviceToken = new DeviceTokenDto(result.UserId, Preferences.Get("DeviceToken", ""));
-                //    var deviceTokenResult = await AccountsProvider.SetDeviceToken(deviceToken);
-                //    if (!deviceTokenResult.Succeeded)
-                //    {
-                //        SnackBar.AddErrors(deviceTokenResult.Messages);
-                //    }
-                //}
+                var deviceToken = new DeviceTokenDto(result.UserId, Preferences.Get("DeviceToken", ""));
+                var deviceTokenResult = await AccountsProvider.SetDeviceToken(deviceToken);
+                if (!deviceTokenResult.Succeeded)
+                {
+                    SnackBar.AddErrors(deviceTokenResult.Messages);
+                }
 
                 if (result.PrivacyAndUsageTermsAcceptedTimeStamp is null && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UsePrivacyNotice"))
                     NavigationManager.NavigateTo("privacyNotice");

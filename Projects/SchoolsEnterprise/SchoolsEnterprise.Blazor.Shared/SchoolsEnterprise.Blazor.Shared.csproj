@@ -77,7 +77,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MudBlazor" Version="8.15.0" />
-    <PackageReference Include="Radzen.Blazor" Version="8.3.4" />
+    <PackageReference Include="Radzen.Blazor" Version="8.3.5" />
   </ItemGroup>
 
   <ItemGroup>

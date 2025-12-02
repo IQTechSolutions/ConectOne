@@ -13,7 +13,6 @@ using MudBlazor;
 using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.ActivityGroups;
 using SchoolsModule.Domain.Interfaces.Learners;
-using SchoolsModule.Domain.Interfaces.Parents;
 using SchoolsModule.Domain.Interfaces.SchoolEvents;
 using SchoolsModule.Domain.RequestFeatures;
 
@@ -61,7 +60,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
         /// <summary>
         /// Gets or sets the service used to query parent entities within the application.
         /// </summary>
-        [Inject] public IParentQueryService ParentQueryService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service used to manage teacher-related operations.
@@ -209,7 +208,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
                 // Looks up users identified as parents, optionally filtered by a specific ParentId (EntityId).
                 case NeuralTech.Base.Enums.MessageType.Parent:
                     {
-                        var userListResult = await ParentQueryService.ParentsNotificationList(new ParentPageParameters
+                        var userListResult = await ParentService.ParentsNotificationList(new ParentPageParameters
                             {
                                 ParentId = _notificationMessage.EntityId
                             }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using SchoolsModule.Domain.Constants;
-using SchoolsModule.Domain.Interfaces.Parents;
+using SchoolsModule.Domain.Interfaces;
 
 namespace SchoolsModule.Blazor.Components.Parents
 {
@@ -42,7 +42,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         /// <summary>
         /// Provides access to HTTP operations for server communication.
         /// </summary>
-        [Inject] public IParentCommandService ParentCommandService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
 
         /// <summary>
         /// Provides access to the snackbar UI component for displaying notifications.
@@ -98,7 +98,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task CreateChatGroup()
         {
-            var result = await ParentCommandService.CreateParentChatGroupAsync(ParentId, _currentUserId);
+            var result = await ParentService.CreateParentChatGroupAsync(ParentId, _currentUserId);
 
             if (result.Succeeded)
             {

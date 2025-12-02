@@ -8,8 +8,8 @@ using MudBlazor;
 using SchoolsModule.Application.ViewModels;
 using SchoolsModule.Blazor.Components.Learners;
 using SchoolsModule.Domain.DataTransferObjects;
+using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.Learners;
-using SchoolsModule.Domain.Interfaces.Parents;
 using SchoolsModule.Domain.RequestFeatures;
 
 namespace SchoolsModule.Blazor.Pages.Parents
@@ -32,12 +32,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
         /// <summary>
         /// Gets or sets the service used to query parent entities within the application.
         /// </summary>
-        [Inject] public IParentQueryService ParentQueryService { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the service used to manage parent command operations.
-        /// </summary>
-        [Inject] public IParentCommandService ParentCommandService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service used to query learner information.
@@ -141,7 +136,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
             // Convert the selected learners into the parent's Dependants list.
             _parent.Dependants = _selectedPagedLearners.ToList();
 
-            var parentResponse = await ParentCommandService.UpdateAsync(_parent.ToDto());
+            var parentResponse = await ParentService.UpdateAsync(_parent.ToDto());
             parentResponse.ProcessResponseForDisplay(SnackBar, () =>
             {
                 SnackBar.AddSuccess("Parent was updated successfully");
@@ -233,7 +228,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
         {
             _selectedPagedLearners.Add(learner.ToDto());
 
-            var parentLearnerCreationResult = await ParentCommandService.CreateParentLearnerAsync(ParentId, learner.LearnerId);
+            var parentLearnerCreationResult = await ParentService.CreateParentLearnerAsync(ParentId, learner.LearnerId);
             if (!parentLearnerCreationResult.Succeeded) SnackBar.AddErrors(parentLearnerCreationResult.Messages);
         }
 
@@ -244,7 +239,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
         /// <param name="learnerId">The unique ID of the learner to remove.</param>
         private async Task OnLearnerRemoved(string learnerId)
         {
-            var removalResult = await ParentCommandService.RemoveParentLearnerAsync(_parent.ParentId, learnerId);
+            var removalResult = await ParentService.RemoveParentLearnerAsync(_parent.ParentId, learnerId);
             removalResult.ProcessResponseForDisplay(SnackBar, () =>
             {
                 SnackBar.AddSuccess("Learner removed successfully.");
@@ -287,7 +282,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            var result = await ParentQueryService.ParentAsync(ParentId, false);
+            var result = await ParentService.ParentAsync(ParentId, false);
             if (result.Succeeded)
             {
                 _parent = new ParentViewModel(result.Data);
@@ -300,7 +295,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
                     _userInfo = userInfoResult.Data;
                 }
 
-                var learnerParents = await ParentQueryService.ParentLearnersAsync(ParentId);
+                var learnerParents = await ParentService.ParentLearnersAsync(ParentId);
                 if (learnerParents.Succeeded)
                     _selectedPagedLearners = learnerParents.Data!.ToHashSet();
             }

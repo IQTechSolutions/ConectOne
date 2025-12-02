@@ -7,8 +7,8 @@ using MudBlazor;
 using SchoolsModule.Blazor.Extensions;
 using SchoolsModule.Domain.Constants;
 using SchoolsModule.Domain.DataTransferObjects;
+using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.Learners;
-using SchoolsModule.Domain.Interfaces.Parents;
 using SchoolsModule.Domain.RequestFeatures;
 
 namespace SchoolsModule.Blazor.Components.Parents
@@ -41,12 +41,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         /// <summary>
         /// Interface for performing backend HTTP requests to fetch and manipulate parent data.
         /// </summary>
-        [Inject] public IParentQueryService ParentQueryService { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the service used to manage parent command operations.
-        /// </summary>
-        [Inject] public IParentCommandService ParentCommandService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service used to query learner information.
@@ -118,7 +113,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         {
             if (await DialogService.ConfirmAction("Are you sure you want to remove this parent from this application?"))
             {
-                var deleteResult = await ParentCommandService.RemoveAsync(parentId);
+                var deleteResult = await ParentService.RemoveAsync(parentId);
                 if (deleteResult.Succeeded)
                     await ReloadTableAsync();
                 else
@@ -162,7 +157,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         /// </summary>
         internal async Task ExportToExcel()
         {
-            var response = await ParentCommandService.ExportParents();
+            var response = await ParentService.ExportParents();
             if (!response.Succeeded && response.Messages != null)
                 SnackBar.AddErrors(response.Messages);
 
@@ -198,7 +193,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         {
             if (LearnerId == null)
             {
-                var request = await ParentQueryService.PagedParentsAsync(_args);
+                var request = await ParentService.PagedParentsAsync(_args);
                 if (request.Succeeded)
                 {
                     _totalItems = request.TotalCount;

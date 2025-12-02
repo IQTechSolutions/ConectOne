@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ProcessedOrders" xml:space="preserve">
+    <value>Verwerkte Bestellings</value>
+  </data>
+  <data name="ProcessedOrdersDescription" xml:space="preserve">
+    <value>Fakture wat betaal is en beskikbaar is om vir jou rekords af te laai.</value>
+  </data>
+  <data name="PendingPayment" xml:space="preserve">
+    <value>Hangende Betaling</value>
+  </data>
+  <data name="CompletedAndShipped" xml:space="preserve">
+    <value>Voltooi &amp; Gestuur</value>
+  </data>
+  <data name="SupportNotice" xml:space="preserve">
+    <value>Betalings wat nie verwerk kon word nie. Kontak asseblief ondersteuning vir meer inligting</value>
+  </data>
+  <data name="FullPaid" xml:space="preserve">
+    <value>Ten volle betaal</value>
+  </data>
+  <data name="RejectedPayments" xml:space="preserve">
+    <value>Geweierde Betalings</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>Geweier</value>
+  </data>
+  <data name="CallSupport" xml:space="preserve">
+    <value>Skakel Ondersteuning</value>
+  </data>
+  <data name="Shopping" xml:space="preserve">
+    <value>Inkopies</value>
+  </data>
+  <data name="OrderHistory" xml:space="preserve">
+    <value>Bestelgeskiedenis</value>
+  </data>
+</root>

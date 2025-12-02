@@ -1,6 +1,8 @@
 ﻿using ConectOne.Domain.ResultWrappers;
+using ConectOne.Infrastructure.Interfaces;
 using IdentityModule.Domain.DataTransferObjects;
 using SchoolsModule.Domain.DataTransferObjects;
+using SchoolsModule.Domain.Entities;
 using SchoolsModule.Domain.RequestFeatures;
 
 namespace SchoolsModule.Domain.Interfaces
@@ -8,7 +10,7 @@ namespace SchoolsModule.Domain.Interfaces
     /// <summary>
     /// Interface for managing Teacher-related operations.
     /// </summary>
-    public interface ITeacherService
+    public interface ITeacherService : IContactInfoService<Teacher>
     {
         /// <summary>
         /// Retrieves all teachers asynchronously.

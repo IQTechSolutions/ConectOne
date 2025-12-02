@@ -5,6 +5,7 @@ using NelspruitHigh.Blazor.Maui.Localization;
 using SchoolsEnterprise.Blazor.Shared.Maui.Extensions;
 using System.Globalization;
 using System.Reflection;
+using CommunityToolkit.Maui;
 using Microsoft.Maui.LifecycleEvents;
 using Plugin.Firebase.CloudMessaging;
 
@@ -41,9 +42,9 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
 
-        var appSettingFileName = "SchoolsEnterprise.Blazor.Maui.wwwroot.appsettings.json";
+        var appSettingFileName = "NelspruitHigh.Blazor.Maui.wwwroot.appsettings.json";
 #if DEBUG
-        appSettingFileName = "SchoolsEnterprise.Blazor.Maui.wwwroot.appsettings.Development.json";
+        appSettingFileName = "NelspruitHigh.Blazor.Maui.wwwroot.appsettings.Development.json";
 #endif
 
         using var appSettingsStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(appSettingFileName);
@@ -63,7 +64,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<LocalizationService>();
 
-        builder.UseMauiApp<App>().RegisterFirebaseServices().ConfigureFonts(fonts =>
+        builder.UseMauiApp<App>().RegisterFirebaseServices().UseMauiCommunityToolkit().ConfigureFonts(fonts =>
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
         });

@@ -226,10 +226,18 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
         /// <returns></returns>
         private async Task PerformLogoutAsync()
         {
-            await LocalStorageService.RemoveItemAsync(StorageConstants.Local.AuthToken);
-            await LocalStorageService.RemoveItemAsync(StorageConstants.Local.RefreshToken);
-            await LocalStorageService.RemoveItemAsync(StorageConstants.Local.UserImageURL);
-            await ((AuthStateProvider)AuthStateProvider).NotifyUserLogout();
+            if (!DeviceInfoService.IsMobilePlatform)
+            {
+                await LocalStorageService.RemoveItemAsync(StorageConstants.Local.AuthToken);
+                await LocalStorageService.RemoveItemAsync(StorageConstants.Local.RefreshToken);
+                await LocalStorageService.RemoveItemAsync(StorageConstants.Local.UserImageURL);
+                await ((AuthStateProvider)AuthStateProvider).NotifyUserLogout();
+            }
+            else
+            {
+                await ((MauiAuthenticationStateProvider)AuthStateProvider).Logout();
+            }
+                
             HttpClient.DefaultRequestHeaders.Authorization = null;
             NavigationManager.NavigateTo("/");
         }

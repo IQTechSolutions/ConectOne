@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="StoreTitle" xml:space="preserve">
+    <value>Blazor-winkel</value>
+  </data>
+  <data name="StoreSubtitle" xml:space="preserve">
+    <value>Vriendelike progressiewe webtoep-sjabloon</value>
+  </data>
+  <data name="DateLabel" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="SampleInvoiceDate" xml:space="preserve">
+    <value>15 Junie 2025</value>
+  </data>
+  <data name="InvoiceNumberLabel" xml:space="preserve">
+    <value>Faktuurnommer</value>
+  </data>
+  <data name="SampleInvoiceNumber" xml:space="preserve">
+    <value>#134562463</value>
+  </data>
+  <data name="OrderNumberLabel" xml:space="preserve">
+    <value>Bestelnommer</value>
+  </data>
+  <data name="SampleOrderNumber" xml:space="preserve">
+    <value>#341531</value>
+  </data>
+  <data name="InvoiceTo" xml:space="preserve">
+    <value>Faktureer Aan</value>
+  </data>
+  <data name="InvoiceToDescription" xml:space="preserve">
+    <value>Jou maatskappy-inligting sal hier verskyn.</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="CustomerName" xml:space="preserve">
+    <value>John Doe</value>
+  </data>
+  <data name="CompanyLabel" xml:space="preserve">
+    <value>Maatskappy</value>
+  </data>
+  <data name="CustomerCompany" xml:space="preserve">
+    <value>YourCo Web Design LTD</value>
+  </data>
+  <data name="AddressLabel" xml:space="preserve">
+    <value>Adres</value>
+  </data>
+  <data name="CustomerAddress" xml:space="preserve">
+    <value>Collinsstraat Wes, Victoria 8007</value>
+  </data>
+  <data name="CountryLabel" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="CustomerCountry" xml:space="preserve">
+    <value>Australië</value>
+  </data>
+  <data name="CityStateLabel" xml:space="preserve">
+    <value>Stad/Provinsie</value>
+  </data>
+  <data name="CustomerCityState" xml:space="preserve">
+    <value>Victoria, Melbourne</value>
+  </data>
+  <data name="PoBoxLabel" xml:space="preserve">
+    <value>Posbus</value>
+  </data>
+  <data name="CustomerPoBox" xml:space="preserve">
+    <value>16122</value>
+  </data>
+  <data name="VatLabel" xml:space="preserve">
+    <value>BTW-nommer</value>
+  </data>
+  <data name="CustomerVat" xml:space="preserve">
+    <value>1234567890</value>
+  </data>
+  <data name="InvoiceFrom" xml:space="preserve">
+    <value>Faktuur Van</value>
+  </data>
+  <data name="InvoiceFromDescription" xml:space="preserve">
+    <value>Ons maatskappy-inligting sal hier verskyn.</value>
+  </data>
+  <data name="CompanyRepresentative" xml:space="preserve">
+    <value>TLS Sagteware</value>
+  </data>
+  <data name="ProviderCompany" xml:space="preserve">
+    <value>YourCo Web Design LTD</value>
+  </data>
+  <data name="ProviderAddress" xml:space="preserve">
+    <value>Collinsstraat Wes, Victoria 8007</value>
+  </data>
+  <data name="ProviderCountry" xml:space="preserve">
+    <value>Australië</value>
+  </data>
+  <data name="ProviderCityState" xml:space="preserve">
+    <value>Victoria, Melbourne</value>
+  </data>
+  <data name="ProviderPoBox" xml:space="preserve">
+    <value>16122</value>
+  </data>
+  <data name="ProviderVat" xml:space="preserve">
+    <value>1234567890</value>
+  </data>
+  <data name="InvoiceDetails" xml:space="preserve">
+    <value>Faktuurbesonderhede</value>
+  </data>
+  <data name="InvoiceDetailsDescription" xml:space="preserve">
+    <value>Produkte en totale sal hier verskyn.</value>
+  </data>
+  <data name="ItemsLabel" xml:space="preserve">
+    <value>Items</value>
+  </data>
+  <data name="QuantityLabel" xml:space="preserve">
+    <value>Hoev.</value>
+  </data>
+  <data name="AmountLabel" xml:space="preserve">
+    <value>Bedrag</value>
+  </data>
+  <data name="ItemBlazorTemplate" xml:space="preserve">
+    <value>Blazor-mobiele en PWA-sjabloon</value>
+  </data>
+  <data name="ItemStickyTemplate" xml:space="preserve">
+    <value>StickyMobile en PWA-sjabloon</value>
+  </data>
+  <data name="ItemCustomization" xml:space="preserve">
+    <value>Aanpassingsdienste teen $30 per uur</value>
+  </data>
+  <data name="TotalLabel" xml:space="preserve">
+    <value>Totaal</value>
+  </data>
+  <data name="SampleTotal" xml:space="preserve">
+    <value>R348</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="PaidInFull" xml:space="preserve">
+    <value>Ten volle betaal</value>
+  </data>
+  <data name="DownloadInvoice" xml:space="preserve">
+    <value>Laai faktuur af</value>
+  </data>
+  <data name="Shopping" xml:space="preserve">
+    <value>Inkopies</value>
+  </data>
+  <data name="OrderHistory" xml:space="preserve">
+    <value>Bestelgeskiedenis</value>
+  </data>
+  <data name="Detail" xml:space="preserve">
+    <value>Besonderhede</value>
+  </data>
+</root>

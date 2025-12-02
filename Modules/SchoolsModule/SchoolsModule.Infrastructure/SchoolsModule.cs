@@ -1,11 +1,12 @@
-﻿using FilingModule.Domain.Implementation;
+﻿using ConectOne.Infrastructure.Implementation;
+using ConectOne.Infrastructure.Interfaces;
+using FilingModule.Domain.Implementation;
 using FilingModule.Domain.Interfaces;
 using FilingModule.Infrastucture.Implementation;
 using Microsoft.Extensions.DependencyInjection;
 using SchoolsModule.Infrastructure.Implementation;
 using SchoolsModule.Infrastructure.Implementation.ActivityGroups;
 using SchoolsModule.Infrastructure.Implementation.Learners;
-using SchoolsModule.Infrastructure.Implementation.Parents;
 using SchoolsModule.Infrastructure.Implementation.SchoolEvents;
 using SchoolsModule.Infrastructure.Implementation.Disciplinary;
 using MessagingModule.Domain.Interfaces;
@@ -14,7 +15,6 @@ using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.ActivityGroups;
 using SchoolsModule.Domain.Interfaces.Discipline;
 using SchoolsModule.Domain.Interfaces.Learners;
-using SchoolsModule.Domain.Interfaces.Parents;
 using SchoolsModule.Domain.Interfaces.SchoolEvents;
 
 namespace SchoolsModule.Infrastructure
@@ -37,6 +37,8 @@ namespace SchoolsModule.Infrastructure
         /// <returns>The updated IServiceCollection instance.</returns>
         public static IServiceCollection AddSchoolsModule(this IServiceCollection services)
         {
+            services.AddScoped(typeof(IContactInfoService<>), typeof(ContactIntoService<>));
+            
             // Core managers
             services.AddScoped<ISchoolsModuleRepoManager, SchoolsModuleRepoManager>();
             services.AddScoped<IExcelService, ExcelService>();
@@ -51,8 +53,7 @@ namespace SchoolsModule.Infrastructure
             services.AddScoped<ISchoolClassService, SchoolClassService>();
 
             // Parent services
-            services.AddScoped<IParentQueryService, ParentQueryService>();
-            services.AddScoped<IParentCommandService, ParentCommandService>();
+            services.AddScoped<IParentService, ParentService>();
 
             // Learner services
             services.AddScoped<ILearnerQueryService, LearnerQueryService>();

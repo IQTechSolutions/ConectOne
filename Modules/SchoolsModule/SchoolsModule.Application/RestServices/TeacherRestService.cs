@@ -1,4 +1,5 @@
-﻿using ConectOne.Domain.Extensions;
+﻿using ConectOne.Domain.DataTransferObjects;
+using ConectOne.Domain.Extensions;
 using ConectOne.Domain.Interfaces;
 using ConectOne.Domain.ResultWrappers;
 using IdentityModule.Domain.DataTransferObjects;
@@ -156,6 +157,144 @@ namespace SchoolsModule.Application.RestServices
         public async Task<IBaseResult<IEnumerable<RecipientDto>>> TeachersNotificationList(TeacherPageParameters pageParameters, CancellationToken cancellationToken = default)
         {
             var result = await provider.GetAsync<IEnumerable<RecipientDto>>($"teachers/notificationList?{pageParameters.GetQueryString()}");
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieves all contact numbers associated with the specified parent identifier.
+        /// </summary>
+        /// <param name="parentId">The unique identifier of the parent whose contact numbers are to be retrieved. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult{T}"/>
+        /// with a collection of <see cref="ContactNumberDto"/> objects representing the contact numbers for the
+        /// specified parent. The collection will be empty if no contact numbers are found.</returns>
+        public async Task<IBaseResult<IEnumerable<ContactNumberDto>>> AllContactNumbers(string parentId)
+        {
+            var result = await provider.GetAsync<IEnumerable<ContactNumberDto>>($"teachers/{parentId}/contactNumbers");
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieves the contact number details for the specified contact number identifier.
+        /// </summary>
+        /// <param name="contactNumberId">The unique identifier of the contact number to retrieve. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{ContactNumberDto}"/> with the contact number details if found; otherwise, an appropriate
+        /// result indicating the outcome.</returns>
+        public async Task<IBaseResult<ContactNumberDto>> ContactNumberAsync(string contactNumberId)
+        {
+            var result = await provider.GetAsync<ContactNumberDto>($"teachers/contactNumbers/{contactNumberId}");
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a new contact number record using the specified contact number details.
+        /// </summary>
+        /// <param name="contactNumber">The contact number information to create. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{ContactNumberDto}"/> with the created contact number details if successful.</returns>
+        public async Task<IBaseResult<ContactNumberDto>> CreateContactNumber(ContactNumberDto contactNumber)
+        {
+            var result = await provider.PutAsync<ContactNumberDto, ContactNumberDto>($"teachers/contactNumbers", contactNumber);
+            return result;
+        }
+
+        /// <summary>
+        /// Updates the contact number information for a parent asynchronously.
+        /// </summary>
+        /// <param name="contactNr">The contact number data to update. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating the outcome of the update operation.</returns>
+        public async Task<IBaseResult> UpdateContactNumberAsync(ContactNumberDto contactNr)
+        {
+            var result = await provider.PostAsync<ContactNumberDto, ContactNumberDto>($"teachers/contactNumbers", contactNr);
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously deletes a contact number identified by the specified contact number ID.
+        /// </summary>
+        /// <param name="contactNrId">The unique identifier of the contact number to delete. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating the outcome of the delete operation.</returns>
+        public async Task<IBaseResult> DeleteContactNumberAsync(string contactNrId)
+        {
+            var result = await provider.DeleteAsync($"teachers/contactNumbers", contactNrId);
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously retrieves all email addresses associated with the specified parent identifier.
+        /// </summary>
+        /// <param name="parentId">The unique identifier of the parent entity for which to retrieve email addresses. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult{T}"/>
+        /// with a collection of <see cref="EmailAddressDto"/> objects representing the email addresses. The collection
+        /// is empty if no email addresses are found.</returns>
+        public async Task<IBaseResult<IEnumerable<EmailAddressDto>>> AllEmailAddressesAsync(string parentId)
+        {
+            var result = await provider.GetAsync<IEnumerable<EmailAddressDto>>($"teachers/{parentId}/emailAddresses");
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieves the email address details for the specified email address identifier.
+        /// </summary>
+        /// <param name="emailAddressId">The unique identifier of the email address to retrieve. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{EmailAddressDto}"/> with the email address details if found; otherwise, the result may
+        /// indicate an error or that the email address does not exist.</returns>
+        public async Task<IBaseResult<EmailAddressDto>> EmailAddressAsync(string emailAddressId)
+        {
+            var result = await provider.GetAsync<EmailAddressDto>($"teachers/emailAddresses/{emailAddressId}");
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieves the email address details for the specified email address asynchronously.
+        /// </summary>
+        /// <param name="emailAddress">The email address to retrieve details for. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{EmailAddressDto}"/> with the details of the specified email address if found; otherwise,
+        /// the result may indicate failure or not found.</returns>
+        public async Task<IBaseResult<EmailAddressDto>> EmailAddressByAddressAsync(string emailAddress)
+        {
+            var result = await provider.GetAsync<EmailAddressDto>($"teachers/emailAddresses/{emailAddress}");
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a new email address entry asynchronously using the specified email address details.
+        /// </summary>
+        /// <param name="emailAddress">An <see cref="EmailAddressDto"/> object containing the details of the email address to create. Cannot be
+        /// null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{EmailAddressDto}"/> with the created email address details if successful.</returns>
+        public async Task<IBaseResult<EmailAddressDto>> CreateEmailAddressAsync(EmailAddressDto emailAddress)
+        {
+            var result = await provider.PutAsync<EmailAddressDto, EmailAddressDto>($"teachers/emailAddresses", emailAddress);
+            return result;
+        }
+
+        /// <summary>
+        /// Updates an existing email address asynchronously using the provided email address data.
+        /// </summary>
+        /// <param name="emailAddress">An object containing the email address information to update. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating the outcome of the update operation.</returns>
+        public async Task<IBaseResult> UpdateEmailAddressAsync(EmailAddressDto emailAddress)
+        {
+            var result = await provider.PostAsync<EmailAddressDto, EmailAddressDto>($"teachers/emailAddresses", emailAddress);
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously deletes the email address with the specified identifier.
+        /// </summary>
+        /// <param name="emailAddressId">The unique identifier of the email address to delete. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an object indicating the outcome
+        /// of the delete operation.</returns>
+        public async Task<IBaseResult> DeleteEmailAddressAsync(string emailAddressId)
+        {
+            var result = await provider.DeleteAsync($"teachers/emailAddresses", emailAddressId);
             return result;
         }
     }

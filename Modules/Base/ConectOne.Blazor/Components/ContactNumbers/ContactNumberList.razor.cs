@@ -126,7 +126,7 @@ namespace ConectOne.Blazor.Components.ContactNumbers
                 // If the route part is valid, send DELETE request to the server.
                 if (!string.IsNullOrEmpty(ControllerUrlPart))
                 {
-                    var deleteResult = await Provider.DeleteContactNumberAsync(ParentId, contactNumberId, false);
+                    var deleteResult = await Provider.DeleteContactNumberAsync(contactNumberId);
                     deleteResult.ProcessResponseForDisplay(SnackBar, () =>
                     {
                         SnackBar.AddSuccess("Contact Number removed successfully");

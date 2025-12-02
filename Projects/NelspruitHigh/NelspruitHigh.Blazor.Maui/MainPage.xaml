@@ -3,12 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:NelspruitHigh.Blazor.Maui"
              xmlns:components="clr-namespace:NelspruitHigh.Blazor.Maui.Components"
-             x:Class="NelspruitHigh.Blazor.Maui.MainPage">
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="NelspruitHigh.Blazor.Maui.MainPage"
+             BackgroundColor="{DynamicResource PageBackgroundColor}">
 
+    <Page.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="#1c2248" StatusBarStyle="LightContent"/>
+    </Page.Behaviors>
+    <Grid>
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
             <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />
         </BlazorWebView.RootComponents>
     </BlazorWebView>
+    </Grid>
 
 </ContentPage>

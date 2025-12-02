@@ -6,6 +6,12 @@
 @using ConectOne.Blazor.Layouts
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
+@using MudBlazor.ThemeManager
+
+
+<MudThemeProvider Theme="_themeManager.Theme" />
+
+<MudThemeManager Open="_themeManagerOpen" Theme="_themeManager"/>
 
 <MudPaper Elevation="3" Height="150" Class="px-4 mx-n4 mt-n10 pt-10 mud-theme-primary" Style="border-radius: 0px 0px 45px 45px; padding-bottom:40px;" Outlined="false">
     <MudPaper Elevation="0" Class="py-6" Style="background-color: transparent">
@@ -16,7 +22,7 @@
 
 <MudGrid Class="mt-n15 pt-0">
 
-    <MudItem xs="12" sm="12" md="12">
+    <MudItem xs="12" sm="12" md="12" xl="12">
         <MudCard Elevation="1"  Class="rounded-lg py-1">
             <MudCardContent Class="d-flex flex-column px-3 py-2">
 
@@ -95,7 +101,7 @@
             </MudCardContent>
         </MudCard>
     </MudItem>
-    <MudItem md="12">
+    <MudItem xs="12" sm="12" md="12" xl="12">
         <MudButton FullWidth="true" Variant="Variant.Filled" OnClick="AcceptNotice" Color="Color.Primary">Accept & Continue</MudButton>
     </MudItem>
 </MudGrid>

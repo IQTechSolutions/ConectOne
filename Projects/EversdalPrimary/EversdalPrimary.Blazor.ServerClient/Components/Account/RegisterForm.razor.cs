@@ -80,7 +80,7 @@ namespace EversdalPrimary.Blazor.ServerClient.Components.Account
             // If the user selected "Parent", check if there's a parent record with the given email.
             if (Input.SelectedOption == "Parent")
             {
-                var parentResponse = await ParentQueryService.ParentByEmailAsync(Input.Email);
+                var parentResponse = await ParentService.ParentByEmailAsync(Input.Email);
                 if (!parentResponse.Succeeded)
                 {
                     var message = $"No parent matching email address '{Input.Email}'";

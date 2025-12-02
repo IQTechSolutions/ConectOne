@@ -1,7 +1,6 @@
 ﻿using ConectOne.Application.ViewModels;
 using ConectOne.Blazor.Extensions;
 using ConectOne.Blazor.Modals;
-using ConectOne.Domain.DataTransferObjects;
 using ConectOne.Domain.Interfaces;
 using ConectOne.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Components;
@@ -113,7 +112,7 @@ namespace ConectOne.Blazor.Components.EmailAddresses
                 // Only attempt a server call if ControllerPartUrl is valid.
                 if (!string.IsNullOrEmpty(ControllerPartUrl))
                 {
-                    var deleteResult = await Provider.DeleteEmailAddressAsync(ParentId, emailAddressId);
+                    var deleteResult = await Provider.DeleteEmailAddressAsync(emailAddressId);
                     deleteResult.ProcessResponseForDisplay(SnackBar, () =>
                     {
                         SnackBar.AddSuccess("Email Address removed successfully");
@@ -218,7 +217,7 @@ namespace ConectOne.Blazor.Components.EmailAddresses
         private async void CalUpdateEmailAddressModal(string emailAddressId)
         {
             // Fetch the current email address details from the server.
-            var emailAddress = await Provider.EmailAddressAsync(emailAddressId, false);
+            var emailAddress = await Provider.EmailAddressAsync(emailAddressId);
 
             // Prepare dialog parameters for updating the email address.
             var parameters = new DialogParameters<EmailAddressModal>
@@ -317,7 +316,7 @@ namespace ConectOne.Blazor.Components.EmailAddresses
         {
             if (EmailAddresses == null)
             {
-                var emailAddressListResult = await Provider.AllEmailAddressesAsync(ParentId, false);
+                var emailAddressListResult = await Provider.AllEmailAddressesAsync(ParentId);
                 emailAddressListResult.ProcessResponseForDisplay(SnackBar, () =>
                 {
                     EmailAddresses = emailAddressListResult.Data!

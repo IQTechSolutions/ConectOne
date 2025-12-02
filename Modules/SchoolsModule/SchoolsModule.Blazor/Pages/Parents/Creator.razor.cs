@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SchoolsModule.Application.ViewModels;
 using SchoolsModule.Domain.DataTransferObjects;
+using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.Learners;
-using SchoolsModule.Domain.Interfaces.Parents;
 using SchoolsModule.Domain.RequestFeatures;
 
 namespace SchoolsModule.Blazor.Pages.Parents
@@ -35,7 +35,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
         /// </summary>
         /// <remarks>This property is typically injected by the dependency injection framework. Assigning
         /// a value manually is not recommended unless overriding the default service behavior.</remarks>
-        [Inject] public IParentCommandService ParentCommandService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
 
         /// <summary>
         /// Injected dialog service for displaying dialogs.
@@ -259,7 +259,7 @@ namespace SchoolsModule.Blazor.Pages.Parents
             _parent.Dependants = _selectedPagedLearners.ToList();
 
             // Map the parent view model to a ParentDto and send a PUT request to create.
-            var parentResponse = await ParentCommandService.CreateAsync(_parent.ToDto());
+            var parentResponse = await ParentService.CreateAsync(_parent.ToDto());
 
             // Process the server's response. If successful, navigate to the parent listing.
             parentResponse.ProcessResponseForDisplay(SnackBar, () =>

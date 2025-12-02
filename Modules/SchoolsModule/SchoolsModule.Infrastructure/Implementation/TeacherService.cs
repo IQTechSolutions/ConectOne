@@ -1,6 +1,8 @@
-﻿using ConectOne.Domain.ResultWrappers;
+﻿using ConectOne.Domain.Entities;
+using ConectOne.Domain.ResultWrappers;
 using ConectOne.EntityFrameworkCore.Sql.Implimentation;
 using ConectOne.EntityFrameworkCore.Sql.Interfaces;
+using ConectOne.Infrastructure.Implementation;
 using IdentityModule.Domain.DataTransferObjects;
 using MessagingModule.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +17,9 @@ namespace SchoolsModule.Infrastructure.Implementation
     /// <summary>
     /// Service class for managing Teacher-related operations.
     /// </summary>
-    public class TeacherService(ISchoolsModuleRepoManager schoolsModuleRepoManager, IRepository<Notification, string> notificationRepository, IRepository<Message, string> messageRepository) : ITeacherService
+    public class TeacherService(ISchoolsModuleRepoManager schoolsModuleRepoManager, IRepository<Notification, string> notificationRepository, 
+        IRepository<Message, string> messageRepository, IRepository<ContactNumber<Teacher>, string> contactNumberRepo,
+        IRepository<EmailAddress<Teacher>, string> emailAddressRepo) : ContactIntoService<Teacher>(contactNumberRepo, emailAddressRepo), ITeacherService
     {
         /// <summary>
         /// Retrieves all teachers asynchronously.

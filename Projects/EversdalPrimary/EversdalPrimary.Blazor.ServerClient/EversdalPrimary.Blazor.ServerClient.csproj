@@ -42,6 +42,7 @@
     <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Blazor\SchoolsModule.Blazor.csproj" />
     <ProjectReference Include="..\..\..\Modules\SchoolsModule\SchoolsModule.Domain\SchoolsModule.Domain.csproj" />
     <ProjectReference Include="..\..\..\Modules\ShoppingModule\ShoppingModule.Blazor\ShoppingModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Vendors\Google\GoogleMapsComponents\GoogleMapsComponents.csproj" />
     <ProjectReference Include="..\..\SchoolsEnterprise\SchoolsEnterprise.Blazor.Shared\SchoolsEnterprise.Blazor.Shared.csproj" />
   </ItemGroup>
 

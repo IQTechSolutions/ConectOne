@@ -12,7 +12,7 @@ namespace IdentityModule.Blazor.StateManagers
     /// authentication tokens from secure storage. It integrates with Blazor's authentication system to notify
     /// subscribers of authentication state changes. Use this class to support authentication scenarios in MAUI
     /// applications that require persistent user sessions.</remarks>
-    public class MauiAuthenticationStateProvider : AuthenticationStateProvider
+    public class MauiAuthenticationStateProvider : AuthenticationStateProvider, ICustomAuthenticationStateProvider
     {
         /// <summary>
         /// Logs in the user by storing the provided authentication token and updating the authentication state.
@@ -72,6 +72,38 @@ namespace IdentityModule.Blazor.StateManagers
             }
 
             return new AuthenticationState(new ClaimsPrincipal(identity));
+        }
+
+        /// <summary>
+        /// Notifies the authentication state provider of a user authentication event.
+        /// </summary>
+        /// <param name="token">The authentication token.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task NotifyUserAuthentication(string token)
+        {
+            var authState = Task.FromResult(await GetAuthenticationStateAsync());
+            NotifyAuthenticationStateChanged(authState);
+        }
+
+        /// <summary>
+        /// Notifies the authentication state provider of a user logout event.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task NotifyUserLogout()
+        {
+            var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
+            var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+            NotifyAuthenticationStateChanged(authState);
+        }
+
+        /// <summary>
+        /// Gets the current authenticated user.
+        /// </summary>
+        /// <returns>The current <see cref="ClaimsPrincipal"/> representing the authenticated user.</returns>
+        public async Task<ClaimsPrincipal> CurrentUser()
+        {
+            var state = await this.GetAuthenticationStateAsync();
+            return state.User;
         }
     }
 }

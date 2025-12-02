@@ -5,7 +5,7 @@ using IdentityModule.Domain.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using SchoolsModule.Domain.DataTransferObjects;
-using SchoolsModule.Domain.Interfaces.Parents;
+using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.SchoolEvents;
 using MapOptions = GoogleMapsComponents.Maps.MapOptions;
 using Marker = GoogleMapsComponents.Maps.Marker;
@@ -33,7 +33,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Events
         /// <summary>
         /// Injected HTTP provider for making API requests.
         /// </summary>
-        [Inject] public IParentQueryService ParentQueryService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
 
         /// <summary>
         /// The ID of the event to be displayed.
@@ -136,7 +136,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Events
                 _schoolEvent = eventResult.Data;
                 if (_user.IsInRole("Parent"))
                 {
-                    var parentResult = await ParentQueryService.ParentByEmailAsync(_user.GetUserEmail());
+                    var parentResult = await ParentService.ParentByEmailAsync(_user.GetUserEmail());
                     if (parentResult.Succeeded) _parent = parentResult.Data;
                 }
             }

@@ -17,9 +17,9 @@ builder.Services.AddVendorServices()
     .ConfigureLocalization()
     .ConfigureAuthentication();
 
-var appSettingFileName = "SchoolsEnterprise.Blazor.Maui.wwwroot.appsettings.json";
+var appSettingFileName = "NelspruitHigh.Blazor.Pwa.wwwroot.appsettings.json";
 #if DEBUG
-appSettingFileName = "SchoolsEnterprise.Blazor.Maui.wwwroot.appsettings.Development.json";
+appSettingFileName = "NelspruitHigh.Blazor.Pwa.wwwroot.appsettings.Development.json";
 #endif
 using var appSettingsStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(appSettingFileName);
 

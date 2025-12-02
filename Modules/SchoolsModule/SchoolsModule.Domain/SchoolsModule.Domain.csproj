@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Base\ConectOne.EntityFrameworkCore.Sql\ConectOne.EntityFrameworkCore.Sql.csproj" />
+    <ProjectReference Include="..\..\Base\ConectOne.Infrastructure\ConectOne.Infrastructure.csproj" />
     <ProjectReference Include="..\..\CalendarModule\CalendarModule.Domain\CalendarModule.Domain.csproj" />
     <ProjectReference Include="..\..\FilingModule\FilingModule.Domain\FilingModule.Domain.csproj" />
     <ProjectReference Include="..\..\IdentityModule\IdentityModule.Domain\IdentityModule.Domain.csproj" />

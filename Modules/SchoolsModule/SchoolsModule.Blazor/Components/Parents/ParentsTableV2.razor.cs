@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using SchoolsModule.Blazor.Components.Learners.Tables;
 using SchoolsModule.Domain.DataTransferObjects;
-using SchoolsModule.Domain.Interfaces.Parents;
+using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.RequestFeatures;
 
 namespace SchoolsModule.Blazor.Components.Parents
@@ -23,12 +23,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         /// <summary>
         /// Injected HTTP provider for making API calls.
         /// </summary>
-        [Inject] public IParentQueryService ParentQueryService { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the service used to manage parent commands within the application.
-        /// </summary>
-        [Inject] public IParentCommandService ParentCommandService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
         
         /// <summary>
         /// Injected dialog service for displaying dialogs.
@@ -132,7 +127,7 @@ namespace SchoolsModule.Blazor.Components.Parents
 
             if (!result!.Canceled)
             {
-                var deleteResult = await ParentCommandService.RemoveAsync(parentId);
+                var deleteResult = await ParentService.RemoveAsync(parentId);
                 if (deleteResult.Succeeded)
                 {
                     await LoadData();
@@ -151,7 +146,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         {
             if (LearnerId == null || MultiSelection)
             {
-                var result = await ParentQueryService.PagedParentsAsync(_args);
+                var result = await ParentService.PagedParentsAsync(_args);
                 if (result.Succeeded)
                 {
                     _pageCount = result.TotalPages;
@@ -194,7 +189,7 @@ namespace SchoolsModule.Blazor.Components.Parents
         public async Task OnAllSelectedChanged(bool value)
         {
             _allSelected = value;
-            var parentResult = await ParentQueryService.AllParentsAsync();
+            var parentResult = await ParentService.AllParentsAsync();
             if (parentResult.Succeeded)
             {
                 if (value)
@@ -291,7 +286,7 @@ namespace SchoolsModule.Blazor.Components.Parents
             if (firstRender)
             {
                 await LoadData();
-                var parentResult = await ParentQueryService.AllParentsAsync();
+                var parentResult = await ParentService.AllParentsAsync();
                 if (parentResult.Succeeded)
                 {
                     if (SelectedParents is not null && SelectedParents.Any())

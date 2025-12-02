@@ -2,9 +2,9 @@
 using ConectOne.Domain.Entities;
 using ConectOne.Domain.Interfaces;
 using ConectOne.Domain.ResultWrappers;
+using ConectOne.EntityFrameworkCore.Sql.Implimentation;
 using ConectOne.EntityFrameworkCore.Sql.Interfaces;
 using ConectOne.Infrastructure.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConectOne.Infrastructure.Implementation
 {
@@ -22,18 +22,11 @@ namespace ConectOne.Infrastructure.Implementation
         private readonly IRepository<EmailAddress<TEntity>, string> _emailAddressRepo;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ContactIntoService{TEntity}"/> with the specified repositories for 
-        /// <see cref="ContactNumber{TEntity}"/> and <see cref="EmailAddress{TEntity}"/>, and a logger.
+        /// Initializes a new instance of the ContactIntoService class with the specified repositories for contact
+        /// numbers and email addresses.
         /// </summary>
-        /// <param name="contactNumberRepo">
-        /// The repository instance for persisting and retrieving <see cref="ContactNumber{TEntity}"/> records.
-        /// </param>
-        /// <param name="emailAddressRepo">
-        /// The repository instance for persisting and retrieving <see cref="EmailAddress{TEntity}"/> records.
-        /// </param>
-        /// <param name="logger">
-        /// A logging utility conforming to <see cref="ILoggerManager"/> for logging events, warnings, and errors.
-        /// </param>
+        /// <param name="contactNumberRepo">The repository used to manage contact numbers associated with the entity type.</param>
+        /// <param name="emailAddressRepo">The repository used to manage email addresses associated with the entity type.</param>
         public ContactIntoService(IRepository<ContactNumber<TEntity>, string> contactNumberRepo, IRepository<EmailAddress<TEntity>, string> emailAddressRepo)
         {
             _contactNumberRepo = contactNumberRepo;
@@ -56,7 +49,8 @@ namespace ConectOne.Infrastructure.Implementation
         /// </returns>
         public async Task<IBaseResult<IEnumerable<ContactNumberDto>>> AllContactNumbers(string parentId)
         {
-            var result = _contactNumberRepo.FindByCondition(c => c.EntityId.Equals(parentId), false);
+            var spec = new LambdaSpec<ContactNumber<TEntity>>(c => c.EntityId == parentId);
+            var result = await _contactNumberRepo.ListAsync(spec);
             if (result.Succeeded)
             {
                 return await Result<IEnumerable<ContactNumberDto>>.SuccessAsync(result.Data.Select(c => new ContactNumberDto(c)));
@@ -74,37 +68,38 @@ namespace ConectOne.Infrastructure.Implementation
         /// </returns>
         public async Task<IBaseResult<ContactNumberDto>> ContactNumberAsync(string contactNumberId)
         {
-            var result = _contactNumberRepo.FindByCondition(c => c.Id.Equals(contactNumberId), false);
+            var spec = new LambdaSpec<ContactNumber<TEntity>>(c => c.Id == contactNumberId);
+            var result = await _contactNumberRepo.FirstOrDefaultAsync(spec);
             if (result.Succeeded)
             {
-                var response = await result.Data.FirstOrDefaultAsync();
-                if (response == null)
+                if (result.Data == null)
                 {
-                    return Result<ContactNumberDto>.Fail($"No contact number with id matching '{contactNumberId}' was found in the database");
+                    return await Result<ContactNumberDto>.FailAsync($"No contact number with id matching '{contactNumberId}' was found in the database");
                 }
-                return Result<ContactNumberDto>.Success(new ContactNumberDto(response));
+                return await Result<ContactNumberDto>.SuccessAsync(new ContactNumberDto(result.Data));
             }
-            return Result<ContactNumberDto>.Fail(result.Messages);
+            return await Result<ContactNumberDto>.FailAsync(result.Messages);
         }
 
         /// <summary>
-        /// Creates a new contact number record for the parent entity, as specified 
-        /// in the <paramref name="contactNumber"/> details.
+        /// Creates a new contact number for the specified parent entity.
         /// </summary>
-        /// <param name="contactNumber">
-        /// A <see cref="ContactNumberCreationDto"/> containing necessary info for creation 
-        /// (e.g., number, <c>Default</c> flag, and <c>ParentId</c>).
-        /// </param>
-        /// <returns>
-        /// An <see cref="IBaseResult{ContactNumberDto}"/> containing the newly created contact number details if successful,
-        /// or a fail result with error messages on failure.
-        /// </returns>
+        /// <remarks>If the specified contact number is marked as default, any existing default contact
+        /// number for the same parent entity will be unset. If no contact numbers exist for the parent entity, the new
+        /// contact number will be set as default regardless of the value of <see
+        /// cref="ContactNumberDto.Default"/>.</remarks>
+        /// <param name="contactNumber">The contact number data to create. The <see cref="ContactNumberDto.Default"/> property indicates whether
+        /// this number should be set as the default for the parent entity. The <see cref="ContactNumberDto.ParentId"/>
+        /// property specifies the parent entity to which the contact number will be associated. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{ContactNumberDto}"/> indicating the outcome of the operation and, if successful, the
+        /// created contact number.</returns>
         public async Task<IBaseResult<ContactNumberDto>> CreateContactNumber(ContactNumberDto contactNumber)
         {
             var defaultContactNr = contactNumber.Default;
-            var result = _contactNumberRepo.FindByCondition(c => c.EntityId.Equals(contactNumber.ParentId), false);
+            var spec = new LambdaSpec<ContactNumber<TEntity>>(c => c.EntityId == contactNumber.ParentId);
+            var result = await _contactNumberRepo.ListAsync(spec);
 
-            // If the new number is specified as default, clear default from all existing contact numbers.
             if (defaultContactNr)
             {
                 if (result.Data.Any(c => c.Default))
@@ -115,7 +110,6 @@ namespace ConectOne.Infrastructure.Implementation
                     }
                 }
             }
-            // If there are no existing contact numbers, ensure the new one is set as default.
             else if (!result.Data.Any())
             {
                 defaultContactNr = true;
@@ -133,24 +127,23 @@ namespace ConectOne.Infrastructure.Implementation
         }
 
         /// <summary>
-        /// Updates the specified contact number associated with the parent entity.
+        /// Updates the contact number information for an existing contact number record asynchronously.
         /// </summary>
-        /// <param name="parentId">The ID of the parent entity (<c>TEntity</c>).</param>
-        /// <param name="contactNrId">The ID of the contact number to update.</param>
-        /// <param name="contactNr">
-        /// A <see cref="ContactNumberEditionDto"/> with updated information 
-        /// (e.g., phone number, <c>Default</c> status).
-        /// </param>
-        /// <returns>
-        /// An <see cref="IBaseResult"/> indicating success or failure, along with any relevant messages.
-        /// </returns>
+        /// <remarks>If the updated contact number is marked as default, any other contact numbers for the
+        /// same parent entity that are currently set as default will have their default status removed. The operation
+        /// does not create new contact numbers; it only updates existing ones.</remarks>
+        /// <param name="contactNr">The data transfer object containing the updated contact number information. Must not be null. The
+        /// ContactNumberId property identifies the contact number to update.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an IBaseResult indicating
+        /// whether the update was successful. If the contact number does not exist, the result will indicate failure
+        /// with an appropriate message.</returns>
         public async Task<IBaseResult> UpdateContactNumberAsync(ContactNumberDto contactNr)
         {
-            var result = _contactNumberRepo.FindByCondition(c => c.Id.Equals(contactNr.ContactNumberId), false);
+            var spec = new LambdaSpec<ContactNumber<TEntity>>(c => c.Id == contactNr.ContactNumberId);
+            var result = await _contactNumberRepo.FirstOrDefaultAsync(spec);
             if (result.Succeeded)
             {
-                var response = result.Data.FirstOrDefault();
-                if (response == null)
+                if (result.Data == null)
                 {
                     return Result.Fail($"No contact number with id matching '{contactNr.ContactNumberId}' was found in the database");
                 }
@@ -165,10 +158,10 @@ namespace ConectOne.Infrastructure.Implementation
                     }
                 }
 
-                response.Number = contactNr.Number;
-                response.Default = contactNr.Default;
+                result.Data.Number = contactNr.Number;
+                result.Data.Default = contactNr.Default;
 
-                _contactNumberRepo.Update(response);
+                _contactNumberRepo.Update(result.Data);
                 var saveResult = await _contactNumberRepo.SaveAsync();
                 return saveResult.Succeeded
                     ? Result.Success("Contact Nr was successfully updated")
@@ -179,31 +172,32 @@ namespace ConectOne.Infrastructure.Implementation
         }
 
         /// <summary>
-        /// Deletes an existing contact number from the parent entity.
+        /// Deletes the contact number with the specified identifier asynchronously.
         /// </summary>
-        /// <param name="parentId">The ID of the parent entity (<c>TEntity</c>).</param>
-        /// <param name="contactNrId">The unique ID of the contact number to delete.</param>
-        /// <param name="trackChanges">Specifies whether EF Core should track changes for concurrency or not.</param>
-        /// <returns>
-        /// An <see cref="IBaseResult"/> indicating success or failure, along with any relevant messages.
-        /// </returns>
-        public async Task<IBaseResult> DeleteContactNumberAsync(string parentId, string contactNrId, bool trackChanges)
+        /// <remarks>If the deleted contact number was the default for its entity and other contact
+        /// numbers exist, another contact number will be set as the new default. The operation fails if the contact
+        /// number cannot be found or if an error occurs while updating the default contact number.</remarks>
+        /// <param name="contactNrId">The unique identifier of the contact number to delete. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating whether the deletion was successful. If the contact number does not exist, the result will
+        /// indicate failure.</returns>
+        public async Task<IBaseResult> DeleteContactNumberAsync(string contactNrId)
         {
-            var result = _contactNumberRepo.FindByCondition(c => c.Id.Equals(contactNrId), false);
+            var spec = new LambdaSpec<ContactNumber<TEntity>>(c => c.Id == contactNrId);
+            var result = await _contactNumberRepo.FirstOrDefaultAsync(spec);
+
             if (!result.Succeeded)
             {
                 return await Result.FailAsync(result.Messages);
             }
-
-            var response = result.Data.FirstOrDefault();
-            if (response == null)
+            if (result.Data == null)
             {
                 return await Result.FailAsync($"No contact number with id matching '{contactNrId}' was found in the database");
             }
 
-            // If there are any other non-default contact numbers, mark one as default
-            // if we are about to remove the default one.
-            var contactNumberResult = _contactNumberRepo.FindByCondition(c => c.EntityId.Equals(parentId) && !c.Default, false);
+            var allSpec = new LambdaSpec<ContactNumber<TEntity>>(c => c.EntityId == result.Data.EntityId && !c.Default);
+
+            var contactNumberResult = await _contactNumberRepo.ListAsync(spec);
             if (contactNumberResult.Data.Any(c => c.Id != contactNrId))
             {
                 contactNumberResult.Data.FirstOrDefault().Default = true;
@@ -218,7 +212,7 @@ namespace ConectOne.Infrastructure.Implementation
                 }
             }
 
-            _contactNumberRepo.Delete(response);
+            await _contactNumberRepo.DeleteAsync(result.Data.Id);
 
             var saveResult = await _contactNumberRepo.SaveAsync();
             return saveResult.Succeeded
@@ -231,21 +225,16 @@ namespace ConectOne.Infrastructure.Implementation
         #region Email Addresses
 
         /// <summary>
-        /// Retrieves all email addresses associated with the specified parent entity.
+        /// Asynchronously retrieves all email addresses associated with the specified parent entity.
         /// </summary>
-        /// <param name="parentId">The unique identifier for the parent entity.</param>
-        /// <param name="trackChanges">
-        /// If <c>true</c>, the data is tracked by EF Core for concurrency/updates; 
-        /// <c>false</c> for read-only operations.
-        /// </param>
-        /// <returns>
-        /// An <see cref="IBaseResult{T}"/> containing an <see cref="IEnumerable{EmailAddressDto}"/> 
-        /// of all email addresses linked to <paramref name="parentId"/>. 
-        /// Returns a fail result on error.
-        /// </returns>
-        public async Task<IBaseResult<IEnumerable<EmailAddressDto>>> AllEmailAddressesAsync(string parentId, bool trackChanges)
+        /// <param name="parentId">The unique identifier of the parent entity for which to retrieve email addresses. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{IEnumerable{EmailAddressDto}}"/> with the collection of email addresses if successful;
+        /// otherwise, contains error messages.</returns>
+        public async Task<IBaseResult<IEnumerable<EmailAddressDto>>> AllEmailAddressesAsync(string parentId)
         {
-            var result = _emailAddressRepo.FindByCondition(c => c.EntityId.Equals(parentId), trackChanges);
+            var spec = new LambdaSpec<EmailAddress<TEntity>>(c => c.EntityId == parentId);
+            var result = await _emailAddressRepo.ListAsync(spec);
             if (result.Succeeded)
             {
                 return await Result<IEnumerable<EmailAddressDto>>.SuccessAsync(result.Data.Select(c => new EmailAddressDto(c)));
@@ -255,77 +244,60 @@ namespace ConectOne.Infrastructure.Implementation
         }
 
         /// <summary>
-        /// Retrieves a specific email address by its unique identifier.
+        /// Retrieves the email address details for the specified email address identifier asynchronously.
         /// </summary>
-        /// <param name="emailAddressId">The ID of the email address to fetch.</param>
-        /// <param name="trackChanges">
-        /// If <c>true</c>, EF Core tracks the returned entity for changes; 
-        /// if <c>false</c>, the data is read-only.
-        /// </param>
-        /// <returns>
-        /// An <see cref="IBaseResult{EmailAddressDto}"/> describing the requested email record, 
-        /// or a fail result with messages if not found or an error occurs.
-        /// </returns>
-        public async Task<IBaseResult<EmailAddressDto>> EmailAddressAsync(string emailAddressId, bool trackChanges)
+        /// <param name="emailAddressId">The unique identifier of the email address to retrieve. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{EmailAddressDto}"/> with the email address details if found; otherwise, a failure result
+        /// with an appropriate error message.</returns>
+        public async Task<IBaseResult<EmailAddressDto>> EmailAddressAsync(string emailAddressId)
         {
-            var result = _emailAddressRepo.FindByCondition(c => c.Id.Equals(emailAddressId), trackChanges);
+            var spec = new LambdaSpec<EmailAddress<TEntity>>(c => c.Id == emailAddressId);
+            var result = await _emailAddressRepo.FirstOrDefaultAsync(spec);
             if (result.Succeeded)
             {
-                var response = await result.Data.FirstOrDefaultAsync();
-                if (response == null)
+                if (result.Data == null)
                 {
-                    return Result<EmailAddressDto>.Fail($"No email address found in the database matching {emailAddressId}");
+                    return await Result<EmailAddressDto>.FailAsync($"No email address found in the database matching {emailAddressId}");
                 }
 
-                return Result<EmailAddressDto>.Success(new EmailAddressDto(response));
+                return await Result<EmailAddressDto>.SuccessAsync(new EmailAddressDto(result.Data));
             }
-            return Result<EmailAddressDto>.Fail($"No email address found in the database matching {emailAddressId}");
+            return await Result<EmailAddressDto>.FailAsync($"No email address found in the database matching {emailAddressId}");
         }
 
         /// <summary>
-        /// Finds an email address record by its email string (e.g., "john.doe@domain.com").
+        /// Asynchronously retrieves an email address record that matches the specified email address.
         /// </summary>
-        /// <param name="emailAddress">The actual email string to locate (case-insensitive).</param>
-        /// <param name="trackChanges">
-        /// If <c>true</c>, EF Core tracks the returned entity for concurrency/updates; 
-        /// otherwise read-only.
-        /// </param>
-        /// <returns>
-        /// An <see cref="IBaseResult{EmailAddressDto}"/> with the details of the email address 
-        /// if found; otherwise, a fail result with error messages.
-        /// </returns>
-        public async Task<IBaseResult<EmailAddressDto>> EmailAddressByAddressAsync(string emailAddress, bool trackChanges)
+        /// <param name="emailAddress">The email address to search for. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="IBaseResult{EmailAddressDto}"/> with the matching email address data if found; otherwise, a failed
+        /// result.</returns>
+        public async Task<IBaseResult<EmailAddressDto>> EmailAddressByAddressAsync(string emailAddress)
         {
-            var result = _emailAddressRepo.FindByCondition(c => c.Email.Equals(emailAddress), trackChanges);
-            if (result.Succeeded)
-            {
-                var response = await result.Data.FirstOrDefaultAsync();
-                if (response == null)
-                {
-                    return Result<EmailAddressDto>.Fail($"No email address found in the database matching {emailAddress}");
-                }
+            var spec = new LambdaSpec<EmailAddress<TEntity>>(c => c.Email == emailAddress);
+            var result = await _emailAddressRepo.FirstOrDefaultAsync(spec);
+            if (!result.Succeeded || result.Data == null)
+                return await Result<EmailAddressDto>.FailAsync($"No email address found in the database matching {emailAddress}");
 
-                return Result<EmailAddressDto>.Success(EmailAddressDto.CreateDto(response));
-            }
-            return Result<EmailAddressDto>.Fail($"No email address found in the database matching {emailAddress}");
+            return await Result<EmailAddressDto>.SuccessAsync(EmailAddressDto.CreateDto(result.Data));
         }
 
         /// <summary>
-        /// Creates a new email address linked to a parent entity, specified in 
-        /// the <paramref name="emailAddress"/> creation DTO.
+        /// Creates a new email address for the specified parent entity asynchronously.
         /// </summary>
-        /// <param name="emailAddress">
-        /// A <see cref="EmailAddressCreationDto"/> containing fields like 
-        /// <c>EmailAddress</c>, <c>ParentId</c>, and whether it's <c>Default</c>.
-        /// </param>
-        /// <returns>
-        /// An <see cref="IBaseResult{EmailAddressDto}"/> containing the newly created email 
-        /// address record on success; otherwise, a fail result with messages.
-        /// </returns>
+        /// <remarks>If the new email address is marked as default, any existing default email address for
+        /// the same parent entity will be unset. If this is the first email address for the parent entity, it will be
+        /// set as the default regardless of the input value.</remarks>
+        /// <param name="emailAddress">An object containing the details of the email address to create, including the parent entity identifier and
+        /// whether the address should be set as the default.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an IBaseResult with the created
+        /// email address data if successful; otherwise, contains error information.</returns>
         public async Task<IBaseResult<EmailAddressDto>> CreateEmailAddressAsync(EmailAddressDto emailAddress)
         {
             var defaultContactNr = emailAddress.Default;
-            var result = _emailAddressRepo.FindByCondition(c => c.EntityId.Equals(emailAddress.ParentId), false);
+            var spec = new LambdaSpec<EmailAddress<TEntity>>(c => c.EntityId == emailAddress.ParentId);
+            var result = await _emailAddressRepo.ListAsync(spec);
 
             // Ensure only one email address is marked as default,
             // or if this is the first email, force it to be default.
@@ -358,26 +330,24 @@ namespace ConectOne.Infrastructure.Implementation
         }
 
         /// <summary>
-        /// Updates an existing email address record by its unique ID.
+        /// Asynchronously updates an existing email address record with new values provided in the specified data
+        /// transfer object.
         /// </summary>
-        /// <param name="emailAddressNr">
-        /// The ID of the existing email address to update.
-        /// </param>
-        /// <param name="emailAddress">
-        /// A <see cref="EmailAddressEditionDto"/> containing updated fields (e.g., 
-        /// changed email string or <c>Default</c> status).
-        /// </param>
-        /// <returns>
-        /// An <see cref="IBaseResult"/> indicating success or failure, 
-        /// with corresponding messages for error details.
-        /// </returns>
+        /// <remarks>If the updated email address is set as the default, any other email addresses for the
+        /// same entity will have their default status cleared. The operation fails if no email address with the
+        /// specified ID is found.</remarks>
+        /// <param name="emailAddress">An object containing the updated email address information, including the email address ID, new address, and
+        /// default status. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating whether the update was successful. If the specified email address ID does not exist, the result
+        /// will indicate failure.</returns>
         public async Task<IBaseResult> UpdateEmailAddressAsync(EmailAddressDto emailAddress)
         {
-            var result = _emailAddressRepo.FindByCondition(c => c.Id.Equals(emailAddress.EmailAddressId), false);
+            var spec = new LambdaSpec<EmailAddress<TEntity>>(c => c.Id == emailAddress.EmailAddressId);
+            var result = await _emailAddressRepo.FirstOrDefaultAsync(spec);
             if (result.Succeeded)
             {
-                var response = result.Data.FirstOrDefault();
-                if (response == null)
+                if (result.Data == null)
                 {
                     return Result.Fail($"No Email Address with id matching '{emailAddress.EmailAddressId}' was found in the database");
                 }
@@ -386,67 +356,70 @@ namespace ConectOne.Infrastructure.Implementation
                 // mark existing default addresses as false.
                 if (emailAddress.Default)
                 {
-                    var allEmailAddresses = _emailAddressRepo.FindByCondition(
-                        c => c.EntityId.Equals(emailAddress.ParentId) && c.Default, false
-                    );
+                    var allSpec = new LambdaSpec<EmailAddress<TEntity>>(c => c.EntityId == result.Data.EntityId && !c.Default);
+
+                    var allEmailAddresses = await _emailAddressRepo.ListAsync(allSpec);
                     foreach (var email in allEmailAddresses.Data)
                     {
                         email.Default = false;
                     }
                 }
 
-                response.Email = emailAddress.EmailAddress;
-                response.Default = emailAddress.Default;
+                result.Data.Email = emailAddress.EmailAddress;
+                result.Data.Default = emailAddress.Default;
 
-                _emailAddressRepo.Update(response);
+                _emailAddressRepo.Update(result.Data);
                 var saveResult = await _emailAddressRepo.SaveAsync();
                 return saveResult.Succeeded
-                    ? Result.Success("Email Address was successfully updated")
-                    : Result.Fail(saveResult.Messages);
+                    ? await Result.SuccessAsync("Email Address was successfully updated")
+                    : await Result.FailAsync(saveResult.Messages);
             }
-            return Result.Fail(result.Messages);
+            return await Result.FailAsync(result.Messages);
         }
 
         /// <summary>
-        /// Removes an existing email address record from the specified parent entity.
+        /// Asynchronously deletes the email address with the specified identifier.
         /// </summary>
-        /// <param name="parentId">The unique ID of the parent entity.</param>
-        /// <param name="emailAddressId">The unique ID of the email address to delete.</param>
-        /// <returns>
-        /// An <see cref="IBaseResult"/> representing the success/failure of the operation 
-        /// and any relevant messages.
-        /// </returns>
-        public async Task<IBaseResult> DeleteEmailAddressAsync(string parentId, string emailAddressId)
+        /// <remarks>If the deleted email address is marked as the default, another email address for the
+        /// same entity will be set as the new default if available. The operation fails if the specified email address
+        /// does not exist.</remarks>
+        /// <param name="emailAddressId">The unique identifier of the email address to delete. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating whether the deletion was successful. If the email address does not exist or an error occurs, the
+        /// result contains failure information.</returns>
+        public async Task<IBaseResult> DeleteEmailAddressAsync(string emailAddressId)
         {
-            var result = _emailAddressRepo.FindByCondition(c => c.Id.Equals(emailAddressId), false);
+            var spec = new LambdaSpec<EmailAddress<TEntity>>(c => c.Id == emailAddressId);
+            var result = await _emailAddressRepo.FirstOrDefaultAsync(spec);
             if (result.Succeeded)
             {
-                var response = result.Data.FirstOrDefault();
-                if (response == null)
+                if (result.Data == null)
                 {
-                    return Result.Fail($"No email address with id matching '{emailAddressId}' was found in the database");
+                    return await Result.FailAsync($"No email address with id matching '{emailAddressId}' was found in the database");
                 }
 
+                var allSpec = new LambdaSpec<EmailAddress<TEntity>>(c => c.EntityId == result.Data.EntityId && !c.Default);
+
                 // If removing the default email address, re-assign default to another address
-                var emailAddressResult = _emailAddressRepo.FindByCondition(c => c.EntityId.Equals(parentId) && !c.Default, false);
+                var emailAddressResult = await _emailAddressRepo.ListAsync(spec);
                 if (emailAddressResult.Data.Any())
                 {
                     emailAddressResult.Data.FirstOrDefault().Default = true;
                     var contactNumberSaveResult = _emailAddressRepo.Update(emailAddressResult.Data.FirstOrDefault());
                     if (!contactNumberSaveResult.Succeeded)
                     {
-                        return Result.Fail($"There was an error setting the default value with detail: {emailAddressResult.Messages.FirstOrDefault()}");
+                        return await Result.FailAsync($"There was an error setting the default value with detail: {emailAddressResult.Messages.FirstOrDefault()}");
                     }
                 }
 
-                _emailAddressRepo.Delete(response);
+                await _emailAddressRepo.DeleteAsync(result.Data.Id);
 
                 var saveResult = await _emailAddressRepo.SaveAsync();
                 return saveResult.Succeeded
-                    ? Result.Success("Contact number was successfully removed")
-                    : Result.Fail(saveResult.Messages);
+                    ? await Result.SuccessAsync("Contact number was successfully removed")
+                    : await Result.FailAsync(saveResult.Messages);
             }
-            return Result.Fail(result.Messages);
+            return await Result.FailAsync(result.Messages);
         }
 
         #endregion

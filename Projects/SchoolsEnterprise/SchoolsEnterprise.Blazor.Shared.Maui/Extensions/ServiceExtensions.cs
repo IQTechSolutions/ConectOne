@@ -124,6 +124,17 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Extensions
             return services;
         }
 
+        /// <summary>
+        /// Adds School MAUI-related services and HTTP clients to the specified service collection.
+        /// </summary>
+        /// <remarks>This method registers core services and modules required for School MAUI
+        /// applications, including HTTP clients configured with authentication handlers and platform-specific message
+        /// handlers in debug builds. Call this method during application startup to ensure all necessary dependencies
+        /// are available for dependency injection.</remarks>
+        /// <param name="services">The service collection to which the School MAUI services will be added. Cannot be null.</param>
+        /// <param name="baseApiAddress">The base URI for the backend API endpoints used by the registered HTTP clients. Must be a valid absolute
+        /// URI.</param>
+        /// <returns>The same service collection instance with School MAUI services and related modules registered.</returns>
         public static IServiceCollection AddSchoolMauiServices(this IServiceCollection services, string baseApiAddress)
         {
             services.AddScoped<IDeviceInfoService, DeviceInfoService>();
@@ -132,18 +143,27 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Extensions
             #if DEBUG
                 var handler = new HttpsClientHandlerService();
                 services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).ConfigurePrimaryHttpMessageHandler(() => handler.GetPlatformMessageHandler()).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-                services.AddHttpClient<IAccountsProvider, AccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).ConfigurePrimaryHttpMessageHandler(() => handler.GetPlatformMessageHandler()).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-#else
+                services.AddHttpClient<IAccountsProvider, MauiAccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).ConfigurePrimaryHttpMessageHandler(() => handler.GetPlatformMessageHandler()).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
+            #else
                 services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-            services.AddHttpClient<IAccountsProvider, AccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-#endif
+                services.AddHttpClient<IAccountsProvider, AccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
+            #endif
 
-            services.AddFilingModule().AddBloggingServices(baseApiAddress).AddMessagingModule(baseApiAddress).AddSchoolsModule(baseApiAddress).AddAdvertisingServices(baseApiAddress)
-                .AddShoppingModule(baseApiAddress).AddBusinessModuleServices(baseApiAddress).AddCalanderModule(baseApiAddress).AddProductsModule(baseApiAddress).AddIdentityModule(baseApiAddress);
+                services.AddFilingModule().AddBloggingServices(baseApiAddress).AddMessagingModule(baseApiAddress).AddSchoolsModule(baseApiAddress).AddAdvertisingServices(baseApiAddress)
+                    .AddShoppingModule(baseApiAddress).AddBusinessModuleServices(baseApiAddress).AddCalanderModule(baseApiAddress).AddProductsModule(baseApiAddress).AddIdentityModule(baseApiAddress);
 
             return services;
         }
 
+        /// <summary>
+        /// Configures authentication and authorization services for a .NET MAUI application and registers related
+        /// dependencies in the service collection.
+        /// </summary>
+        /// <remarks>This method registers authentication state providers, authorization policies, and
+        /// HTTP client interceptors required for authentication in a .NET MAUI application. Call this method during
+        /// application startup to ensure authentication services are available throughout the app.</remarks>
+        /// <param name="services">The service collection to which authentication and authorization services will be added. Cannot be null.</param>
+        /// <returns>The same <see cref="IServiceCollection"/> instance that was provided, to support method chaining.</returns>
         public static IServiceCollection ConfigureMauiAuthentication(this IServiceCollection services)
         {
             services.AddScoped<MauiAuthenticationHeaderHandler>();
@@ -161,6 +181,15 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Extensions
             return services;
         }
 
+        /// <summary>
+        /// Configures localization services for a .NET MAUI application by adding resource-based localization support
+        /// to the service collection.
+        /// </summary>
+        /// <remarks>This method registers localization services with resource paths commonly used in .NET
+        /// MAUI projects. It should be called during application startup before building the service
+        /// provider.</remarks>
+        /// <param name="services">The service collection to which localization services will be added. Cannot be null.</param>
+        /// <returns>The same instance of <see cref="IServiceCollection"/> that was provided, to support method chaining.</returns>
         public static IServiceCollection ConfigureMauiLocalization(this IServiceCollection services)
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources/Localization");

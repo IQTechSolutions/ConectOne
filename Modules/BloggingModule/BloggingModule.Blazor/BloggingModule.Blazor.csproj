@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
     <PackageReference Include="MudBlazor" Version="8.15.0" />
-    <PackageReference Include="Radzen.Blazor" Version="8.3.4" />
+    <PackageReference Include="Radzen.Blazor" Version="8.3.5" />
   </ItemGroup>
 
   <ItemGroup>

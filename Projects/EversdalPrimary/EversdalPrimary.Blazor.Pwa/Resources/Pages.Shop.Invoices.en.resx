@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ProcessedOrders" xml:space="preserve">
+    <value>Processed Orders</value>
+  </data>
+  <data name="ProcessedOrdersDescription" xml:space="preserve">
+    <value>Invoices that have been paid and are available for you to download for your own records.</value>
+  </data>
+  <data name="PendingPayment" xml:space="preserve">
+    <value>Pending Payment</value>
+  </data>
+  <data name="CompletedAndShipped" xml:space="preserve">
+    <value>Completed &amp; Shipped</value>
+  </data>
+  <data name="SupportNotice" xml:space="preserve">
+    <value>Payments that have failed to process. Please contact support for more information</value>
+  </data>
+  <data name="FullPaid" xml:space="preserve">
+    <value>Paid in Full</value>
+  </data>
+  <data name="RejectedPayments" xml:space="preserve">
+    <value>Rejected Payments</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="CallSupport" xml:space="preserve">
+    <value>Call Support</value>
+  </data>
+  <data name="Shopping" xml:space="preserve">
+    <value>Shopping</value>
+  </data>
+  <data name="OrderHistory" xml:space="preserve">
+    <value>Order History</value>
+  </data>
+</root>

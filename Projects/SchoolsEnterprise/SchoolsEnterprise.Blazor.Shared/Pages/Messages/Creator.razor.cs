@@ -1,4 +1,5 @@
-﻿using ConectOne.Blazor.Extensions;
+﻿using Azure.Core;
+using ConectOne.Blazor.Extensions;
 using ConectOne.Blazor.Modals;
 using FilingModule.Application.ViewModels;
 using FilingModule.Blazor.Modals;
@@ -9,6 +10,7 @@ using IdentityModule.Domain.Interfaces;
 using MessagingModule.Application.ViewModels;
 using MessagingModule.Domain.DataTransferObjects;
 using MessagingModule.Domain.Interfaces;
+using MessagingModule.Infrastructure.Implementation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +19,6 @@ using NeuralTech.Base.Enums;
 using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.ActivityGroups;
 using SchoolsModule.Domain.Interfaces.Learners;
-using SchoolsModule.Domain.Interfaces.Parents;
 using SchoolsModule.Domain.Interfaces.SchoolEvents;
 using SchoolsModule.Domain.RequestFeatures;
 
@@ -74,7 +75,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
         /// <summary>
         /// Gets or sets the service used to query parent entities within the application.
         /// </summary>
-        [Inject] public IParentQueryService ParentQueryService { get; set; } = null!;
+        [Inject] public IParentService ParentService { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service used to manage teacher-related operations.
@@ -229,7 +230,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
 
                 case NeuralTech.Base.Enums.MessageType.Parent:
                     {
-                        var userListResult = await ParentQueryService.ParentsNotificationList(new ParentPageParameters
+                        var userListResult = await ParentService.ParentsNotificationList(new ParentPageParameters
                             {
                                 ParentId = _notificationMessage.EntityId
                             }
@@ -342,8 +343,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
                 }
                 
                 var userInfos = await ProcessNotificationUserList();
-                var result = await PushNotificationService.SendNotifications(userInfos, _notificationMessage.ToNotificationDto());
-
+                var result = await PushNotificationService.EnqueueNotificationsAsync(userInfos, _notificationMessage.ToNotificationDto());
                 result.ProcessResponseForDisplay(SnackBar, async () =>
                 {
                     var notificationBody = string.IsNullOrWhiteSpace(_notificationMessage.Message)

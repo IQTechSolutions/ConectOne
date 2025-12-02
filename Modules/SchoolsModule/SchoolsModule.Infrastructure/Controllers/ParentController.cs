@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolsModule.Domain.DataTransferObjects;
 using SchoolsModule.Domain.Entities;
-using SchoolsModule.Domain.Interfaces.Parents;
+using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.RequestFeatures;
 
 namespace SchoolsModule.Infrastructure.Controllers
@@ -16,21 +16,8 @@ namespace SchoolsModule.Infrastructure.Controllers
     /// and exporting of parent data. It uses IParentService for business logic and returns results as HTTP responses.
     /// </summary>
     [Route("api/parents"), Authorize(AuthenticationSchemes = "Bearer")]
-    public class ParentController : BaseContactInfoApiController<Parent>
+    public class ParentController(IParentService parentService, IContactInfoService<Parent> service) : BaseContactInfoApiController<Parent>(service)
     {
-        private readonly IParentQueryService parentQueryService;
-        private readonly IParentCommandService parentCommandService;
-        
-        /// <summary>
-        /// Constructs the ParentController with the required IParentService.
-        /// </summary>
-        /// <param name="parentService">Service providing parent-related operations.</param>
-        public ParentController(IParentQueryService parentQueryService, IParentCommandService parentCommandService, IContactInfoService<Parent> service) : base(service)
-        {
-            this.parentQueryService = parentQueryService;
-            this.parentCommandService = parentCommandService;
-        }
-
         /// <summary>
         /// Retrieves a paged list of parent users based on the given page parameters.
         /// Useful if distinguishing between parent records and parent users in the system.
@@ -39,7 +26,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A paginated list of ParentDto objects.</returns>
         [HttpGet("pagedparentusers")] public async Task<IActionResult> PagedParentUsersAsync([FromQuery] ParentPageParameters pageParameters)
         {
-            var result = await parentQueryService.PagedParentsAsync(pageParameters);
+            var result = await parentService.PagedParentsAsync(pageParameters);
             return Ok(result);
         }
 
@@ -51,7 +38,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A PaginatedResult containing ParentDto data.</returns>
         [HttpGet("pagedparents")] public async Task<IActionResult> PagedParentsAsync([FromQuery] ParentPageParameters pageParameters)
         {
-            var result = await parentQueryService.PagedParentsAsync(pageParameters);
+            var result = await parentService.PagedParentsAsync(pageParameters);
             return Ok(result);
         }
 
@@ -64,7 +51,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// JSON.</returns>
         [HttpGet("all")] public async Task<IActionResult> AllParents()
         {
-            var result = await parentQueryService.AllParentsAsync();
+            var result = await parentService.AllParentsAsync();
             return Ok(result);
         }
 
@@ -74,7 +61,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A count of all parent records.</returns>
         [HttpGet("count")] public async Task<IActionResult> ParentCount()
         {
-            var result = await parentQueryService.ParentCount(HttpContext.RequestAborted);
+            var result = await parentService.ParentCount(HttpContext.RequestAborted);
             return Ok(result);
         }
 
@@ -85,7 +72,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A ParentDto if found, otherwise an error.</returns>
         [HttpGet("{parentId}")] public async Task<IActionResult> ParentAsync(string parentId)
         {
-            var result = await parentQueryService.ParentAsync(parentId, false, HttpContext.RequestAborted);
+            var result = await parentService.ParentAsync(parentId, false, HttpContext.RequestAborted);
             return Ok(result);
         }
 
@@ -97,7 +84,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A ParentDto if found.</returns>
         [HttpGet("byemail/{emailAddress}")] public async Task<IActionResult> ParentByEmailAsync(string emailAddress)
         {
-            var result = await parentQueryService.ParentByEmailAsync(emailAddress);
+            var result = await parentService.ParentByEmailAsync(emailAddress);
             return Ok(result);
         }
 
@@ -111,7 +98,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// specified email address exists; otherwise, <see langword="false"/>.</returns>
         [HttpGet("exist/{emailAddress}"), AllowAnonymous] public async Task<IActionResult> ParentExits(string emailAddress)
         {
-            var result = await parentQueryService.ParentByEmailAsync(emailAddress);
+            var result = await parentService.ParentByEmailAsync(emailAddress);
             return Ok(result);
         }
 
@@ -122,7 +109,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>The newly created ParentDto, or an error message if creation fails.</returns>
         [HttpPut] public async Task<IActionResult> CreateParentAsync([FromBody] ParentDto parentDto)
         {
-            var result = await parentCommandService.CreateAsync(parentDto);
+            var result = await parentService.CreateAsync(parentDto);
             return Ok(result);
         }
 
@@ -133,7 +120,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A success or failure result.</returns>
         [HttpPost] public async Task<IActionResult> UpdateParentAsync([FromBody] ParentDto parentDto)
         {
-            var result = await parentCommandService.UpdateAsync(parentDto);
+            var result = await parentService.UpdateAsync(parentDto);
             return Ok(result);
         }
 
@@ -144,7 +131,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A success or failure result.</returns>
         [HttpPost("updateprofile")] public async Task<IActionResult> UpdateParenProfiletAsync([FromBody] ParentDto parentDto)
         {
-            var result = await parentCommandService.UpdateProfileAsync(parentDto);
+            var result = await parentService.UpdateProfileAsync(parentDto);
             return Ok(result);
         }
 
@@ -155,7 +142,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A success or failure result.</returns>
         [HttpDelete("{parentId}")] public async Task<IActionResult> DeleteAsync(string parentId)
         {
-            var result = await parentCommandService.RemoveAsync(parentId);
+            var result = await parentService.RemoveAsync(parentId);
             return Ok(result);
         }
 
@@ -165,7 +152,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// </summary>
         [HttpPost("parentlearners/{parentId}/create/{learnerId}")] public async Task<IActionResult> CreateParentLearnerAsync(string parentId, string learnerId)
         {
-            var result = await parentCommandService.CreateParentLearnerAsync(parentId, learnerId);
+            var result = await parentService.CreateParentLearnerAsync(parentId, learnerId);
             return Ok(result);
         }
 
@@ -175,7 +162,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// </summary>
         [HttpGet("parentlearners/{parentId}")] public async Task<IActionResult> ParentLearnersAsync(string parentId)
         {
-            var result = await parentQueryService.ParentLearnersAsync(parentId);
+            var result = await parentService.ParentLearnersAsync(parentId);
             return Ok(result);
         }
 
@@ -185,7 +172,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// </summary>
         [HttpDelete("parentlearners/{parentId}/{learnerId}")] public async Task<IActionResult> DeleteParentLearnerAsync(string parentId, string learnerId)
         {
-            var result = await parentCommandService.RemoveParentLearnerAsync(parentId, learnerId);
+            var result = await parentService.RemoveParentLearnerAsync(parentId, learnerId);
             return Ok(result);
         }
 
@@ -196,7 +183,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <returns>A reference to the exported file, or an error if the export fails.</returns>
         [HttpGet("export")] public async Task<IActionResult> Export()
         {
-            var result = await parentCommandService.ExportParents();
+            var result = await parentService.ExportParents();
             return Ok(result);
         }
 
@@ -208,7 +195,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// </summary>
         [HttpGet("notificationList")] public async Task<IActionResult> ParentsNotificationList([FromQuery] ParentPageParameters pageParameters)
         {
-            var result = await parentQueryService.ParentsNotificationList(pageParameters);
+            var result = await parentService.ParentsNotificationList(pageParameters);
             if (result.Succeeded)
             {
                 return Ok(await Result<IEnumerable<RecipientDto>>.SuccessAsync(result.Data));
@@ -227,7 +214,7 @@ namespace SchoolsModule.Infrastructure.Controllers
         /// <param name="userId">The identity of the current user creating the chat group</param>
         [HttpPut("chats/{parentId}")] public async Task<IActionResult> CreateParentChatGroupAsync(string parentId, [FromBody]string userId)
         {
-            var result = await parentCommandService.CreateParentChatGroupAsync(parentId, userId);
+            var result = await parentService.CreateParentChatGroupAsync(parentId, userId);
             return Ok(result);
         }
 

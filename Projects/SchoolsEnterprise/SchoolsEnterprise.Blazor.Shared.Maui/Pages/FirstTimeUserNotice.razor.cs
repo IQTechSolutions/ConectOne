@@ -1,10 +1,12 @@
 ﻿using ConectOne.Blazor.Extensions;
+using ConectOne.Blazor.Settings;
 using ConectOne.Domain.Interfaces;
 using IdentityModule.Domain.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using MudBlazor;
+using MudBlazor.ThemeManager;
 
 namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
 {
@@ -16,6 +18,9 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
     /// authentication state and an HTTP provider to perform the necessary operations.</remarks>
     public partial class FirstTimeUserNotice
     {
+        private ThemeManagerTheme _themeManager = new ThemeManagerTheme() { Theme = ApplciationTheme.LightTheme };
+        private bool _themeManagerOpen;
+
         /// <summary>
         /// Gets or sets the task that provides the current authentication state.
         /// </summary>

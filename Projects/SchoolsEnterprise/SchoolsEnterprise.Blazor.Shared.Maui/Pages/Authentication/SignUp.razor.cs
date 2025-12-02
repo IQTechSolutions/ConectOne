@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 using MudBlazor;
 using SchoolsModule.Domain.DataTransferObjects;
-using SchoolsModule.Domain.Interfaces.Parents;
 
 namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Authentication
 {

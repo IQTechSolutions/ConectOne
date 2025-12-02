@@ -4,13 +4,11 @@ using SchoolsModule.Application.RestServices;
 using SchoolsModule.Application.RestServices.ActivityGroups;
 using SchoolsModule.Application.RestServices.Disciplinary;
 using SchoolsModule.Application.RestServices.Learners;
-using SchoolsModule.Application.RestServices.Parents;
 using SchoolsModule.Application.RestServices.SchoolEvents;
 using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.ActivityGroups;
 using SchoolsModule.Domain.Interfaces.Discipline;
 using SchoolsModule.Domain.Interfaces.Learners;
-using SchoolsModule.Domain.Interfaces.Parents;
 using SchoolsModule.Domain.Interfaces.SchoolEvents;
 
 namespace SchoolsModule.Application
@@ -43,8 +41,7 @@ namespace SchoolsModule.Application
             services.AddScoped<ISchoolClassService, SchoolClassRestService>();
 
             // Parent services
-            services.AddScoped<IParentQueryService, ParentQueryRestService>();
-            services.AddScoped<IParentCommandService, ParentCommandRestService>();
+            services.AddScoped<IParentService, ParentRestService>();
 
             // Learner services
             services.AddScoped<ILearnerQueryService, LearnerQueryRestService>();
