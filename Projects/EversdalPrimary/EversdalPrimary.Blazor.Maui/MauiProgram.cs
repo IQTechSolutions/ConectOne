@@ -1,5 +1,6 @@
-﻿using ConectOne.Blazor.StateManagers;
+using ConectOne.Blazor.StateManagers;
 using EversdalPrimary.Blazor.Maui.Localization;
+using EversdalPrimary.Blazor.Maui.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SchoolsEnterprise.Blazor.Shared.Maui.Extensions;
@@ -20,6 +21,8 @@ namespace EversdalPrimary.Blazor.Maui
 {
     public static class MauiProgram
     {
+        public static IServiceProvider? Services { get; private set; }
+
         private static MauiAppBuilder RegisterFirebaseServices(this MauiAppBuilder builder)
         {
             builder.ConfigureLifecycleEvents(events =>
@@ -63,6 +66,7 @@ namespace EversdalPrimary.Blazor.Maui
                 .ConfigureMauiAuthentication();
 
             builder.Services.AddSingleton<LocalizationService>();
+            builder.Services.AddSingleton<NotificationNavigationService>();
 
             builder.UseMauiApp<App>().RegisterFirebaseServices().UseMauiCommunityToolkit().ConfigureFonts(fonts =>
             {
@@ -77,6 +81,7 @@ namespace EversdalPrimary.Blazor.Maui
 #endif
 
             var host = builder.Build();
+            Services = host.Services;
 
             var storageService = host.Services.GetService<ClientPreferenceManager>();
 

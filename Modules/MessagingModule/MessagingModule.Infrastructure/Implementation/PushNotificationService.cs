@@ -31,6 +31,19 @@ namespace MessagingModule.Infrastructure.Implementation
     {
         private const int MaxBatchSize = 500;
 
+        private static NotificationDto EnsureNotificationUrl(NotificationDto notification)
+        {
+            if (!string.IsNullOrWhiteSpace(notification.NotificationUrl))
+                return notification;
+
+            var entityId = notification.MessageId ?? notification.EntityId;
+            if (string.IsNullOrWhiteSpace(entityId))
+                return notification;
+
+            var navigationUrl = $"/messages/bytype/{(int)notification.MessageType}/{entityId}";
+            return notification with { NotificationUrl = navigationUrl };
+        }
+
         /// <summary>
         /// Sends push notifications to a list of users. If more than 500 messages are required,
         /// the send operation is broken into multiple sub-batches to respect Firebase's limit.
@@ -50,11 +63,12 @@ namespace MessagingModule.Infrastructure.Implementation
         public async Task<IBaseResult> SendNotifications(IEnumerable<RecipientDto> notificationList, NotificationDto pushNotification)
         {
             var errorList = new List<string>();
+            var notificationWithNavigation = EnsureNotificationUrl(pushNotification);
 
             try
             {
                 // 1) Build the list of FCM messages based on users and tokens.
-                var messageListResult = await CreateMessageList(notificationList, pushNotification);
+                var messageListResult = await CreateMessageList(notificationList, notificationWithNavigation);
 
                 // If message creation encountered an error, return early.
                 if (!messageListResult.Succeeded)
@@ -116,6 +130,7 @@ namespace MessagingModule.Infrastructure.Implementation
         public async Task<IBaseResult> EnqueueNotificationsAsync(IEnumerable<RecipientDto> recipients, NotificationDto pushNotification)
         {
             const int shardSize = 5_000;
+            var notificationWithNavigation = EnsureNotificationUrl(pushNotification);
 
             foreach (var shard in recipients.Chunk(shardSize))
             {
@@ -124,7 +139,7 @@ namespace MessagingModule.Infrastructure.Implementation
 
                 // Never capture the variable in a closure – pass it as a method arg
                 jobs.Enqueue<PushNotificationService>(svc =>
-                    svc.ProcessNotificationsAsync(shardList, pushNotification));
+                    svc.ProcessNotificationsAsync(shardList, notificationWithNavigation));
             }
 
             return await Result.SuccessAsync("Notifications queued for background delivery");

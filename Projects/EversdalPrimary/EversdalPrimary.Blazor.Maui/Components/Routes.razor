@@ -1,6 +1,8 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
 @using ShoppingModule.Blazor.Components
+@inject NavigationManager NavigationManager
+@inject EversdalPrimary.Blazor.Maui.Services.NotificationNavigationService NotificationNavigationService
 
 <CartStateProvider>
     <CascadingAuthenticationState>
@@ -15,3 +17,18 @@
         </Router>
     </CascadingAuthenticationState>
 </CartStateProvider>
+
+@code {
+    private bool _navigationRegistered;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && !_navigationRegistered)
+        {
+            NotificationNavigationService.RegisterNavigationManager(NavigationManager);
+            _navigationRegistered = true;
+        }
+
+        base.OnAfterRender(firstRender);
+    }
+}
