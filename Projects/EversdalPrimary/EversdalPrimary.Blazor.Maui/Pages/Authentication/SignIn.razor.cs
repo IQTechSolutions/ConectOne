@@ -114,10 +114,10 @@ namespace EversdalPrimary.Blazor.Maui.Pages.Authentication
         private static async Task RequestNotificationPermissionAsync()
         {
 #if ANDROID || IOS
-            var status = await Permissions.CheckStatusAsync<Permissions.Notifications>();
+            var status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
             if (status is PermissionStatus.Denied or PermissionStatus.Unknown)
             {
-                status = await Permissions.RequestAsync<Permissions.Notifications>();
+                status = await Permissions.RequestAsync<Permissions.PostNotifications>();
             }
 
             if (status != PermissionStatus.Granted)
