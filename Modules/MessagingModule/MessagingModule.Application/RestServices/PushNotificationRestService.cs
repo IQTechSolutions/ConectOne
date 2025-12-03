@@ -47,5 +47,18 @@ namespace MessagingModule.Application.RestServices
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Registers a new web push notification subscription using the specified subscription details.
+        /// </summary>
+        /// <param name="token">An object containing the subscription information required to enable web push notifications for a user.
+        /// Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating the outcome of the subscription request.</returns>
+        public async Task<IBaseResult> AddNotificationSubscription(NotificationSubscriptionDto token)
+        {
+            var result = await provider.PostAsync("notifications/webPush/subscribe", token);
+            return result;
+        }
     }
 }

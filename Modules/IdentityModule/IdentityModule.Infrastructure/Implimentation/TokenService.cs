@@ -85,5 +85,7 @@ namespace IdentityModule.Infrastructure.Implimentation
             }
             return await Result.FailAsync(deviceTokenResult.Messages);
         }
+
+        
     }
 }

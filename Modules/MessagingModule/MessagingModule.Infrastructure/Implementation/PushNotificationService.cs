@@ -1,5 +1,6 @@
 ﻿using ConectOne.Domain.Extensions;
 using ConectOne.Domain.ResultWrappers;
+using ConectOne.EntityFrameworkCore.Sql.Implimentation;
 using ConectOne.EntityFrameworkCore.Sql.Interfaces;
 using FirebaseAdmin.Messaging;
 using Hangfire;
@@ -8,9 +9,13 @@ using IdentityModule.Domain.Entities;
 using IdentityModule.Domain.Interfaces;
 using IdentityModule.Domain.RequestFeatures;
 using MessagingModule.Domain.DataTransferObjects;
+using MessagingModule.Domain.Entities;
 using MessagingModule.Domain.Interfaces;
+using MessagingModule.Infrastructure.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using NeuralTech.Base.Enums;
+using SchoolsEnterprise.Base.Constants;
 using Message = FirebaseAdmin.Messaging.Message;
 using Notification = MessagingModule.Domain.Entities.Notification;
 
@@ -27,7 +32,8 @@ namespace MessagingModule.Infrastructure.Implementation
     /// </list>
     /// </summary>
     public class PushNotificationService(IRepository<DeviceToken, string> deviceTokenRepository, IRepository<Notification, string> notificationRepository,IUserService userRepository,
-        IBackgroundJobClient jobs, ILogger<PushNotificationService> logger) : IPushNotificationService
+        IBackgroundJobClient jobs, IRepository<NotificationSubscription, string> notificationSubscriptionTokenRepo, ILogger<PushNotificationService> logger, 
+        IHubContext<NotificationsHub> _hub) : IPushNotificationService
     {
         private const int MaxBatchSize = 500;
 
@@ -107,6 +113,10 @@ namespace MessagingModule.Infrastructure.Implementation
 
                             if (sentCount == 0) errorList.Add("No Notifications was sent");
                         }
+
+                        await _hub.Clients.Users(notificationList.Select(c => c.Id).ToList()).SendAsync(
+                            ApplicationConstants.SignalR.SendPushNotification, pushNotification.MessageType,
+                            pushNotification.Title, pushNotification.Message, pushNotification.NotificationUrl);
                     }
                 }
 
@@ -186,6 +196,33 @@ namespace MessagingModule.Infrastructure.Implementation
                 throw;                       // let Hangfire capture & retry
             }
         }
+
+        #region Subscriptions
+
+        /// <summary>
+        /// Adds a notification subscription for the specified user, replacing any existing subscriptions for that user.
+        /// </summary>
+        /// <remarks>If a subscription already exists for the user, it will be removed before adding the
+        /// new subscription. This method is asynchronous and should be awaited.</remarks>
+        /// <param name="token">The notification subscription data to add. Must contain a valid user identifier.</param>
+        /// <returns>A result indicating whether the subscription was added successfully. If the operation fails, the result
+        /// contains error messages.</returns>
+        public async Task<IBaseResult> AddNotificationSubscription(NotificationSubscriptionDto token)
+        {
+            var spec = new LambdaSpec<NotificationSubscription>(c => c.UserId == token.UserId);
+            var existingTokens = await notificationSubscriptionTokenRepo.ListAsync(spec, false);
+
+            notificationSubscriptionTokenRepo.RemoveRange(existingTokens.Data);
+
+            var result = await notificationSubscriptionTokenRepo.CreateAsync(new NotificationSubscription(token));
+            if(!result.Succeeded) return await Result.FailAsync(result.Messages);
+
+            var saveResult = await notificationSubscriptionTokenRepo.SaveAsync();
+            if (!saveResult.Succeeded) return await Result.FailAsync(saveResult.Messages);
+            return await Result.SuccessAsync("Notification subscription was added successfully");
+        }
+
+        #endregion
 
         #region Helpers
 

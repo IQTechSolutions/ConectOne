@@ -11,6 +11,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
 using IdentityModule.Domain.Entities;
+using MessagingModule.Infrastructure.Hubs;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,12 @@ builder.Services.AddScoped<GenericDbContextFactory>();
 builder.Services.AddDbContextFactory<GenericDbContext>(options => options.UseSqlServer(connectionString, optionsBuilder => optionsBuilder.MigrationsAssembly(migrationAssembly)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+});
+builder.Services.AddSignalRCore();
 
 var baseAddress = $"{builder.Configuration["ApiConfiguration:BaseApiAddress"]}/api/";
 
@@ -139,6 +146,7 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+app.MapHub<NotificationsHub>("/notificationsHub");
 app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using NeuralTech.Base.Enums;
 using MessagingModule.Domain.RequestFeatures;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
+using SchoolsEnterprise.Base.Constants;
 
 namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
 {
@@ -18,8 +20,9 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
     /// authentication, navigation, and HTTP services via dependency injection. It manages notification counts for
     /// various message types and updates the UI in response to notification state changes. This class is typically used
     /// as a component or service to display and update notification indicators for the authenticated user.</remarks>
-    public partial class CommsCenter 
+    public partial class CommsCenter
     {
+        private HubConnection? _hubConnection;
         private string _userId = null!;
         private ClaimsPrincipal _user = null!;
         private int _notificationCount;
@@ -155,6 +158,47 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
+            try
+            {
+#if DEBUG
+                var handler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+                    {
+                        // WARNING: This accepts any cert. Use ONLY for local dev.
+                        return true;
+                    }
+                };
+
+                _hubConnection = new HubConnectionBuilder()
+                    .WithUrl($"{Configuration["ApiConfiguration:BaseApiAddress"]}/notificationsHub", options => options.HttpMessageHandlerFactory = _ => handler)
+                    .WithAutomaticReconnect().Build();
+#else
+                _hubConnection = new HubConnectionBuilder()
+                    .WithUrl($"{Configuration["ApiConfiguration:BaseApiAddress"]}/notificationsHub")
+                    .WithAutomaticReconnect().Build();
+#endif
+
+
+                _hubConnection.On<string, string, string, string>(ApplicationConstants.SignalR.SendPushNotification,
+                    (type, title, message, url) =>
+                    {
+                        if (type == ((int)MessageType.Global).ToString())
+                        {
+                            _globalNotificationCount += 1;
+                            StateHasChanged();
+                        }
+                    });
+
+                await _hubConnection.StartAsync();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+           
+
             var authState = await AuthenticationStateTask;
             _user = authState.User;
             _userId = authState.User.GetUserId();

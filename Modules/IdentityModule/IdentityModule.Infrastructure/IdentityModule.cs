@@ -1,5 +1,6 @@
 ﻿using IdentityModule.Domain.Interfaces;
 using IdentityModule.Infrastructure.Implimentation;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityModule.Infrastructure
@@ -17,6 +18,7 @@ namespace IdentityModule.Infrastructure
         /// <returns>The updated IServiceCollection instance.</returns>
         public static IServiceCollection AddIdentityModule(this IServiceCollection services)
         {
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             services.AddScoped<IAuditTrailsService, AuditTrialsService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();

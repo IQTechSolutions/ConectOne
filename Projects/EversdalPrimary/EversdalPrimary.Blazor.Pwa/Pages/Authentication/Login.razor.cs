@@ -2,6 +2,9 @@
 using ConectOne.Blazor.StateManagers;
 using IdentityModule.Application.ViewModels;
 using IdentityModule.Domain.Interfaces;
+using MessagingModule.Domain.DataTransferObjects;
+using MessagingModule.Domain.Entities;
+using MessagingModule.Domain.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -42,6 +45,11 @@ namespace EversdalPrimary.Blazor.Pwa.Pages.Authentication
         /// dependency injection container is configured to provide an implementation of <see
         /// cref="IClientPreferenceManager"/>.</remarks>
         [Inject] public IClientPreferenceManager ClientPreferenceManager { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the service used to send push notifications to clients.
+        /// </summary>
+        [Inject] public IPushNotificationService PushNotificationService { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the JavaScript runtime instance used to invoke JavaScript functions from .NET.
@@ -113,8 +121,7 @@ namespace EversdalPrimary.Blazor.Pwa.Pages.Authentication
         /// Handles the user login process.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task 
-            LoginNowAsync()
+        public async Task LoginNowAsync()
         {
             // Reset authentication error display
             _errorMessage = null;
@@ -149,15 +156,18 @@ namespace EversdalPrimary.Blazor.Pwa.Pages.Authentication
             else
             {
                 //var subscription = await JsRuntime.InvokeAsync<NotificationSubscription>("blazorPushNotifications.requestSubscription");
-
                 //if (subscription is not null)
                 //{
-                //    subscription.Id = Guid.NewGuid().ToString();
-                //    subscription.UserId = result.UserId;
-                //    subscription.RowVersion = Array.Empty<byte>();
+                //    var pushRegistrationResult = await PushNotificationService.AddNotificationSubscription(new NotificationSubscriptionDto()
+                //    {
+                //        Id = Guid.NewGuid().ToString(),
+                //        UserId = result.UserId,
+                //        Url = subscription.Url,
+                //        P256dh = subscription.P256dh,
+                //        Auth = subscription.Auth
+                //    });
 
-                //    var createSubscriptionResult = await NotificationSubscriptionService.AddSubscription(subscription);
-                //    if (!createSubscriptionResult.Succeeded)
+                //    if (!pushRegistrationResult.Succeeded)
                 //    {
                 //        SnackBar.Add("Failed to subscribe to notifications", Severity.Error);
                 //    }

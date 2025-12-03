@@ -9,9 +9,12 @@
   <ItemGroup>
     <PackageReference Include="FirebaseAdmin" Version="3.4.0" />
     <PackageReference Include="Hangfire.Core" Version="1.8.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Projects\SchoolsEnterprise\SchoolsEnterprise.Base\SchoolsEnterprise.Base.csproj" />
     <ProjectReference Include="..\..\Base\ConectOne.EntityFrameworkCore.Sql\ConectOne.EntityFrameworkCore.Sql.csproj" />
     <ProjectReference Include="..\MessagingModule.Domain\MessagingModule.Domain.csproj" />
   </ItemGroup>

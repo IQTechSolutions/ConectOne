@@ -37,5 +37,13 @@ namespace MessagingModule.Domain.Interfaces
         /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
         /// indicating the outcome of the enqueue operation.</returns>
         Task<IBaseResult> EnqueueNotificationsAsync(IEnumerable<RecipientDto> recipients, NotificationDto pushNotification);
+
+        /// <summary>
+        /// Adds a new notification subscription asynchronously.
+        /// </summary>
+        /// <param name="token">An object containing the details of the notification subscription to add. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IBaseResult"/>
+        /// indicating the outcome of the subscription addition.</returns>
+        Task<IBaseResult> AddNotificationSubscription(NotificationSubscriptionDto token);
     }
 }

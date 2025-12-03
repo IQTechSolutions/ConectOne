@@ -343,7 +343,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
                 }
                 
                 var userInfos = await ProcessNotificationUserList();
-                var notificationUrl = $"/messages/bytype/{(int)_notificationMessage.MessageType}/{EntityId}";
+                var notificationUrl = $"/messages/bytype/{(int)_notificationMessage.MessageType}/{_notificationMessage.MessageId}";
                 var result = await PushNotificationService.EnqueueNotificationsAsync(userInfos, _notificationMessage.ToNotificationDto(notificationUrl));
                 result.ProcessResponseForDisplay(SnackBar, async () =>
                 {
