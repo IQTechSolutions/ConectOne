@@ -8,6 +8,8 @@ using System.Text;
 using ConectOne.Blazor.Extensions;
 using ConectOne.Domain.Entities;
 using IdentityModule.Application.ViewModels;
+using SchoolsModule.Domain.Interfaces;
+using SchoolsModule.Infrastructure.Implementation;
 
 namespace NelspruitHigh.Blazor.ServerClient.Components.Account
 {
@@ -37,6 +39,8 @@ namespace NelspruitHigh.Blazor.ServerClient.Components.Account
         /// authentication or other intermediate steps are required. If not specified, the default redirect behavior is
         /// applied.</remarks>
         [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+        
+        [Inject] public IParentService  ParentService { get; set; }
 
         /// <summary>
         /// Gets a formatted error message that summarizes the identity errors, if any are present.
@@ -80,7 +84,7 @@ namespace NelspruitHigh.Blazor.ServerClient.Components.Account
             // If the user selected "Parent", check if there's a parent record with the given email.
             if (Input.SelectedOption == "Parent")
             {
-                var parentResponse = await ParentQueryService.ParentByEmailAsync(Input.Email);
+                var parentResponse = await ParentService.ParentByEmailAsync(Input.Email);
                 if (!parentResponse.Succeeded)
                 {
                     var message = $"No parent matching email address '{Input.Email}'";

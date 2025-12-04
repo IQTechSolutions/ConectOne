@@ -190,7 +190,7 @@ namespace MessagingModule.Domain.DataTransferObjects
         /// <summary>
         /// Timestamp for when the notification was created.
         /// </summary>
-        public DateTime? Created { get; init; }
+        public DateTime? Created { get; init; } = DateTime.Now;
 
         /// <summary>
         /// Timestamp for when the user viewed/opened this notification, if any.

@@ -10,12 +10,10 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\EversdalIndex.jpg" />
-    <Content Remove="wwwroot\eversdalLogo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\EversdalIndex.jpg" />
-    <None Include="wwwroot\eversdalLogo.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,7 +12,7 @@
 <EditForm Model="_affiliate" OnValidSubmit="CreateAsync">
     <MudGrid>
         <MudItem md="6">
-            <DefaultTitle Title="Create Advertisement" Caption="Complete information to create new advertisement" />
+            <DefaultTitle Title="Create Affiliate" Caption="Complete information to create new Affiliate" />
         </MudItem>
         <MudItem md="6" Style="float:right">
             <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
@@ -21,7 +21,7 @@
             <DataAnnotationsValidator />
             <MudGrid>
                 <MudItem xs="12" sm="12" md="3" lg="3">
-                    <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@(_affiliate.Title)" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Advertisement)" ParentId="@_affiliate.Id" />
+                    <MudSingleImageCropperUpload AspectRatio="1:1" OnFileAccepted="CoverImageChanged" Caption="@(_affiliate.Title)" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Advertisement)" ParentId="@_affiliate.Id" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="9" lg="9">
                     <MudCard>

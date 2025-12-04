@@ -1,4 +1,5 @@
-﻿using ConectOne.Blazor.Extensions;
+﻿
+using ConectOne.Blazor.Extensions;
 using ConectOne.Blazor.Modals;
 using GroupingModule.Domain.DataTransferObjects;
 using GroupingModule.Domain.Interfaces;

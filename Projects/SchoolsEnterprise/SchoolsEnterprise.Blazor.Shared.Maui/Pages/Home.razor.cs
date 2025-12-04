@@ -109,51 +109,43 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
 
         #region Lifecycle Methods
 
-        /// <summary>
-        /// Executes after the component has rendered and handles the initial data load on the first render.
-        /// </summary>
-        /// <param name="firstRender">Indicates whether this is the first time the component is rendered.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnInitializedAsync()
         {
-            await base.OnAfterRenderAsync(firstRender);
-            if (firstRender)
+            try
             {
-                try
+                var authState = await AuthenticationStateTask;
+                var user = authState.User;
+                var featuredCategoriesResult = await BlogCategoryService.PagedCategoriesAsync(new CategoryPageParameters() { PageSize = 100, Featured = true });
+
+                // If the HTTP request or data fetch succeeded, store the categories.
+                if (featuredCategoriesResult.Succeeded)
+                    _featuredCategories = featuredCategoriesResult.Data;
+
+                if (user.Identity?.IsAuthenticated == true)
                 {
-                    var authState = await AuthenticationStateTask;
-                    var user = authState.User;
-                    var featuredCategoriesResult = await BlogCategoryService.PagedCategoriesAsync(new CategoryPageParameters() { PageSize = 100, Featured = true });
-
-                    // If the HTTP request or data fetch succeeded, store the categories.
-                    if (featuredCategoriesResult.Succeeded)
-                        _featuredCategories = featuredCategoriesResult.Data;
-
-                    if (user.Identity?.IsAuthenticated == true)
+                    var listingParameters = new BusinessListingPageParameters
                     {
-                        var listingParameters = new BusinessListingPageParameters
-                        {
-                            UserId = user.GetUserId(),
-                            Status = ReviewStatus.Approved,
-                            PageSize = 100
-                        };
+                        UserId = user.GetUserId(),
+                        Status = ReviewStatus.Approved,
+                        PageSize = 100
+                    };
 
-                        var listingsResult = await BusinessDirectoryQueryService.PagedListingsAsync(listingParameters);
-                        listingsResult.ProcessResponseForDisplay(SnackBar, () =>
-                        {
-                            _userListings = listingsResult.Data?.ToList() ?? [];
-                            RefreshExpiringListings();
-                        });
-                    }
+                    var listingsResult = await BusinessDirectoryQueryService.PagedListingsAsync(listingParameters);
+                    listingsResult.ProcessResponseForDisplay(SnackBar, () =>
+                    {
+                        _userListings = listingsResult.Data?.ToList() ?? [];
+                        RefreshExpiringListings();
+                    });
+                }
 
-                    StateHasChanged();
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, "An error occurred while fetching featured category count.");
-                    SnackBar.Add(Localizer["ErrorFetchingFeaturedCategories"]);
-                }
+                StateHasChanged();
             }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "An error occurred while fetching featured category count.");
+                SnackBar.Add(Localizer["ErrorFetchingFeaturedCategories"]);
+            }
+            await base.OnInitializedAsync();
         }
 
         #endregion

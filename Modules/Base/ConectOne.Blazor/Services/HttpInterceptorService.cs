@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Net;
+using System.Net.Http.Headers;
+using IdentityModule.Domain.Interfaces;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Toolbelt.Blazor;
 
@@ -19,18 +22,19 @@ namespace ConectOne.Blazor.Services
     {
         private readonly HttpClientInterceptor _interceptor;
         private readonly NavigationManager _navigationManager;
+        private readonly IAccountsProvider _accountProvider;
         private readonly ISnackbar SnackBar;
 
         /// <summary>
         /// Constructor injects all required dependencies: interceptor, navigation manager, 
         /// snackbar, and account provider.
         /// </summary>
-        public HttpInterceptorService(HttpClientInterceptor interceptor, NavigationManager navigationManager, ISnackbar snackBar)
+        public HttpInterceptorService(HttpClientInterceptor interceptor, NavigationManager navigationManager, ISnackbar snackBar, IAccountsProvider accountProvider)
         {
             _interceptor = interceptor;
             _navigationManager = navigationManager;
             SnackBar = snackBar;
-           
+           _accountProvider = accountProvider;
         }
 
         /// <summary>
@@ -52,51 +56,51 @@ namespace ConectOne.Blazor.Services
         /// </summary>
         private async Task HandleResponse(object? sender, HttpClientInterceptorEventArgs e)
         {        
-            //try
-            //{
-            //    if (e.Response.StatusCode == HttpStatusCode.Unauthorized || e.Response.StatusCode == HttpStatusCode.Forbidden)
-            //    {
-            //        SnackBar.Add("You are Logged Out.", Severity.Error);
-            //        await _accountProvider.Logout();
-            //        _navigationManager.NavigateTo("/", true);
-            //        return;
-            //    }
+            try
+            {
+                if (e.Response.StatusCode == HttpStatusCode.Unauthorized || e.Response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    SnackBar.Add("You are Logged Out.", Severity.Error);
+                    await _accountProvider.Logout();
+                    _navigationManager.NavigateTo("/", true);
+                    return;
+                }
 
-            //    // Get the absolute path of the request URI to decide whether to refresh token.
-            //    var absPath = e.Request.RequestUri.AbsolutePath;
+                // Get the absolute path of the request URI to decide whether to refresh token.
+                var absPath = e.Request.RequestUri.AbsolutePath;
 
-            //    // Skip refreshing token if the request is for 'token' or 'account' endpoints.
-            //    if (!absPath.Contains("token") && !absPath.Contains("account"))
-            //    {
-            //        try
-            //        {
-            //            // Attempt to refresh the token (if the provider deems it's needed).
-            //            var token = await _accountProvider.TryRefreshToken();
+                // Skip refreshing token if the request is for 'token' or 'account' endpoints.
+                if (!absPath.Contains("token") && !absPath.Contains("account"))
+                {
+                    try
+                    {
+                        // Attempt to refresh the token (if the provider deems it's needed).
+                        var token = await _accountProvider.TryRefreshToken();
 
-            //            if (!string.IsNullOrEmpty(token))
-            //            {
-            //                // Inform the user that the token has been refreshed.
-            //                SnackBar.Add("Refreshed Token.", Severity.Success);
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            // Inform the user that the token has been refreshed.
+                            SnackBar.Add("Refreshed Token.", Severity.Success);
 
-            //                // Update the Authorization header with the new token.
-            //                e.Request.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            // If token refresh fails or user is unauthenticated, log out and redirect to home.
-            //            Console.WriteLine(ex.Message);
-            //            SnackBar.Add("You are Logged Out.", Severity.Error);
-            //            await _accountProvider.Logout();
-            //            _navigationManager.NavigateTo("/", true);
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //    SnackBar.Add(ex.Message, Severity.Error);
-            //}
+                            // Update the Authorization header with the new token.
+                            e.Request.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // If token refresh fails or user is unauthenticated, log out and redirect to home.
+                        Console.WriteLine(ex.Message);
+                        SnackBar.Add("You are Logged Out.", Severity.Error);
+                        await _accountProvider.Logout();
+                        _navigationManager.NavigateTo("/", true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                SnackBar.Add(ex.Message, Severity.Error);
+            }
         }
     }
 }

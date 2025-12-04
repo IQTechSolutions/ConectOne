@@ -32,8 +32,8 @@ namespace MessagingModule.Infrastructure.Implementation
     /// </list>
     /// </summary>
     public class PushNotificationService(IRepository<DeviceToken, string> deviceTokenRepository, IRepository<Notification, string> notificationRepository,IUserService userRepository,
-        IBackgroundJobClient jobs, IRepository<NotificationSubscription, string> notificationSubscriptionTokenRepo, ILogger<PushNotificationService> logger, 
-        IHubContext<NotificationsHub> _hub) : IPushNotificationService
+        IBackgroundJobClient jobs, IRepository<NotificationSubscription, string> notificationSubscriptionTokenRepo, ILogger<PushNotificationService> logger,
+        IHubContext<NotificationsHub> hubContext) : IPushNotificationService
     {
         private const int MaxBatchSize = 500;
 
@@ -113,10 +113,6 @@ namespace MessagingModule.Infrastructure.Implementation
 
                             if (sentCount == 0) errorList.Add("No Notifications was sent");
                         }
-
-                        await _hub.Clients.Users(notificationList.Select(c => c.Id).ToList()).SendAsync(
-                            ApplicationConstants.SignalR.SendPushNotification, pushNotification.MessageType,
-                            pushNotification.Title, pushNotification.Message, pushNotification.NotificationUrl);
                     }
                 }
 
@@ -338,6 +334,9 @@ namespace MessagingModule.Infrastructure.Implementation
         /// </remarks>
         private List<Message> BuildFirebaseMessages(IEnumerable<DeviceToken> tokens, NotificationDto dto, string navigationUrl)
         {
+            var navigationTarget = string.IsNullOrWhiteSpace(navigationUrl)
+                ? dto.NotificationUrl ?? string.Empty
+                : navigationUrl;
             return tokens.Select(token => new Message
             {
                 Notification = new FirebaseAdmin.Messaging.Notification
@@ -347,10 +346,13 @@ namespace MessagingModule.Infrastructure.Implementation
                         ? dto.ShortDescription.TruncateLongString(55)
                         : dto.Message.HtmlToPlainText().TruncateLongString(55)
                 },
-                Data = new Dictionary<string, string>
-                {
-                    { "NavigationID", navigationUrl }
-                },
+                Data = string.IsNullOrWhiteSpace(navigationTarget)
+                    ? new Dictionary<string, string>()
+                    : new Dictionary<string, string>
+                    {
+                        { "NavigationID", navigationTarget },
+                        { "Url", navigationTarget }
+                    },
                 Token = token.DeviceTokenContent,
                 Android = new AndroidConfig
                 {

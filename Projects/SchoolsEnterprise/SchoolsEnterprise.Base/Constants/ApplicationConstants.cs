@@ -18,6 +18,7 @@
         {
             public const string HubUrl = "/signalRHub";
             public const string SendPushNotification = "SendPushNotification";
+            public const string ReadPushNotification = "ReadPushNotification";
 
 
 

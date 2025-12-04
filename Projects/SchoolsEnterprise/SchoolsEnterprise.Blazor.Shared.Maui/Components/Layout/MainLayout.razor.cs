@@ -19,6 +19,7 @@ using MessagingModule.Blazor.NotificationDelegates;
 using Microsoft.JSInterop;
 using MudBlazor;
 using NeuralTech.Services;
+using Plugin.Firebase.CloudMessaging;
 using ShoppingModule.Blazor.Components;
 
 namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
@@ -167,19 +168,13 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
         /// This is used, for example, if a push notification indicated a user should open a certain page 
         /// upon app (re-)start.
         /// </summary>
-        private async Task NavigateToPageAsync()
+        private async Task NavigateToPageAsync(string url)
         {
-            //if (DeviceInfoService.IsMobilePlatform && PreferenceService.ContainsKey("NavigationID"))
-            //{
-            //    // If no saved route, do nothing
-            //    if (!PreferenceService.ContainsKey("NavigationID")) return;
-
-            //    var id = PreferenceService.Get("NavigationID");
-            //    PreferenceService.Remove("NavigationID");
-
-            //    NavigationManager.NavigateTo(id);
-            //    await InvokeAsync(StateHasChanged);
-            //}
+            if (DeviceInfoService.IsMobilePlatform)
+            {
+                NavigationManager.NavigateTo(url);
+                await InvokeAsync(StateHasChanged);
+            }
         }
 
         /// <summary>
@@ -200,23 +195,6 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
         #endregion
 
         #region SignOut Logic
-
-        /// <summary>
-        /// Removes the device token associated with the specified user ID.
-        /// </summary>
-        /// <remarks>This method checks if the current platform is a mobile platform and if a device token
-        /// is stored in preferences. If both conditions are met, it retrieves the device token and removes it using the
-        /// account provider.</remarks>
-        /// <param name="userId">The unique identifier of the user whose device token is to be removed.</param>
-        /// <returns></returns>
-        private async Task RemoveDeviceTokenAsync(string userId)
-        {
-            //if (DeviceInfoService.IsMobilePlatform && PreferenceService.ContainsKey("DeviceToken"))
-            //{
-            //    var deviceToken = PreferenceService.Get("DeviceToken");
-            //    await TokenService.RemoveDeviceTokenAsync(new DeviceTokenDto(userId, deviceToken));
-            //}
-        }
 
         /// <summary>
         /// Logs the user out of the current session asynchronously.
@@ -251,21 +229,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
         /// <returns></returns>
         private async Task SignOut()
         {
-            try
-            {
-                // Get the currently authenticated user
-                var authState = await AuthenticationStateTask;
-                var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (!string.IsNullOrEmpty(userId))
-                    await RemoveDeviceTokenAsync(userId);
-
-                await PerformLogoutAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Error during sign out");
-            }
+            await PerformLogoutAsync();
         }
 
         #endregion
@@ -317,59 +281,6 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
         }
 
         /// <summary>
-        /// Stops the periodic refresh loop and disposes related resources.
-        /// </summary>
-        private void StopCountRefreshLoop()
-        {
-            if (_countRefreshCts is null)
-                return;
-
-            try
-            {
-                _countRefreshCts.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-            }
-
-            _countRefreshCts.Dispose();
-            _countRefreshCts = null;
-        }
-
-        /// <summary>
-        /// Registered callback for when a push notification is *sent*. 
-        /// We re-fetch the unread count, then mark that the NotificationStateManager received it.
-        /// This ensures the UI updates if needed (like showing a badge).
-        /// </summary>
-        private async void NotificationSentHandler(object r, PushNotificationSent m)
-        {
-            try
-            {
-                await UpdateNotificationCountsAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Error handling notification sent");
-            }
-        }
-
-        /// <summary>
-        /// Registered callback for when a push notification is *received*. 
-        /// We try to auto-navigate to a page if "NavigationID" was stored.
-        /// </summary>
-        private async void NotificationReceivedHandler(object r, PushNotificationReceived m)
-        {
-            try
-            {
-                await NavigateToPageAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Error handling notification received");
-            }
-        }
-
-        /// <summary>
         /// Asynchronously updates the cart item count display to reflect the current number of items in the shopping
         /// cart.
         /// </summary>
@@ -386,12 +297,6 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
 
         #region Overrides
 
-        private void RegisterNotificationEvents()
-        {
-            WeakReferenceMessenger.Default.Register<PushNotificationSent>(this, NotificationSentHandler);
-            WeakReferenceMessenger.Default.Register<PushNotificationReceived>(this, NotificationReceivedHandler);
-        }
-
         /// <summary>
         /// A Blazor lifecycle method (synchronous, hence "void") that runs after the component 
         /// is initialized. 
@@ -406,19 +311,24 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
         {
             try
             {
+                if (DeviceInfo.Current.Platform == DevicePlatform.Android ||
+                    DeviceInfo.Current.Platform == DevicePlatform.iOS)
+                {
+                    CrossFirebaseCloudMessaging.Current.NotificationTapped += async (sender, e) =>
+                    {
+                        if (e.Notification.Data.TryGetValue("NavigationID", out string pageName))
+                        {
+                            NavigationManager.NavigateTo(pageName);
+                        }
+                    };
+                }
+
                 Interceptor.RegisterEvent();
                 NavigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
                 CartStateProvider.OnShoppingCartChanged += async () => await UpdateCartItemCounter();
-
-                if (DeviceInfo.Current.Platform == DevicePlatform.Android || DeviceInfo.Current.Platform == DevicePlatform.iOS)
-                {
-                    RegisterNotificationEvents();
-                    await NavigateToPageAsync();
-                }
-
+                
                 _cartItemCount = CartStateProvider.ShoppingCart?.ItemCount.ToString();
                 
-
                 _drawerOpen = false;
 
                 await OnInitializedAsync();
@@ -474,14 +384,6 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Components.Layout
         {
             CartStateProvider.OnShoppingCartChanged -= async () => await UpdateCartItemCounter();
             Interceptor.DisposeEvent();
-
-            if (DeviceInfoService.IsMobilePlatform)
-            {
-                WeakReferenceMessenger.Default.Unregister<PushNotificationSent>(this);
-                WeakReferenceMessenger.Default.Unregister<PushNotificationReceived>(this);
-            }
-
-            StopCountRefreshLoop();
         }
 
         #endregion

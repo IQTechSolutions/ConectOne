@@ -102,47 +102,47 @@ namespace SchoolsModule.Blazor.StateManagers
             if (SchoolEvent is null)
                 return await Result.FailAsync("No School Event specified");
 
-            //var tempSelectedActivityGroups = new HashSet<ActivityGroupDto>(SchoolEvent.SelectedActivityGroups);
-            //var selectedCategoryIds = categories.Select(c => c.CategoryId).ToHashSet();
-            //var currentCategoryIds = SchoolEvent.SelectedActivityCategories.Select(c => c.CategoryId).ToHashSet();
+            var tempSelectedActivityGroups = new HashSet<ActivityGroupDto>(SchoolEvent.SelectedActivityGroups);
+            var selectedCategoryIds = categories.Select(c => c.CategoryId).ToHashSet();
+            var currentCategoryIds = SchoolEvent.SelectedActivityCategories.Select(c => c.CategoryId).ToHashSet();
 
-            //// Add new activity groups for newly selected categories
-            //foreach (var newCategoryId in selectedCategoryIds.Except(currentCategoryIds))
-            //{
-            //    var result = await FetchActivityGroupsByCategoryId(newCategoryId);
-            //    if (!result.Succeeded)
-            //    {
-            //        SchoolEvent.SelectedActivityGroups = tempSelectedActivityGroups.ToList();
-            //        return await Result.FailAsync(result.Messages);
-            //    }
+            // Add new activity groups for newly selected categories
+            foreach (var newCategoryId in selectedCategoryIds.Except(currentCategoryIds))
+            {
+                var result = await FetchActivityGroupsByCategoryId(newCategoryId);
+                if (!result.Succeeded)
+                {
+                    SchoolEvent.SelectedActivityGroups = tempSelectedActivityGroups.ToList();
+                    return await Result.FailAsync(result.Messages);
+                }
 
-            //    foreach (var group in result.Data)
-            //    {
-            //        SchoolEvent.SelectedActivityGroups.Add(group);
-            //    }
-            //}
+                foreach (var group in result.Data)
+                {
+                    SchoolEvent.SelectedActivityGroups.Add(group);
+                }
+            }
 
-            //// Remove activity groups for deselected categories
-            //foreach (var removedCategoryId in currentCategoryIds.Except(selectedCategoryIds))
-            //{
-            //    var result = await FetchActivityGroupsByCategoryId(removedCategoryId);
-            //    if (!result.Succeeded)
-            //    {
-            //        SchoolEvent.SelectedActivityGroups = tempSelectedActivityGroups.ToList();
-            //        return await Result.FailAsync(result.Messages);
-            //    }
+            // Remove activity groups for deselected categories
+            foreach (var removedCategoryId in currentCategoryIds.Except(selectedCategoryIds))
+            {
+                var result = await FetchActivityGroupsByCategoryId(removedCategoryId);
+                if (!result.Succeeded)
+                {
+                    SchoolEvent.SelectedActivityGroups = tempSelectedActivityGroups.ToList();
+                    return await Result.FailAsync(result.Messages);
+                }
 
-            //    foreach (var group in result.Data)
-            //    {
-            //        var match = SchoolEvent.SelectedActivityGroups.FirstOrDefault(g => g?.ActivityGroupId == group.ActivityGroupId);
-            //        if (match != null)
-            //        {
-            //            SchoolEvent.SelectedActivityGroups.Remove(match);
-            //        }
-            //    }
-            //}
+                foreach (var group in result.Data)
+                {
+                    var match = SchoolEvent.SelectedActivityGroups.FirstOrDefault(g => g?.ActivityGroupId == group.ActivityGroupId);
+                    if (match != null)
+                    {
+                        SchoolEvent.SelectedActivityGroups.Remove(match);
+                    }
+                }
+            }
 
-            //SchoolEvent.SelectedActivityCategories = new HashSet<CategoryDto>(categories);
+            SchoolEvent.SelectedActivityCategories = categories;
             NotifyStateChanged();
 
             return await Result.SuccessAsync();

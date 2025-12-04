@@ -1,4 +1,5 @@
 ﻿using FilingModule.Application;
+using MessagingModule.Application.HubServices;
 using MessagingModule.Application.RestServices;
 using MessagingModule.Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,8 @@ namespace MessagingModule.Application
         public static IServiceCollection AddMessagingModule(this IServiceCollection services, string baseAddress)
         {
             services.AddFilingModule();
+
+            services.AddScoped<NotificationHubService>();
 
             services.AddScoped<IPushNotificationService, PushNotificationRestService>();
             services.AddScoped<IChatGroupService, ChatGroupRestService>();

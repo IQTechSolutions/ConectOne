@@ -2,8 +2,6 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using EversdalPrimary.Blazor.Maui.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Plugin.Firebase.CloudMessaging;
 
 namespace EversdalPrimary.Blazor.Maui
@@ -29,16 +27,6 @@ namespace EversdalPrimary.Blazor.Maui
         private static void HandleIntent(Intent intent)
         {
             FirebaseCloudMessagingImplementation.OnNewIntent(intent);
-
-            if (intent?.Extras is null || MauiProgram.Services is null)
-            {
-                return;
-            }
-
-            var targetUrl = intent.Extras.GetString("Url") ?? intent.Extras.GetString("NavigationID");
-            var navigationService = MauiProgram.Services.GetService<NotificationNavigationService>();
-
-            navigationService?.NavigateFromNotification(targetUrl);
         }
 
         private void CreateNotificationChannelIfNeeded()

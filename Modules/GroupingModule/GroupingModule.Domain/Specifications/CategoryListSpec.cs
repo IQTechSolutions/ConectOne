@@ -29,11 +29,8 @@ namespace GroupingModule.Domain.Specifications
         public CategoryListSpec(string? parentId = null)
         {
             Criteria = category => !category.IsDeleted;
-            
-            if (!string.IsNullOrEmpty(parentId))
-            {
-                Criteria = Criteria.And(f => f.ParentCategoryId == parentId);
-            }
+
+            Criteria = Criteria.And(f => f.ParentCategoryId == parentId);
 
             AddInclude(c => c.Include(category => category.EntityCollection));
             AddInclude(c => c.Include(category => category.Images).ThenInclude(category => category.Image));

@@ -88,21 +88,16 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Notifications
                     if (eventResult.Data.StartDate.Date < DateTime.Now.Date)
                     {
                         SnackBar.AddError("This event has already been completed");
-                    }
-                    else
-                    {
-                        NavigationManager.NavigateTo(url);
+                        return;
                     }
                 }
                 else
                 {
                     SnackBar.AddError("There was an error retrieving the event");
+                    return;
                 }
             }
-            else
-            {
-                NavigationManager.NavigateTo(url+$"/{notificationId}");
-            }
+            NavigationManager.NavigateTo(url);
             await Provider.GetAsync<NotificationDto>($"notifications/{notificationId}/markasread");
         }
 

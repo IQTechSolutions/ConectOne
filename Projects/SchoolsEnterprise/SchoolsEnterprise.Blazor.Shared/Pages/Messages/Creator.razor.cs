@@ -10,12 +10,15 @@ using IdentityModule.Domain.Interfaces;
 using MessagingModule.Application.ViewModels;
 using MessagingModule.Domain.DataTransferObjects;
 using MessagingModule.Domain.Interfaces;
+using MessagingModule.Infrastructure.Hubs;
 using MessagingModule.Infrastructure.Implementation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using MudBlazor;
 using NeuralTech.Base.Enums;
+using SchoolsEnterprise.Base.Constants;
 using SchoolsModule.Domain.Interfaces;
 using SchoolsModule.Domain.Interfaces.ActivityGroups;
 using SchoolsModule.Domain.Interfaces.Learners;
@@ -56,6 +59,14 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
         /// Gets or sets the user service used to manage user-related operations within the component.
         /// </summary>
         [Inject] public IUserService UserService { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the SignalR hub context used to send notifications to connected clients.
+        /// </summary>
+        /// <remarks>Use this property to access methods for broadcasting messages or invoking client
+        /// methods on the associated NotificationsHub. The hub context is typically injected by the framework and
+        /// should not be set manually except for testing or advanced scenarios.</remarks>
+        [Inject] public IHubContext<NotificationsHub> HubContext { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service used to send push notifications.
@@ -343,13 +354,13 @@ namespace SchoolsEnterprise.Blazor.Shared.Pages.Messages
                 }
                 
                 var userInfos = await ProcessNotificationUserList();
-                var notificationUrl = $"/messages/bytype/{(int)_notificationMessage.MessageType}/{_notificationMessage.MessageId}";
+                var notificationUrl = $"/messages/{(int)_notificationMessage.MessageType}/{_notificationMessage.MessageId}";
                 var result = await PushNotificationService.EnqueueNotificationsAsync(userInfos, _notificationMessage.ToNotificationDto(notificationUrl));
                 result.ProcessResponseForDisplay(SnackBar, async () =>
                 {
-                    var notificationBody = string.IsNullOrWhiteSpace(_notificationMessage.Message)
-                        ? (_notificationMessage.ShortDescription ?? _notificationMessage.Subject ?? string.Empty)
-                        : _notificationMessage.Message;
+                    await HubContext.Clients.Users(userInfos.Select(c => c.Id).ToList()).SendAsync(
+                        ApplicationConstants.SignalR.SendPushNotification, ((int)_notificationMessage.MessageType).ToString(),
+                        _notificationMessage.Subject, _notificationMessage.Message, notificationUrl);
 
                     SnackBar.AddSuccess("PushNotification was sent successfully");
                     NavigationManager.NavigateTo($"/messages/bytype/{(int)_notificationMessage.MessageType}/{EntityId}");

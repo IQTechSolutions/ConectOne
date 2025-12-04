@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using IdentityModule.Domain.Extensions;
+﻿using IdentityModule.Domain.Extensions;
+using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace IdentityModule.Infrastructure.Implimentation
 {
@@ -19,7 +20,14 @@ namespace IdentityModule.Infrastructure.Implimentation
         /// <returns>A string containing the unique identifier for the user associated with the connection.</returns>
         public string GetUserId(HubConnectionContext connection)
         {
-            return connection.User.GetUserId();
+            var user = connection.User;
+
+            // Prefer the standard NameIdentifier claim for SignalR user mapping, but fall back to other
+            // common claim types in case the token uses a different name (e.g., "sub" or "uid").
+            return user.GetUserId()
+                   ?? user.FindFirstValue("sub")
+                   ?? user.FindFirstValue("uid")
+                   ?? user.Identity?.Name;
         }
     }
 }

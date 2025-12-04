@@ -7,12 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Projects\SchoolsEnterprise\SchoolsEnterprise.Base\SchoolsEnterprise.Base.csproj" />
     <ProjectReference Include="..\..\FilingModule\FilingModule.Application\FilingModule.Application.csproj" />
     <ProjectReference Include="..\MessagingModule.Domain\MessagingModule.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Maui.Essentials">
+      <HintPath>..\..\..\..\..\nuget\microsoft.maui.essentials\10.0.11\lib\net10.0\Microsoft.Maui.Essentials.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

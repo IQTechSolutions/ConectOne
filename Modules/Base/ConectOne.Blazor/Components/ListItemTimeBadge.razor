@@ -9,12 +9,12 @@
 </style>
 
 <div class="second-card rounded-lg" style="height:100%; vertical-align:middle !important;">
-    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:white !important;" Class="text-secondary">@Date.Day @Date.Month.GetAbbreviatedMonth() <br/> @Date.Year</MudText>
+    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center; color:white !important;" Class="text-secondary">@Date?.Day @(Date?.Month is null ? "" : Date?.Month.GetAbbreviatedMonth()) <br/> @Date?.Year</MudText>
     <MudDivider></MudDivider>
-    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center;" Color="@Color.Error" Class="text-secondary">@Date.ToShortTimeString()</MudText>
+    <MudText Typo="Typo.subtitle1" Style="font-weight: 600; text-align:center;" Color="@Color.Error" Class="text-secondary">@Date?.ToShortTimeString()</MudText>
 </div>
 
 @code
 {
-    [Parameter, EditorRequired] public DateTime Date { get; set; }
+    [Parameter] public DateTime? Date { get; set; }
 }

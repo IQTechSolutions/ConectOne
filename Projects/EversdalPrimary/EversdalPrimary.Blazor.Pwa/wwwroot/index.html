@@ -2,61 +2,62 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eversdal Primary Progresive Web App</title>
-    <base href="/" />
-    <link rel="preload" id="webassembly" />
-    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/app.css" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link href="EversdalPrimary.Blazor.Pwa.styles.css" rel="stylesheet" />
-    <link href="manifest.webmanifest" rel="manifest" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Eversdal Primary Progresive Web App</title>
+	<base href="/" />
+	<link rel="preload" id="webassembly" />
+	<link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/app.css" />
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/app.css" rel="stylesheet" />
+	<link rel="icon" type="image/png" href="favicon.png" />
+	<link href="EversdalPrimary.Blazor.Pwa.styles.css" rel="stylesheet" />
+	<link href="manifest.webmanifest" rel="manifest" />
+	<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+	<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
 
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/loading.css" rel="stylesheet" />
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-regular.css" rel="stylesheet">
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-duotone.css" rel="stylesheet">
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-light.css" rel="stylesheet">
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-brands.css" rel="stylesheet">
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/flag-icons.css" rel="stylesheet" />
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/google-map.css" rel="stylesheet" />
-    <link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/custom.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v6.1.2/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <link href="/_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    <link href="/_content/MudBlazor.ThemeManager/MudBlazorThemeManager.css" rel="stylesheet" />
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/loading.css" rel="stylesheet" />
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-regular.css" rel="stylesheet">
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-duotone.css" rel="stylesheet">
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-light.css" rel="stylesheet">
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/fa-brands.css" rel="stylesheet">
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/flag-icons.css" rel="stylesheet" />
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/google-map.css" rel="stylesheet" />
+	<link href="_content/SchoolsEnterprise.Blazor.Shared.Maui/css/custom.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<link href="https://use.fontawesome.com/releases/v6.1.2/css/all.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<link href="/_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+	<link href="/_content/MudBlazor.ThemeManager/MudBlazorThemeManager.css" rel="stylesheet" />
 
-    <link rel="stylesheet" href="_content/Cropper.Blazor/cropper.min.css" />
+	<link rel="stylesheet" href="_content/Cropper.Blazor/cropper.min.css" />
 
-    <link id="theme" rel="stylesheet" href="_content/Radzen.Blazor/css/material.css">
-    <RadzenComponents />
+	<link id="theme" rel="stylesheet" href="_content/Radzen.Blazor/css/material.css">
+	<RadzenComponents />
 
-    <style>
-        .rz-html-editor-content ul {
-            padding-left: 20px;
-        }
+	<style>
+		.rz-html-editor-content ul {
+			padding-left: 20px;
+		}
 
-        .rz-html-editor-content ol {
-            padding-left: 20px;
-        }
+		.rz-html-editor-content ol {
+			padding-left: 20px;
+		}
 
-        .rz-html-editor-content ul li {
-            padding-left: 5px;
-            list-style-type: initial;
-            display: revert;
-        }
+		.rz-html-editor-content ul li {
+			padding-left: 5px;
+			list-style-type: initial;
+			display: revert;
+		}
 
-        .rz-html-editor-content ol li {
-            padding-left: 5px;
-            list-style-type: auto;
-            display: revert;
-        }
-    </style>
-    
-    <script type="importmap"></script>
+		.rz-html-editor-content ol li {
+			padding-left: 5px;
+			list-style-type: auto;
+			display: revert;
+		}
+	</style>
+
+	<script type="importmap"></script>
 </head>
 
 <body>
@@ -279,15 +280,20 @@
 	</script>
 	<script src="_content/SchoolsEnterprise.Blazor.Shared.Maui/js/google-map.js"></script>
 	<script src="_content/SchoolsEnterprise.Blazor.Shared.Maui/js/shoppingcart.js"></script>
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <!-- Google Map Scripts -->
-    <script src="_content/GoogleMapsComponents/js/objectManager.js"></script>
-    <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
+	<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+	<!-- Google Map Scripts -->
+	<script src="_content/GoogleMapsComponents/js/objectManager.js"></script>
+	<script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
 
+	<script>
+		function AddModalToHistory(url) {
+			window.history.pushState("MauiStore", "Modal", url);
+		}
+	</script>
 
-    <script src="_content/FilingModule.Blazor/js/filing.js"></script>
+	<script src="_content/FilingModule.Blazor/js/filing.js"></script>
 
-    <script>
+	<script>
 		async function initPush() {
 			const reg = await navigator.serviceWorker.register('/service-worker.js');
 			let sub = await reg.pushManager.getSubscription();
@@ -305,7 +311,7 @@
 		}
 	</script>
 
-    <script>
+	<script>
 		function successPayment(payrequestId, checksum) {
 
 			document.getElementById("PAY_REQUEST_ID").value = payrequestId;

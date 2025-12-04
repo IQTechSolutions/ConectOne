@@ -1,14 +1,21 @@
-﻿using System.Security.Claims;
+﻿using Blazored.LocalStorage;
+using ConectOne.Domain.Constants;
 using ConectOne.Domain.Extensions;
 using ConectOne.Domain.Interfaces;
 using IdentityModule.Domain.Extensions;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
-using NeuralTech.Base.Enums;
+using MessagingModule.Application.HubServices;
 using MessagingModule.Domain.RequestFeatures;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.Storage;
+using MudBlazor;
+using NeuralTech.Base.Enums;
 using SchoolsEnterprise.Base.Constants;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
 {
@@ -20,7 +27,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
     /// authentication, navigation, and HTTP services via dependency injection. It manages notification counts for
     /// various message types and updates the UI in response to notification state changes. This class is typically used
     /// as a component or service to display and update notification indicators for the authenticated user.</remarks>
-    public partial class CommsCenter
+    public partial class CommsCenter : IDisposable
     {
         private HubConnection? _hubConnection;
         private string _userId = null!;
@@ -41,9 +48,30 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
         [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
         /// <summary>
+        /// Injected authentication state provider used to react to sign-in/out events.
+        /// </summary>
+        [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+
+        /// <summary>
         /// Injected service for retrieving unread notification counts from the server.
         /// </summary>
         [Inject] public IBaseHttpProvider Provider { get; set; } = null!;
+
+        [Inject] public NotificationHubService NotificationHubService { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the service used to interact with the browser's local storage.
+        /// </summary>
+        /// <remarks>This property is typically provided via dependency injection. Use this service to
+        /// store, retrieve, or remove data from the browser's local storage in a Blazor application.</remarks>
+        [Inject] public ILocalStorageService LocalStorage { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the service used to display snack bar notifications to the user.
+        /// </summary>
+        /// <remarks>This property is typically set by dependency injection. Use the provided ISnackbar
+        /// instance to show transient messages or alerts within the application's user interface.</remarks>
+        [Inject] public ISnackbar SnackBar { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the navigation manager used to programmatically navigate and obtain information about the
@@ -150,63 +178,83 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages
             }
         }
 
-        #region Overrides
-
         /// <summary>
         /// Initializes the component, subscribing to notification changes and 
         /// fetching the authenticated user’s ID. Then populates unread counts.
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            try
-            {
-#if DEBUG
-                var handler = new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
-                    {
-                        // WARNING: This accepts any cert. Use ONLY for local dev.
-                        return true;
-                    }
-                };
-
-                _hubConnection = new HubConnectionBuilder()
-                    .WithUrl($"{Configuration["ApiConfiguration:BaseApiAddress"]}/notificationsHub", options => options.HttpMessageHandlerFactory = _ => handler)
-                    .WithAutomaticReconnect().Build();
-#else
-                _hubConnection = new HubConnectionBuilder()
-                    .WithUrl($"{Configuration["ApiConfiguration:BaseApiAddress"]}/notificationsHub")
-                    .WithAutomaticReconnect().Build();
-#endif
-
-
-                _hubConnection.On<string, string, string, string>(ApplicationConstants.SignalR.SendPushNotification,
-                    (type, title, message, url) =>
-                    {
-                        if (type == ((int)MessageType.Global).ToString())
-                        {
-                            _globalNotificationCount += 1;
-                            StateHasChanged();
-                        }
-                    });
-
-                await _hubConnection.StartAsync();
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-           
-
             var authState = await AuthenticationStateTask;
             _user = authState.User;
-            _userId = authState.User.GetUserId();
+            _userId = _user.GetUserId();
+
+            await NotificationHubService.InitializeAsync();
+            NotificationHubService.OnMessageReceived += OnMessageReceived;
+            NotificationHubService.OnMessageRead += OnMessageRead;
 
             await SetMessageCounts();
+
             await base.OnInitializedAsync();
+
         }
 
-        #endregion
+        /// <summary>
+        /// Handles the logic required when a notification message is marked as read, updating the relevant notification
+        /// counts based on the message type.
+        /// </summary>
+        /// <remarks>This method decrements the overall and type-specific notification counters to reflect
+        /// that a message has been read. It should be called whenever a notification is marked as read to ensure
+        /// notification counts remain accurate.</remarks>
+        /// <param name="type">The type of the notification message, represented as a string value corresponding to a member of the
+        /// MessageType enumeration.</param>
+        /// <param name="notificationId">The unique identifier of the notification message that has been read.</param>
+        private void OnMessageRead(string type, string notificationId)
+        {
+            _notificationCount -= 1;
+            if (type == ((int)MessageType.Global).ToString()) _globalNotificationCount -= 1;
+            if (type == ((int)MessageType.Grade).ToString()) _gradeNotificationCount -= 1;
+            if (type == ((int)MessageType.SchoolClass).ToString()) _classNotificationCount -= 1;
+            if (type == ((int)MessageType.Learner).ToString()) _learnerNotificationCount -= 1;
+            if (type == ((int)MessageType.Parent).ToString()) _parentNotificationCount -= 1;
+            if (type == ((int)MessageType.Teacher).ToString()) _teacherNotificationCount -= 1;
+            if (type == ((int)MessageType.Event).ToString()) _eventNotificationCount -= 1;
+            if (type == ((int)MessageType.ActivityGroup).ToString()) _activityNotificationCount -= 1;
+            if (type == ((int)MessageType.ActivityCategory).ToString()) _activityNotificationCount -= 1;
+
+            InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// Handles an incoming message notification and updates the corresponding notification counters based on the
+        /// message type.
+        /// </summary>
+        /// <remarks>This method increments the total notification count and updates specific counters for
+        /// each message type. It also triggers a UI update to reflect the new notification state.</remarks>
+        /// <param name="type">A string representing the type of the message. Must correspond to a valid value of the MessageType
+        /// enumeration.</param>
+        /// <param name="title">The title of the message to be processed.</param>
+        /// <param name="message">The content or body of the message.</param>
+        /// <param name="url">An optional URL associated with the message. May be null or empty if not applicable.</param>
+        private void OnMessageReceived(string type, string title, string message, string url)
+        {
+            _notificationCount += 1;
+            if (type == ((int)MessageType.Global).ToString()) _globalNotificationCount += 1;
+            if (type == ((int)MessageType.Grade).ToString()) _gradeNotificationCount += 1;
+            if (type == ((int)MessageType.SchoolClass).ToString()) _classNotificationCount += 1;
+            if (type == ((int)MessageType.Learner).ToString()) _learnerNotificationCount += 1;
+            if (type == ((int)MessageType.Parent).ToString()) _parentNotificationCount += 1;
+            if (type == ((int)MessageType.Teacher).ToString()) _teacherNotificationCount += 1;
+            if (type == ((int)MessageType.Event).ToString()) _eventNotificationCount += 1;
+            if (type == ((int)MessageType.ActivityGroup).ToString()) _activityNotificationCount += 1;
+            if (type == ((int)MessageType.ActivityCategory).ToString()) _activityNotificationCount += 1;
+
+            InvokeAsync(StateHasChanged);
+        }
+
+        public void Dispose()
+        {
+            NotificationHubService.OnMessageReceived -= OnMessageReceived;
+            NotificationHubService.OnMessageRead -= OnMessageRead;
+        }
     }
 }

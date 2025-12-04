@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using IdentityModule.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using SchoolsEnterprise.Base.Constants;
 
 namespace MessagingModule.Infrastructure.Hubs
@@ -10,18 +12,63 @@ namespace MessagingModule.Infrastructure.Hubs
     /// be invoked by the web API or other server-side components to broadcast notification payloads
     /// to specific users.
     /// </summary>
-    public class NotificationsHub : Hub
+    [Authorize(AuthenticationSchemes = "Bearer")] public class NotificationsHub : Hub
     {
         /// <summary>
-        /// Sends a push notification to a specific user, which can be displayed
-        /// in real-time (e.g., a toast notification) in the client's UI.
+        /// Initializes a new instance of the NotificationsHub class using the specified SignalR hub connection mapping.
         /// </summary>
-        /// <param name="message">The content of the push notification.</param>
-        /// <param name="receiverUserId">The user who should receive the notification.</param>
-        /// <param name="senderUserId">The user who triggered the notification.</param>
-        public async Task SendPushNotification(List<string> userIds, string type, string title, string message, string url)
+        /// <param name="signalRHubConnectionMapping">The SignalRHubConnectionMapping instance that manages the mapping between user identifiers and SignalR
+        /// connection IDs. Cannot be null.</param>
+        public NotificationsHub(SignalRHubConnectionMapping signalRHubConnectionMapping)
         {
-            await Clients.Users(userIds).SendAsync(ApplicationConstants.SignalR.SendPushNotification, type, title, message, url);
+            SignalRHubConnectionMapping = signalRHubConnectionMapping;
+        }
+
+        /// <summary>
+        /// Gets the mapping of SignalR hub connections associated with the current instance.
+        /// </summary>
+        private SignalRHubConnectionMapping SignalRHubConnectionMapping { get; }
+
+        /// <summary>
+        /// Called when a new connection is established with the hub.
+        /// </summary>
+        /// <remarks>This method adds the connected user's identifier and connection ID to the connection
+        /// mapping. Override this method to perform additional actions when a client connects. Always call the base
+        /// implementation to ensure the connection is properly established.</remarks>
+        /// <returns>A task that represents the asynchronous connect operation.</returns>
+        public override Task OnConnectedAsync()
+        {
+            var userId = Context.UserIdentifier ?? Context.ConnectionId;
+            SignalRHubConnectionMapping.Add(userId, Context.ConnectionId);
+            return base.OnConnectedAsync();
+        }
+
+        /// <summary>
+        /// Handles the event when a client disconnects from the hub.
+        /// </summary>
+        /// <remarks>This method is called by the SignalR framework when a client disconnects, either
+        /// intentionally or due to a network failure. Override this method to perform custom logic when a connection is
+        /// terminated.</remarks>
+        /// <param name="exception">The exception that occurred during the disconnect operation, if any; otherwise, null.</param>
+        /// <returns>A task that represents the asynchronous disconnect operation.</returns>
+        public override Task OnDisconnectedAsync(Exception? exception)
+        {
+            var userId = Context.UserIdentifier ?? Context.ConnectionId;
+            SignalRHubConnectionMapping.Remove(userId, Context.ConnectionId);
+            return base.OnDisconnectedAsync(exception);
+        }
+
+        /// <summary>
+        /// Marks a push notification as read for a specified user and notification type.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user for whom the notification is being marked as read. Cannot be null or
+        /// empty.</param>
+        /// <param name="type">The type or category of the push notification to be marked as read. Cannot be null or empty.</param>
+        /// <param name="notificationId">The unique identifier of the notification to mark as read. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task ReadPushNotification(string userId, string type, string notificationId)
+        {
+            await Clients.Users(userId).SendAsync(ApplicationConstants.SignalR.ReadPushNotification, type, notificationId);
         }
     }
 }

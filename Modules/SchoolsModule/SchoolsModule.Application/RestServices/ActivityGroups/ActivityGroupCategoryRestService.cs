@@ -117,7 +117,7 @@ namespace SchoolsModule.Application.RestServices.ActivityGroups
         /// about the pagination.</returns>
         public async Task<PaginatedResult<CategoryDto>> PagedCategoriesAsync(CategoryPageParameters categoryPageParameters, CancellationToken cancellationToken = default)
         {
-            var result = await provider.GetPagedAsync<CategoryDto, CategoryPageParameters>("activities/categories/paged", categoryPageParameters);
+            var result = await provider.GetPagedAsync<CategoryDto, CategoryPageParameters>("activities/categories", categoryPageParameters);
             return result;
         }
 

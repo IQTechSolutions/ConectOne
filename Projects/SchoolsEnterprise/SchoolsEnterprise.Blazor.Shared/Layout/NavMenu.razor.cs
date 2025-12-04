@@ -166,20 +166,33 @@ namespace SchoolsEnterprise.Blazor.Shared.Layout
             _canViewBlogEntries = (await AuthorizationService.AuthorizeAsync(authState.User, BloggingModule.Domain.Constants.Permissions.BlogPermissions.View)).Succeeded;
             _canViewBlogEntryCategories = (await AuthorizationService.AuthorizeAsync(authState.User, BloggingModule.Domain.Constants.Permissions.BlogCategoryPermissions.View)).Succeeded;
             _canCreateBlogEntry = (await AuthorizationService.AuthorizeAsync(authState.User, BloggingModule.Domain.Constants.Permissions.BlogPermissions.Create)).Succeeded;
-            _canViewProductCatgories = (await AuthorizationService.AuthorizeAsync(authState.User, ProductsModule.Domain.Constants.Permissions.ProductCategories.View)).Succeeded;
-            _canViewProducts = (await AuthorizationService.AuthorizeAsync(authState.User, ProductsModule.Domain.Constants.Permissions.Products.View)).Succeeded;
-            _canViewServices = (await AuthorizationService.AuthorizeAsync(authState.User, ProductsModule.Domain.Constants.Permissions.Services.View)).Succeeded;
-            _canViewAdvertisements = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.AdvertisementPermissions.View)).Succeeded;
-            _canViewAdvertisementReviews = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.AdvertisementReviewPermissions.View)).Succeeded;
-            _canViewAdvertisementTiers = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.AdvertisementTierPermissions.View)).Succeeded;
-            _canViewBusinessListings = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessListingPermissions.View)).Succeeded;
-            _canViewBusinessListingReviews = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessReviewPermissions.View)).Succeeded;
-            _canViewBusinessListingTiers = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessReviewPermissions.View)).Succeeded;
-            _canViewBusinessListingCategories = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessCategoryPermissions.View)).Succeeded;
+
             _canViewUserRples = (await AuthorizationService.AuthorizeAsync(authState.User, IdentityModule.Domain.Constants.Permissions.Roles.View)).Succeeded;
             _canViewUsers = (await AuthorizationService.AuthorizeAsync(authState.User, IdentityModule.Domain.Constants.Permissions.Users.View)).Succeeded;
             _canViewAffiliates = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.AffiliatePermissions.View)).Succeeded;
 
+            _canViewProductCatgories = (await AuthorizationService.AuthorizeAsync(authState.User, ProductsModule.Domain.Constants.Permissions.ProductCategories.View)).Succeeded
+                                       && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseEcommerceModule");
+            _canViewProducts = (await AuthorizationService.AuthorizeAsync(authState.User, ProductsModule.Domain.Constants.Permissions.Products.View)).Succeeded
+                               && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseEcommerceModule");
+            _canViewServices = (await AuthorizationService.AuthorizeAsync(authState.User, ProductsModule.Domain.Constants.Permissions.Services.View)).Succeeded
+                               && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseEcommerceModule");
+
+            _canViewAdvertisements = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.AdvertisementPermissions.View)).Succeeded
+                                     && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("SellAdvertisements");
+            _canViewAdvertisementReviews = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.AdvertisementReviewPermissions.View)).Succeeded
+                                           && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("SellAdvertisements");
+            _canViewAdvertisementTiers = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.AdvertisementTierPermissions.View)).Succeeded
+                                         && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("SellAdvertisements");
+            _canViewBusinessListings = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessListingPermissions.View)).Succeeded
+                                       && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("SellAdvertisements");
+
+            _canViewBusinessListingReviews = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessReviewPermissions.View)).Succeeded
+                                             && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseEcommerceModule");
+            _canViewBusinessListingTiers = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessReviewPermissions.View)).Succeeded
+                                           && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseEcommerceModule");
+            _canViewBusinessListingCategories = (await AuthorizationService.AuthorizeAsync(authState.User, BusinessModule.Domain.Constants.Permissions.BusinessCategoryPermissions.View)).Succeeded
+                                                && Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseEcommerceModule");
         }
 
         #endregion

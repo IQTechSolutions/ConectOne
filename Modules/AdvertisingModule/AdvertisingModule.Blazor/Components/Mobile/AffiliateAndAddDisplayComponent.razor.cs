@@ -1,5 +1,6 @@
 ﻿using AdvertisingModule.Domain.DataTransferObjects;
 using AdvertisingModule.Domain.Interfaces;
+using FilingModule.Domain.DataTransferObjects;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using MudBlazor;
@@ -94,7 +95,7 @@ namespace AdvertisingModule.Blazor.Components.Mobile
         /// <summary>
         /// Represents a collection of affiliate slide groups, organized by group name.
         /// </summary>
-        public Dictionary<string, List<AffiliateDto>> _affiliateSlideGroups = new Dictionary<string, List<AffiliateDto>>();
+        public Dictionary<string, List<CarouselItemViewModel>> _affiliateSlideGroups = new Dictionary<string, List<CarouselItemViewModel>>();
 
         /// <summary>
         /// Represents a mapping of group identifiers to their associated advertisement slide collections.
@@ -102,7 +103,7 @@ namespace AdvertisingModule.Blazor.Components.Mobile
         /// <remarks>Each key in the dictionary corresponds to a group identifier, and the associated
         /// value is a list of advertisements belonging to that group. This field is intended for internal use and
         /// should not be accessed directly from outside the containing class.</remarks>
-        public Dictionary<string, List<AdvertisementDto>> _adverTisementSlideGroups = new Dictionary<string, List<AdvertisementDto>>();
+        public Dictionary<string, List<CarouselItemViewModel>> _adverTisementSlideGroups = new Dictionary<string, List<CarouselItemViewModel>>();
 
         /// <summary>
         /// Asynchronously initializes the component and loads required data when the component is first rendered.
@@ -152,27 +153,60 @@ namespace AdvertisingModule.Blazor.Components.Mobile
             _affiliateSlideGroups.Clear();
             _adverTisementSlideGroups.Clear();
 
-            var slideObjectCount = browserViewportEventArgs.Breakpoint == Breakpoint.Xs || browserViewportEventArgs.Breakpoint == Breakpoint.Sm || browserViewportEventArgs.Breakpoint == Breakpoint.Md ? 3 : 4;
-            _columnSize = browserViewportEventArgs.Breakpoint == Breakpoint.Xs || browserViewportEventArgs.Breakpoint == Breakpoint.Sm || browserViewportEventArgs.Breakpoint == Breakpoint.Md ? 4 : 3;
+            var ammountOfAffiliateSlides = SlideQty;
+            var ammountOfAddSlides = SlideQty;
 
-            for (int i = 0; i < SlideQty; i++)
+            _columnSize = browserViewportEventArgs.Breakpoint == Breakpoint.Xs 
+                          || browserViewportEventArgs.Breakpoint == Breakpoint.Sm 
+                          || browserViewportEventArgs.Breakpoint == Breakpoint.Md ? 4 : 3;
+            var slideColumnCount = _columnSize == 4 ? 3 : 4;
+            var affiliateSlideObjectCount = _columnSize * AffiliateRowsPerSlide;
+            var addSlideObjectCount = _columnSize * AddRowsPerSlide;
+
+            var wishfulaffiliateCount = affiliateSlideObjectCount * SlideQty;
+            var wishfullAddCount = addSlideObjectCount * SlideQty;
+
+
+            if (_affiliates.Count() < wishfulaffiliateCount)
             {
-                if (_affiliates.Count() - _selectedAffiliates.Count() >= AffiliateRowsPerSlide * slideObjectCount)
+                double decammountOfAffiliateSlides = Convert.ToDouble(_affiliates.Count) / Convert.ToDouble(affiliateSlideObjectCount);
+                if (decammountOfAffiliateSlides > 0 && decammountOfAffiliateSlides < affiliateSlideObjectCount)
+                    ammountOfAffiliateSlides = 1;
+                else
+                    ammountOfAffiliateSlides = (int)decammountOfAffiliateSlides;
+            }
+                
+
+            for (int i = 0; i < ammountOfAffiliateSlides; i++)
+            {
+                var selection = _affiliates.Skip(i * (affiliateSlideObjectCount)).Take(affiliateSlideObjectCount).ToList();
+                _affiliateSlideGroups.Add($"Affilaite Slide {i + 1}", selection.Select(c => new CarouselItemViewModel(c.Title, c.Description, c.Url, c.Images.ToList())).ToList());
+                _selectedAffiliates.AddRange(selection);
+            }
+
+            foreach (var item in _selectedAffiliates)
+            {
+                _affiliates.Remove(_affiliates.FirstOrDefault(x => x.Id == item.Id));
+            }
+
+            var combinedList = _advertisements.Select(c => new CarouselItemViewModel(c.Title, c.Description, c.Url, c.Images.ToList())).ToList();
+            if (_advertisements.Count() < wishfullAddCount)
+            {
+                combinedList.AddRange(_affiliates.Select(c => new CarouselItemViewModel(c.Title, c.Description, c.Url, c.Images.ToList())));
+                if (combinedList.Count() < wishfullAddCount)
                 {
-                    var selection = _affiliates.Skip(i * (slideObjectCount)).Take(slideObjectCount * AffiliateRowsPerSlide).ToList();
-                    _affiliateSlideGroups.Add($"Affilaite Slide {i + 1}", selection);
-                    _selectedAffiliates.AddRange(selection);
+                    double decammountOfAddSlides = Convert.ToDouble(combinedList.Count()) / Convert.ToDouble(addSlideObjectCount);
+                    if (decammountOfAddSlides > 0 && decammountOfAddSlides < addSlideObjectCount)
+                        ammountOfAddSlides = 1;
+                    else
+                        ammountOfAddSlides = (int)decammountOfAddSlides;
                 }
             }
 
-            for (int i = 0; i < SlideQty; i++)
+            for (int i = 0; i < ammountOfAddSlides; i++)
             {
-                if (_advertisements.Count() - _selectedAdvertisements.Count() >= AddRowsPerSlide * slideObjectCount)
-                {
-                    var selection = _advertisements.Skip(i * (slideObjectCount)).Take(slideObjectCount * AddRowsPerSlide).ToList();
-                    _adverTisementSlideGroups.Add($"Advertisement Slide {i + 1}", selection);
-                    _selectedAdvertisements.AddRange(selection);
-                }
+                var selection = combinedList.Skip(i * (addSlideObjectCount)).Take(addSlideObjectCount).ToList();
+                _affiliateSlideGroups.Add($"Affilaite Slide {i + 1}", selection.Select(c => new CarouselItemViewModel(c.Title, c.Description, c.Url, c.Images.ToList())).ToList());
             }
 
             await InvokeAsync(StateHasChanged);
@@ -194,5 +228,23 @@ namespace AdvertisingModule.Blazor.Components.Mobile
         /// Gets the unique identifier for this instance.
         /// </summary>
         public Guid Id { get; } = Guid.NewGuid();
+    }
+
+    public class CarouselItemViewModel
+    {
+        public CarouselItemViewModel(){}
+
+        public CarouselItemViewModel(string title, string description, string url, List<ImageDto> images) 
+        {
+            Title = title;
+            Description = description;
+            Url = url;
+            Images = images;
+        }
+        public string Title { get; init; } = null!;
+        public string? Description { get; init; }
+        public string? Url { get; init; }
+
+        public ICollection<ImageDto>? Images { get; init; } = [];
     }
 }

@@ -17,7 +17,8 @@ namespace SchoolsModule.Infrastructure.Controllers
     [Route("api/activitygroups"), ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class ActivityGroupController(IActivityGroupQueryService activityGroupQueryService, 
-        IActivityGroupCommandService activityGroupCommandService, IActivityGroupNotificationService activityGroupNotificationService, IActivityGroupExportService activityGroupExportService) : ControllerBase
+        IActivityGroupCommandService activityGroupCommandService, IActivityGroupNotificationService activityGroupNotificationService, 
+        IActivityGroupExportService activityGroupExportService) : ControllerBase
     {
         /// <summary>
         /// Returns all activity groups matching the specified filtering or paging criteria.

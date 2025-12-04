@@ -79,7 +79,7 @@ namespace SchoolsModule.Blazor.Pages.Events
         /// <summary>
         /// Reference to the activity groups table component.
         /// </summary>
-        private ActivityGroupsTable _activityGroupsTable = null!;
+        private ActivityGroupTableV2 _activityGroupsTable = null!;
 
         /// <summary>
         /// The name of the category.
@@ -357,7 +357,9 @@ namespace SchoolsModule.Blazor.Pages.Events
         {
             EventStateManager.SchoolEvent!.SelectedActivityCategories = categories;
             _activityGroupTableArgs.CategoryIds = string.Join(",", categories.Select(c => c.CategoryId));
-            await _activityGroupsTable.ReloadServerData();
+            
+            if(_activityGroupsTable is not null)
+                await _activityGroupsTable.Reload();
         }
 
         /// <summary>

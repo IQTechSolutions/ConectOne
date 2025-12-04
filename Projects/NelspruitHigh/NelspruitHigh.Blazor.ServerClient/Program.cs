@@ -36,14 +36,14 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 
 var baseAddress = $"{builder.Configuration["ApiConfiguration:BaseApiAddress"]}/api/";
 
-builder.Services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseAddress); });
+builder.Services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>(( c) => { c.BaseAddress = new Uri(baseAddress); });
 
-builder.Services.AddVendorServices().AddSchoolServices().ConfigureHangfire(builder.Configuration).ConfigureLocalization().ConfigureAuthentication().ConfigureAppEmailServices(builder.Configuration);
+builder.Services.AddVendorServices().AddSchoolServices().ConfigureHangfire(builder.Configuration).ConfigureLocalization().ConfigureAuthentication(builder.Configuration).ConfigureAppEmailServices(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", builder =>
-        builder.AllowAnyOrigin()
+    options.AddPolicy("CorsPolicy", builder2 =>
+        builder2.AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders("X-Pagination"));
@@ -83,7 +83,7 @@ app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies(ComponentAssemblyHelper.AdditionalAssemblies); ;
+    .AddAdditionalAssemblies(ComponentAssemblyHelper.AdditionalAssemblies); 
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();

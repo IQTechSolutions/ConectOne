@@ -180,7 +180,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Extensions
         /// <param name="services">The service collection to which authentication, authorization, and identity services will be added. Cannot
         /// be null.</param>
         /// <returns>The same service collection instance with authentication, authorization, and identity services configured.</returns>
-        public static IServiceCollection ConfigureAuthentication(this IServiceCollection services)
+        public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCascadingAuthenticationState();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, PermissionClaimsPrincipalFactory>();
@@ -199,9 +199,12 @@ namespace SchoolsEnterprise.Blazor.Shared.Extensions
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,
+                    ValidIssuer = configuration["JWTSettings:validIssuer"],
+                    ValidAudience = configuration["JWTSettings:validAudience"],
+                    NameClaimType = ClaimTypes.NameIdentifier,
                     RoleClaimType = ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("139796117134-f89i9blu0qwerqweqredfasdrt1234rasdfasdfasdfasdrqwerqwe"))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:securityKey"]))
                 };
                 options.Events = new JwtBearerEvents
                 {

@@ -2,6 +2,7 @@
 @page "/messages/entity"
 @page "/messages/bytype/{MessageType:int}"
 @using ConectOne.Blazor.Components
+@using MessagingModule.Domain.DataTransferObjects
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
@@ -33,7 +34,14 @@ else
                         <MudCardContent Class="py-2" Style=" width: 100%">
                             <MudGrid>
                                 <MudItem xs="4">
-                                    <ListItemTimeBadge Date="@item.CreatedTime!.Value"/>
+                                    @if (item.CreatedTime.HasValue)
+                                    {
+                                        <ListItemTimeBadge Date="@item.CreatedTime.Value"/>
+                                    }
+                                    else
+                                    {
+                                        <MudText Typo="Typo.caption" Color="@Color.Dark" Class="text-secondary">No date</MudText>
+                                    }
                                 </MudItem>
                                 <MudItem xs="8">
                                     <MudGrid>
@@ -83,4 +91,12 @@ else
         }
 
     </MudGrid>
+}
+
+@code
+{
+    private static DateTime? GetNotificationDate(MessageDto notification)
+    {
+        return notification?.CreatedTime ?? null;
+    }
 }

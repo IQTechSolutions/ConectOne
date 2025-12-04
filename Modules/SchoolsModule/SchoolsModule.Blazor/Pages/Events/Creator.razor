@@ -109,7 +109,7 @@
                     if (!_working && EventStateManager.SchoolEvent!.SelectedActivityCategories.Any())
                     {
                         <MudTabPanel Text="Event Teams">
-                            <ActivityGroupTableV2 ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" 
+                            <ActivityGroupTableV2 @ref="_activityGroupsTable" ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" 
                                                   LearnerSelectionSelectionChanged="OnActivityGroupTeamMemberSelectionChanged" 
                                                   CategoryIds="@(string.Join(",",  EventStateManager.SchoolEvent!.SelectedActivityCategories.Select(c => c.CategoryId)))" />
                         </MudTabPanel>
@@ -118,7 +118,7 @@
                 else
                 {
                     <MudTabPanel Text="Event Teams">
-                        <ActivityGroupTableV2 ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" LearnerSelectionSelectionChanged="OnActivityGroupTeamMemberSelectionChanged"/>
+                        <ActivityGroupTableV2 @ref="_activityGroupsTable" ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" LearnerSelectionSelectionChanged="OnActivityGroupTeamMemberSelectionChanged" />
                     </MudTabPanel>
                 }
                 

@@ -23,7 +23,6 @@ using MudBlazor.Services;
 using NeuralTech.Services;
 using ProductsModule.Application;
 using Radzen;
-using SchoolsEnterprise.Blazor.Shared.Maui.Handler;
 using SchoolsEnterprise.Blazor.Shared.Maui.Services;
 using SchoolsModule.Application;
 using SchoolsModule.Application.Extensions;
@@ -140,14 +139,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Extensions
             services.AddScoped<IDeviceInfoService, DeviceInfoService>();
             services.AddScoped<IClientPreferenceManager, ClientPreferenceManager>();
 
-            #if DEBUG
-                var handler = new HttpsClientHandlerService();
-                services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).ConfigurePrimaryHttpMessageHandler(() => handler.GetPlatformMessageHandler()).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-                services.AddHttpClient<IAccountsProvider, MauiAccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).ConfigurePrimaryHttpMessageHandler(() => handler.GetPlatformMessageHandler()).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-            #else
-                services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-                services.AddHttpClient<IAccountsProvider, AccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
-            #endif
+            
 
                 services.AddFilingModule().AddBloggingServices(baseApiAddress).AddMessagingModule(baseApiAddress).AddSchoolsModule(baseApiAddress).AddAdvertisingServices(baseApiAddress)
                     .AddShoppingModule(baseApiAddress).AddBusinessModuleServices(baseApiAddress).AddCalanderModule(baseApiAddress).AddProductsModule(baseApiAddress).AddIdentityModule(baseApiAddress);

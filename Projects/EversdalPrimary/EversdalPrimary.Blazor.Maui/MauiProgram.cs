@@ -9,6 +9,17 @@ using System.Reflection;
 using CommunityToolkit.Maui;
 using Plugin.Firebase.CloudMessaging;
 using Microsoft.Maui.LifecycleEvents;
+using Microsoft.AspNetCore.SignalR;
+
+using static ProductsModule.Domain.Constants.Permissions;
+using IdentityModule.Domain.Interfaces;
+using EversdalPrimary.Blazor.Maui.Handler;
+using ConectOne.Domain.Interfaces;
+using IdentityModule.Blazor.StateManagers;
+using IdentityModule.Blazor.Implimentation;
+
+using ConectOne.Domain.Providers;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 
 #if ANDROID
@@ -64,6 +75,15 @@ namespace EversdalPrimary.Blazor.Maui
                 .AddSchoolMauiServices(baseAddress)
                 .ConfigureMauiLocalization()
                 .ConfigureMauiAuthentication();
+
+#if DEBUG
+            var handler = new HttpsClientHandlerService();
+            builder.Services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseAddress); c.EnableIntercept(sp); }).ConfigurePrimaryHttpMessageHandler(() => handler.GetPlatformMessageHandler()).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
+            builder.Services.AddHttpClient<IAccountsProvider, MauiAccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseAddress); c.EnableIntercept(sp); }).ConfigurePrimaryHttpMessageHandler(() => handler.GetPlatformMessageHandler()).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
+#else
+                services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
+                services.AddHttpClient<IAccountsProvider, AccountsClient>((sp, c) => { c.BaseAddress = new Uri(baseApiAddress); c.EnableIntercept(sp); }).AddHttpMessageHandler<MauiAuthenticationHeaderHandler>();
+#endif
 
             builder.Services.AddSingleton<LocalizationService>();
             builder.Services.AddSingleton<NotificationNavigationService>();

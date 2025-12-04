@@ -148,7 +148,7 @@
         </MudNavGroup>
     }
 
-    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseBusinessListingModule") == true)
+    @if (Configuration.GetSection("ApplicationConfiguration").GetValue<bool>("UseBusinessListingModule") || _canViewAffiliates)
     {
         @if (CanViewAdvertisingMenu || CanViewBusinessListingMenu || _canViewAffiliates)
         {

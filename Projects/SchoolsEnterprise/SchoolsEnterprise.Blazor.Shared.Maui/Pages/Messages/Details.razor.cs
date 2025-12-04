@@ -1,10 +1,16 @@
 ﻿using ConectOne.Blazor.Extensions;
 using ConectOne.Blazor.Modals;
+using IdentityModule.Domain.Extensions;
+using MessagingModule.Application.HubServices;
 using MessagingModule.Domain.DataTransferObjects;
 using MessagingModule.Domain.Interfaces;
+using MessagingModule.Infrastructure.Hubs;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.JSInterop;
 using MudBlazor;
+using SchoolsEnterprise.Base.Constants;
 
 namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Messages
 {
@@ -14,6 +20,11 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Messages
     public partial class Details
     {
         #region Injected Services
+
+        /// <summary>
+        /// The current authentication state, used to determine the logged-in user's identity.
+        /// </summary>
+        [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service used to display dialogs to the user.
@@ -46,6 +57,11 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Messages
         [Inject] public IMessageService MessageService { get; set; } = null!;
 
         /// <summary>
+        /// Gets or sets the service used to send notifications to connected clients via SignalR hubs.
+        /// </summary>
+        [Inject] public NotificationHubService HubContext { get; set; } = null!;
+
+        /// <summary>
         /// Gets or sets the JavaScript runtime instance used to invoke JavaScript functions from .NET code.
         /// </summary>
         /// <remarks>This property is typically set by the Blazor framework through dependency injection.
@@ -64,12 +80,12 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Messages
         /// <summary>
         /// Gets or sets the message ID to be displayed.
         /// </summary>
-        [Parameter] public string MessageId { get; set; } = null!;
+        [Parameter] public string MessageType { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the optional notification ID associated with the message.
         /// </summary>
-        [Parameter] public string? NotificationId { get; set; }
+        [Parameter] public string? MessageId { get; set; }
 
         #endregion
 
@@ -118,42 +134,42 @@ namespace SchoolsEnterprise.Blazor.Shared.Maui.Pages.Messages
 
         #region Lifecycle Methods
 
-        /// <summary>
-        /// Method invoked after the component has rendered.
-        /// </summary>
-        /// <param name="firstRender">Indicates whether this is the first time the component is rendered.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnInitializedAsync()
         {
-            await base.OnAfterRenderAsync(firstRender);
-            if (firstRender)
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+
+            var messageResult = await MessageService.GetMessageAsync(MessageId);
+            if (messageResult.Succeeded)
+                _notificationDto = messageResult.Data;
+
+            await HubContext.InitializeAsync();
+
+            await HubContext.NotificationRead(user.GetUserId(), MessageType, MessageId);
+
+            _loaded = true;
+            StateHasChanged();
+
+            if (_notificationDto == null)
             {
-                var messageResult = await MessageService.GetMessageAsync(MessageId);
-                if(messageResult.Succeeded) 
-                    _notificationDto = messageResult.Data;
-                _loaded = true;
-                StateHasChanged();
-
-                if (_notificationDto == null)
+                var parameters = new DialogParameters<ConformtaionModal>
                 {
-                    var parameters = new DialogParameters<ConformtaionModal>
-                    {
-                        { x => x.ContentText, "This message was removed from the database by Admin, would you like to remove this notification?" },
-                        { x => x.ButtonText, "Yes" }
-                    };
+                    { x => x.ContentText, "This message was removed from the database by Admin, would you like to remove this notification?" },
+                    { x => x.ButtonText, "Yes" }
+                };
 
-                    var dialog = await DialogService.ShowAsync<ConformtaionModal>("Confirm", parameters);
-                    var result = await dialog.Result;
+                var dialog = await DialogService.ShowAsync<ConformtaionModal>("Confirm", parameters);
+                var result = await dialog.Result;
 
-                    if (!result!.Canceled)
-                    {
-                        var removalResult = await NotificationService.RemoveNotificationAsync(NotificationId);
-                        if (!removalResult.Succeeded) SnackBar.AddErrors(removalResult.Messages);
-                        SnackBar.Add("Notification was removed successfully", Severity.Success);
-                    }
-                    await JsRuntime.InvokeVoidAsync("history.back");
+                if (!result!.Canceled)
+                {
+                    var removalResult = await NotificationService.RemoveNotificationAsync(MessageId);
+                    if (!removalResult.Succeeded) SnackBar.AddErrors(removalResult.Messages);
+                    SnackBar.Add("Notification was removed successfully", Severity.Success);
                 }
+                await JsRuntime.InvokeVoidAsync("history.back");
             }
+            await base.OnInitializedAsync();
         }
 
         #endregion

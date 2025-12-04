@@ -46,11 +46,14 @@ builder.Services.AddSignalR(o =>
 });
 builder.Services.AddSignalRCore();
 
+
 var baseAddress = $"{builder.Configuration["ApiConfiguration:BaseApiAddress"]}/api/";
 
 builder.Services.AddHttpClient<IBaseHttpProvider, BaseHttpProvider>((sp, c) => { c.BaseAddress = new Uri(baseAddress); });
 
-builder.Services.AddVendorServices().AddSchoolServices().ConfigureHangfire(builder.Configuration).ConfigureLocalization().ConfigureAuthentication().ConfigureAppEmailServices(builder.Configuration);
+builder.Services.AddVendorServices().AddSchoolServices().ConfigureHangfire(builder.Configuration).ConfigureLocalization().ConfigureAuthentication(builder.Configuration).ConfigureAppEmailServices(builder.Configuration);
+
+builder.Services.AddAuthorization();
 
 var json = @"
 {
@@ -111,6 +114,8 @@ builder.Services.AddCors(options =>
             .WithExposedHeaders("X-Pagination"));
 });
 
+builder.Services.AddSingleton<SignalRHubConnectionMapping>();
+
 var app = builder.Build();
 
 using var serviceScope = app.Services.CreateScope();
@@ -145,6 +150,9 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapHub<NotificationsHub>("/notificationsHub");
 app.MapControllers();
