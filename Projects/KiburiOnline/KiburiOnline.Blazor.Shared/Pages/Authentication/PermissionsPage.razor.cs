@@ -5,11 +5,11 @@ using IdentityModule.Application.ViewModels;
 using IdentityModule.Domain.Constants;
 using IdentityModule.Domain.Extensions;
 using IdentityModule.Domain.RequestFeatures;
+using KiburiOnline.Blazor.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
-using SchoolsEnterprise.Base.Extensions;
 
 namespace KiburiOnline.Blazor.Shared.Pages.Authentication
 {

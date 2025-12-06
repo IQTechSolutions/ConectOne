@@ -5,7 +5,7 @@ using IdentityModule.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Permissions = FilingModule.Domain.Constants.Permissions;
 
-namespace SchoolsEnterprise.Base.Extensions
+namespace KiburiOnline.Blazor.Shared.Extensions
 {
     /// <summary>
     /// Provides extension methods for managing claims in a <see cref="ClaimsPrincipal"/>.
@@ -63,14 +63,11 @@ namespace SchoolsEnterprise.Base.Extensions
         public static List<Type> GetAllPermissionTypesAsync()
         {
             List<Type> modules = new List<Type>();
-            modules.AddRange(typeof(Permissions).GetNestedTypes());
-            modules.AddRange(typeof(SchoolsModule.Domain.Constants.Permissions).GetNestedTypes());
+            modules.AddRange(typeof(IdentityModule.Domain.Constants.Permissions).GetNestedTypes());
+            modules.AddRange(typeof(AccomodationModule.Domain.Constants.Permissions).GetNestedTypes());
             modules.AddRange(typeof(ProductsModule.Domain.Constants.Permissions).GetNestedTypes());
             modules.AddRange(typeof(CalendarModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(MessagingModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(BusinessModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(BloggingModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(AdvertisingModule.Domain.Constants.Permissions).GetNestedTypes());
+            modules.AddRange(typeof(FilingModule.Domain.Constants.Permissions).GetNestedTypes());
             return modules;
         }
 
@@ -81,14 +78,12 @@ namespace SchoolsEnterprise.Base.Extensions
         public static List<Type> GetAdmininstratorPermissionsTypesAsync()
         {
             List<Type> modules = new List<Type>();
-            modules.AddRange(typeof(Permissions).GetNestedTypes());
-            modules.AddRange(typeof(SchoolsModule.Domain.Constants.Permissions).GetNestedTypes());
+            modules.AddRange(typeof(IdentityModule.Domain.Constants.Permissions).GetNestedTypes());
+            modules.AddRange(typeof(AccomodationModule.Domain.Constants.Permissions).GetNestedTypes());
             modules.AddRange(typeof(ProductsModule.Domain.Constants.Permissions).GetNestedTypes());
             modules.AddRange(typeof(CalendarModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(MessagingModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(BusinessModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(BloggingModule.Domain.Constants.Permissions).GetNestedTypes());
-            modules.AddRange(typeof(AdvertisingModule.Domain.Constants.Permissions).GetNestedTypes());
+            modules.AddRange(typeof(CalendarModule.Domain.Constants.Permissions).GetNestedTypes());
+            modules.AddRange(typeof(FilingModule.Domain.Constants.Permissions).GetNestedTypes());
             return modules;
         }
     }

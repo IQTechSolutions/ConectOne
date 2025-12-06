@@ -30,7 +30,6 @@
     <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Blazor\IdentityModule.Blazor.csproj" />
     <ProjectReference Include="..\..\..\Modules\LocationModule\LocationModule.Application\LocationModule.Application.csproj" />
     <ProjectReference Include="..\..\..\Vendors\Google\Recapcha\Recapcha.csproj" />
-    <ProjectReference Include="..\..\SchoolsEnterprise\SchoolsEnterprise.Base\SchoolsEnterprise.Base.csproj" />
   </ItemGroup>
 
 </Project>

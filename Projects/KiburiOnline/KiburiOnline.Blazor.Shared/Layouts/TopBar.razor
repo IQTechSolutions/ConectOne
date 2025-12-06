@@ -11,14 +11,14 @@
     <div style="display:inline-block; font-size:13px; color:#FFF;">
         <a href="mailto:@Configuration["ApplicationConfiguration:SupportEmailAddress"]">
             <strong style="color:#F90">
-                 @Configuration["ApplicationConfiguration:SupportEmailAddress"]
+                @Configuration["ApplicationConfiguration:SupportEmailAddress"]
             </strong>
         </a>
     </div>
     <div style="display:inline-block; font-size:13px; color:#FFF;">
         @if (_user?.Identity is not null && _user.Identity.IsAuthenticated)
         {
-            <form action="Account/Logout" method="post">
+            <form id="logoutForm" action="Account/Logout" method="post">
                 <input type="hidden" name="ReturnUrl" value="" />
                 <AntiforgeryToken />
                 <button type="submit" style="padding-left:15px;"><strong style="color:white">Logout</strong></button>
@@ -36,3 +36,4 @@
         }
     </div>
 </MudAppBar>
+

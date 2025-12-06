@@ -102,10 +102,8 @@
     <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.ServerClient/EversdalPrimary.Blazor.ServerClient.csproj" Id="f90ec5ed-d034-4bec-aafe-26cc00c9168b" />
   </Folder>
   <Folder Name="/Projects/KiburiOnline/">
-    <Project Path="Projects/KiburiOnline/GeckoAfrica.Blazor.ServerClient/GeckoAfrica.Blazor.ServerClient.csproj" Id="ec93e024-00de-49df-b991-eacf35d46720" />
     <Project Path="Projects/KiburiOnline/KiburiOnline.Blazor.ServerClient/KiburiOnline.Blazor.ServerClient.csproj" Id="4f0d01bf-4446-4c5b-a4b2-ea7eed1482b3" />
     <Project Path="Projects/KiburiOnline/KiburiOnline.Blazor.Shared/KiburiOnline.Blazor.Shared.csproj" Id="0856fe76-7a72-46d1-9306-71fd757b8dd1" />
-    <Project Path="Projects/KiburiOnline/Progolf.Blazor.ServerClient/Progolf.Blazor.ServerClient.csproj" Id="8c97b146-9988-46aa-9242-ad17b13180a0" />
   </Folder>
   <Folder Name="/Projects/NelspruitHigh/">
     <Project Path="Projects/NelspruitHigh/NelspruitHigh.Blazor.Maui/NelspruitHigh.Blazor.Maui.csproj" />

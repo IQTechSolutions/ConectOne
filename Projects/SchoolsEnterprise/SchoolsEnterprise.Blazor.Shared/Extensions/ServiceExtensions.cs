@@ -44,6 +44,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using Permissions = FilingModule.Domain.Constants.Permissions;
 
 namespace SchoolsEnterprise.Blazor.Shared.Extensions
 {
@@ -280,7 +281,7 @@ namespace SchoolsEnterprise.Blazor.Shared.Extensions
                 perm.AddRange(typeof(BloggingModule.Domain.Constants.Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)).ToList());
                 perm.AddRange(typeof(ProductsModule.Domain.Constants.Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)).ToList());
                 perm.AddRange(typeof(BusinessModule.Domain.Constants.Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)).ToList());
-                perm.AddRange(typeof(FilingModule.Application.Constants.Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)).ToList());
+                perm.AddRange(typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)).ToList());
                 perm.AddRange(typeof(AdvertisingModule.Domain.Constants.Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)).ToList());
 
                 foreach (var prop in perm)

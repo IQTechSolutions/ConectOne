@@ -3,8 +3,8 @@ using ConectOne.EntityFrameworkCore.Sql;
 using IdentityModule.Domain.Constants;
 using IdentityModule.Domain.Entities;
 using IdentityModule.Domain.Extensions;
+using KiburiOnline.Blazor.Shared.Extensions;
 using Microsoft.AspNetCore.Identity;
-using SchoolsEnterprise.Base.Extensions;
 
 namespace KiburiOnline.Blazor.ServerClient.DataSeeder
 {

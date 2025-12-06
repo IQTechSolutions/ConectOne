@@ -126,30 +126,9 @@ namespace KiburiOnline.Blazor.Shared.Layouts
             _canViewRoles = (await AuthorizationService.AuthorizeAsync(_user, IdentityModule.Domain.Constants.Permissions.Roles.View)).Succeeded;
             _canViewLodgingTypes = (await AuthorizationService.AuthorizeAsync(_user, Permissions.LodgingTypes.View)).Succeeded;
             _canViewTemplates = (await AuthorizationService.AuthorizeAsync(_user, Permissions.Templates.View)).Succeeded;
-            _canViewGallery = (await AuthorizationService.AuthorizeAsync(_user, FilingModule.Application.Constants.Permissions.Gallery.View)).Succeeded;
+            _canViewGallery = (await AuthorizationService.AuthorizeAsync(_user, FilingModule.Domain.Constants.Permissions.Gallery.View)).Succeeded;
 
             await base.OnInitializedAsync();
-        }
-
-
-        /// <summary>
-        /// Executes logic after the component has been rendered.
-        /// </summary>
-        /// <remarks>This method is invoked after the component's rendering process is complete.  If
-        /// <paramref name="firstRender"/> is <see langword="true"/>, the method retrieves the current  authentication
-        /// state and updates the component's user information.</remarks>
-        /// <param name="firstRender">A value indicating whether this is the first time the component has been rendered. If <see
-        /// langword="true"/>, additional initialization logic is performed.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-            if (firstRender)
-            {
-                
-
-                StateHasChanged();
-            }
         }
     }
 }

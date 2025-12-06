@@ -1,9 +1,9 @@
 ﻿using ConectOne.Blazor.Extensions;
 using ConectOne.Blazor.Modals;
 using ConectOne.Domain.ResultWrappers;
-using FilingModule.Application.Constants;
 using FilingModule.Application.ViewModels;
 using FilingModule.Blazor.Modals;
+using FilingModule.Domain.Constants;
 using GroupingModule.Domain.DataTransferObjects;
 using GroupingModule.Domain.Interfaces;
 using GroupingModule.Domain.RequestFeatures;

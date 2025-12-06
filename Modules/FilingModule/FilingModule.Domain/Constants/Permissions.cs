@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace FilingModule.Application.Constants
+namespace FilingModule.Domain.Constants
 {
     /// <summary>
     /// Provides a centralized definition of permission constants for various application features.
