@@ -1,0 +1,88 @@
+﻿
+@using ConectOne.Domain.Extensions
+@using FilingModule.Domain.Enums
+@using MudBlazor
+
+<MudTable Elevation="25" ServerData="GetDestinationsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+		
+    <ToolBarContent>
+        
+        @if (_canSearchDestinations)
+        {
+            <div class="form-group" style="width:100%; padding-right:15px;">
+                <input asp-for="Params.SearchText" class="form-control" placeholder="Type to Search"/>
+            </div>
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" OnClick="Search" StartIcon="@Icons.Material.Filled.Search" Color="Color.Tertiary" IconColor="Color.Surface">Search</MudButton>
+            </div>
+            <MudSpacer/>
+        }
+        
+        <div style="padding-right:15px;">
+            <MudButton Variant="Variant.Filled" OnClick="ClearFiltersAsync" StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Secondary" IconColor="Color.Surface">Reload</MudButton>
+        </div>
+        
+        @if (_canCreateDestination)
+        {
+            <MudSpacer/>
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" OnClick="CreateCategory" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">Create</MudButton>
+            </div>
+        }
+
+    </ToolBarContent>
+
+	<HeaderContent>
+		@if (!_dense)
+		{
+		    <MudTh><strong>Cover</strong></MudTh>
+		}
+	    <MudTh><strong>Name</strong></MudTh>
+        <MudTh><strong>Short Description</strong></MudTh>
+        <MudTh><strong>Url</strong></MudTh>
+        @if (_canEditDestination || _canDeleteDestination)
+        {
+            <MudTh></MudTh>
+        }
+	</HeaderContent>
+
+    <RowTemplate>
+        @if (!_dense)
+        {
+            <MudTd><MudImage Width="50" Height="50" Src="@(context.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover) == null ? "_content/Accomodation.Blazor/images/NoImage.jpg" : context.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath.Contains("StaticFiles") ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{context.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath.Replace("\\", "/")}" : context.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath)" /> </MudTd>
+        }
+        <MudTd>@context.Name</MudTd>
+        <MudTd><strong>@context.Description.HtmlToPlainText().TruncateLongString(150)</strong></MudTd>
+        
+        @if (_canEditDestination || _canDeleteDestination)
+        {
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                    @if (_canEditDestination)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/destinations/update/{@context.DestinationId}")">Edit</MudMenuItem>
+                    }
+                    @if (_canDeleteDestination)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCategory(context.DestinationId!))">Delete</MudMenuItem>
+                    }
+                </MudMenu>
+            </MudTd>
+        }
+    </RowTemplate>
+
+	<FooterContent>
+		<MudTd colspan="6">
+			<div class="d-flex">
+				<MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+			    <MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+			    <MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+			</div>
+		</MudTd>		
+	</FooterContent>
+
+	<PagerContent>
+        <MudTablePager/>
+    </PagerContent>
+
+</MudTable>

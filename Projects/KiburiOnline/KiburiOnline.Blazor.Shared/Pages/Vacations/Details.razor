@@ -1,0 +1,981 @@
+﻿@page "/packages/{Slug}"
+@page "/packages/{VacationId}/{Url}"
+
+@using Accomodation.Blazor.Components.DisplaySettings
+@using AccomodationModule.Domain.Enums
+@using MudBlazor
+@using NeuralTech.Shared.Extensions
+@using BlazorBootstrap
+@using ConectOne.Domain.Extensions
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.ContactUsViews
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+@layout WebsiteLayout
+
+<PageTitle>@_vacation?.VacationTitle?.VacationTitle</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="@_vacation?.ShortDescription" />
+    <link rel="canonical" href="@NavigationManager.Uri" />
+</HeadContent>
+
+@if(_loaded)
+{
+    <style>
+        ul{
+            list-style-type: disc;
+            padding-left:15px;
+        }
+
+        ul li {
+            display: list-item;            
+        }
+    </style>
+
+    <style>           
+
+            .img-fluid {
+                width:100%;
+                max-width:none;
+            }
+
+            .carousel-control-prev {
+                opacity: 1;
+                width: auto;
+            }
+
+            .carousel-control-prev-icon {
+                background-color: white;
+                padding: 20px;
+                background-size: 20px;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e") !important;
+            }
+
+            .carousel-control-next {
+                opacity: 1;
+                width: auto;
+            }
+
+            .carousel-control-next-icon {
+                background-color: white;
+                padding: 20px;
+                background-size: 20px;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+            }
+
+            .dash-list { /* ① hide the normal bullet          */
+                list-style: none; /*    (also resets left‑padding)      */
+                padding-left: 0;
+            }
+
+            .dash-list li::before { /* ② inject your own marker           */
+                content: "-"; /* the dash itself                    */
+                margin-right: .5em; /* a little gap before the text       */
+            }
+        </style>
+
+    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+    {
+       
+
+        <PageTitle>ProGolf Africa Safaris</PageTitle>
+    
+
+        @if (_vacation is not null)
+        {
+            @* SLIDER *@
+            <MudHidden Breakpoint="Breakpoint.Xs">
+                <Carousel Style="width:100%;" ShowPreviousNextControls="false">
+                    <CarouselItem Active="true">
+                        <Image Src="@_vacation?.MainSliderImageUrl(Configuration)" />
+                    </CarouselItem>
+                </Carousel>
+            </MudHidden>
+        
+            @* DETAILS *@
+            <span id="overview" style="scroll-margin-top:100px;"></span>
+                <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+                <div class="container">
+
+                    <div class="row row-fix row-60">
+
+                <div class="col-sm-12 text-center group-event">
+
+                    <div class="row row-fix row-30 post-event">
+
+                        <div class="col-md-9 text-md-start post-event-body">
+                            <div style="margin:0 auto !important;">
+                                <img src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{_vacation?.Host?.ImgPath}")" width="160" height="198" alt="@_vacation!.VacationTitle.VacationTitle"/>
+                            </div>
+                            <div style="margin:0 auto !important; padding-top:30px;">
+                                <h4 style="text-align:center !important; color:#666;">
+                                    @_vacation!.VacationTitle.VacationTitle<br>
+                                            @_vacation!.StartDate!.Value.Month.GetMonthFromMonthNr().ToUpper() @_vacation?.StartDate.Value.Day - @_vacation!.EndDate.Value.Month.GetMonthFromMonthNr().ToUpper() @_vacation!.EndDate.Value.Day, @_vacation.EndDate.Value.Year
+                                </h4>
+                            </div>
+
+                            <p style="font-size:13px !important;">
+                                @_shortDescriptionText
+                            </p>
+                        </div>
+
+                        <div class="col-md-3 text-md-start post-event-body">
+                            <p style="font-style:italic; font-size:20px; color:#F90; font-weight:bold;">@_vacation?.Nights NIGHTS</p>
+                            @if (_vacation?.VacationPrices is not null)
+                            {
+                                @foreach (var selector in _vacation.VacationPriceGroups)
+                                {
+                                    <p style="font-size15px !important;"><strong>@selector</strong></p>
+                                    @foreach (var item in _vacation!.VacationPrices.Where(c => c.Selector == selector.Name).OrderBy(c => c.Order))
+                                    {
+                                        <p style="margin-top:0; font-size:13px !important;"><strong>@item.Name @_vacation.CurrencySymbol @item.Price.ToString("N2")</strong> <span style="font-size:10px; font-style:italic;">@item.Description</span></p>
+                                    }
+
+                                            <hr style="margin-top:10px; margin-bottom:10px;">
+                                }
+                            }
+                            
+                            @if (_vacation.StartDate is not null)
+                            {
+                                <p style="font-size:13px !important; margin-top:0 !important;">Limited to @_vacation?.RoomCount Double Rooms <br><strong>Tour start:</strong> @(_vacation.StartDate is null ? "Day 1" : $"{_vacation?.StartDate.Value.Month.GetMonthFromMonthNr()} {_vacation?.StartDate.Value.Day}, {_vacation.StartDate.Value.Year}")<br><strong>Tour ends:</strong> @(_vacation.StartDate is null ? $"Day {_vacation.Nights + 1}" :$"{_vacation?.EndDate.Value.Month.GetMonthFromMonthNr()} {_vacation?.EndDate.Value.Day}, {_vacation.EndDate.Value.Year}")<br>@_vacation?.DayCount Days / @_vacation?.Nights Nights</p>
+                            
+                                <p style="font-style:italic; font-size:20px; color:#F90; font-weight:bold;">@_vacation?.RoomCount Rooms Left</p>
+
+                            }
+                            
+                            
+                            <MudButton OnClick="(() => NavigateToBookNow(_vacation?.VacationId))" Class="button button-primary">Book Now</MudButton>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+                </div>
+            </section>
+        
+            @* INCLUSIONS *@
+            <span id="inclusions" style="scroll-margin-top:110px;"></span>
+            <section class="section novi-bg novi-bg-img bg-gray-lighter section-xl text-center">
+            <div class="container">
+                <div class="row row-fix row-60">
+                    <div class="col-sm-12 text-center group-event">
+                        <div class="row row-fix row-30 post-event">
+
+                            <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">INCLUDED IN THIS TOUR</h4>
+
+                            <MudGrid>
+                                <MudItem xs="6" Style="text-align:left !important; margin-bottom:5px !important; margin-top:-15px;">
+                                    <VacationInclusionDisplayTypeSectionsColumn Vacation="_vacation" ColumnName="One"/>
+                                </MudItem>
+                                <MudItem xs="6" Style="text-align:left !important; margin-bottom:5px !important; margin-top:-15px;">
+                                    <VacationInclusionDisplayTypeSectionsColumn Vacation="_vacation" ColumnName="Two" />
+                                </MudItem>
+                            </MudGrid>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+            @* PRICING INFORMATION *@
+            <span id="pricing" style="scroll-margin-top:110px;"></span>
+            <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+            <div class="container">
+
+                <div class="row row-fix row-60">
+
+                    <div class="col-sm-12 text-center group-event">
+
+                        <div class="row row-fix row-30 post-event">
+
+                            <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">PRICING - BOOKING PROCESS - PAYMENT TERMS</h4>
+
+                            <div class="col-md-12 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+                                
+                                @foreach (var price in _vacation!.VacationPrices!.Where(c => c.Selector == "Golfer").OrderBy(c => c.Order))
+                                {
+                                    <p style="margin-top:0; font-size:13px !important;"><strong>@price.Name @string.Format(nfi, "{0:C}", price.Price)</strong> <span style="font-size:10px; font-style:italic;">@price.Description</span></p>
+                                }
+                                <br/>
+                                @foreach (var price in _vacation!.VacationPrices!.Where(c => c.Selector == "Non-Golfer").OrderBy(c => c.Order))
+                                {
+                                    <p style="margin-top:0; font-size:13px !important;"><strong>@price.Name @string.Format(nfi, "{0:C}", price.Price)</strong> <span style="font-size:10px; font-style:italic;">@price.Description</span></p>
+                                }
+
+                                <p style="font-size:13px !important;">
+                                    Full Golf Package Includes all golf and tours as stated Non-Golfers Package excludes all golf but includes all tours stated and additional excursion options
+                                    <br><br>
+
+                                    <strong>Excluded from the Package Price</strong>
+                                    <p style="margin-top:0">@_paymentExclusionText</p>
+                                    
+                                    Please Note - In order to start your itinerary as scheduled, please ensure that your international flight arrives in Johannesburg no later than April 20, 2024.
+
+                                    <br><br>
+
+                                    <strong>Booking process</strong>
+                                    <p style="margin-top:0">@_bookingTermsText</p>
+                                    
+                                    <br>
+
+                                    <strong>Payment Terms</strong>
+                                    <br>
+                                    <p style="margin-top:0">
+                                        @foreach (var item in _vacation.PaymentRules.OrderBy(c => c.MonthsBeforeVacationStart))
+                                        {
+                                            if (item.PaymentType == PaymentType.ReservationFee)
+                                            {
+                                                if (item.RuleType == PaymentRuleType.FixedAmount)
+                                                {
+                                                    <p style="margin-top:0">
+                                                        @_vacation.CurrencySymbol@item.Value non-refundable reservation fee per person to secure the reservation
+                                                    </p>
+                                                }
+                                                if (item.RuleType == PaymentRuleType.PercentageOfTotalCharge || item.RuleType == PaymentRuleType.PercentageOfDeposit)
+                                                {
+                                                    <p style="margin-top:0">
+                                                        @item.Value% non-refundable reservation fee of the package price to secure the reservation
+                                                    </p>
+                                                }
+                                            }
+                                            if (item.PaymentType == PaymentType.Deposit || item.PaymentType == PaymentType.AdHoc)
+                                            {
+                                                if (item.RuleType == PaymentRuleType.FixedAmount)
+                                                {
+                                                    <p style="margin-top:0">
+                                                        @_vacation.CurrencySymbol@item.Value per person is payable on or before @_vacation.StartDate?.AddMonths(-@item.MonthsBeforeVacationStart).ToShortDateString()
+                                                    </p>
+                                                }
+                                                if (item.RuleType == PaymentRuleType.PercentageOfTotalCharge || item.RuleType == PaymentRuleType.PercentageOfDeposit)
+                                                {
+                                                    <p style="margin-top:0">
+                                                        @item.Value% of the package price is payable on or before @_vacation.StartDate?.AddMonths(-@item.MonthsBeforeVacationStart).ToShortDateString()
+                                                    </p>
+                                                }
+                                            }
+                                            if (item.PaymentType == PaymentType.Balance)
+                                            {
+                                                <p style="margin-top:0">
+                                                    The balance of the package price is payable on or before @_vacation.StartDate?.AddMonths(-@item.MonthsBeforeVacationStart).ToShortDateString()
+                                                </p>
+                                            }
+                                        }
+                                        <p style="margin-top:0">
+                                            Cancellation terms will be detailed on the reservation form provided
+                                        </p>
+                                        <p style="margin-top:0">
+                                            Terms and conditions apply and will be detailed in the reservation form
+                                        </p>
+                                    </p>
+                                </p>
+                            </div>
+
+                            <div style="text-align:center !important; padding-top:30px;">
+                                <MudButton OnClick="(() => NavigateToBookNow(_vacation.VacationId))" Class="button button-primary">Book Now</MudButton>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+                @if (!_vacation.Banner1ImageUrl(Configuration).Contains("_content"))
+                {
+                    <div class="col-md-12" style="padding-top:50px;"><img src="@_vacation.Banner1ImageUrl(Configuration)" alt="" width="1505" height="372"></div>
+                }
+            </div>
+
+
+        </section>
+        
+            @* HIGHLIGHTS *@
+            <span id="hightlights" style="scroll-margin-top:110px;"></span>
+            <section class="section novi-bg novi-bg-img bg-gray-lighter section-xl text-center">
+            <div class="container">
+
+                <div class="row row-fix row-60">
+
+                    <div class="col-sm-12 text-center group-event">
+
+                        <div class="row row-fix row-30 post-event">
+
+                            <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">PACKAGE DETAILS</h4>
+
+                            @if (!_vacation.MapImageUrl(Configuration).Contains("_content"))
+                            {
+                                <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important;">
+
+                                    <p style="margin-top:5px;">
+
+                                        <h5 style="color:#666; font-size:16px">BRIEF ITINERARY AND TOUR HIGHLIGHTS</h5>
+
+                                        <p style="font-size:13px !important;">
+                                            Your destination itinerary is tailored to ensure ease of travel with as little disruption possible when changing hotels.<br><br>
+                                            @foreach (var interval in _vacation.VacationIntervals.OrderBy(c => c.SortOrderNr))
+                                            {
+                                            <strong>@(interval.NightCount.ToString("N0")) Nights at @interval.Lodging.Name </strong>
+                                                <p style="margin-top:0;">
+                                                    @((MarkupString)interval.Description)
+                                                </p>
+                                                @if (_vacation.VacationIntervals.OrderBy(c => c.SortOrderNr).Last() != interval)
+                                                {
+                                                    <br />
+                                                }
+                                            }
+                                            <p>
+                                                All hotels and lodges selected for this tailored itinerary are of 5 star luxury quality. Arrangements are made to accommodate both golfers and non golfers; you will have a choice in the amount of golf you wish to play.
+                                            </p>
+                                            <p>
+                                                All transportation is taken care of from the time of arrival in South Africa until departure. This includes the regional flights within South Africa. Excess luggage arrangements are made and a special allowance for golf equipment is included in this service.
+                                            </p>
+                                            <p>
+                                                All accommodation includes a full breakfast daily. Special dinners are included to ensure you sample the best of African cuisine. Upgrades are available should you wish to upgrade rooms and/or safari lodges.
+                                            </p>
+                                            <p>
+                                                A dedicated tour director will travel with the group from the day of arrival in South Africa until the day of departure.
+                                            </p>
+                                            <p>
+                                            
+                                                The tour director has extensive experience in dealing with luxury golf groups and will take care of all aspects of the trip during your stay.
+                                            </p>
+                                        </p>
+                                    </p>
+                                </div>
+                                <div class="col-md-6"><img src="@_vacation.MapImageUrl(Configuration)" alt="" width="652" height="491" /></div>
+                            }
+                            else
+                            {
+                                <div class="col-md-12 text-md-start post-event-body" style="text-align:left !important;">
+
+                                    <p style="margin-top:5px;">
+
+                                        <h5 style="color:#666; font-size:16px">BRIEF ITINERARY AND TOUR HIGHLIGHTS</h5>
+
+                                    <p style="font-size:13px !important;">
+                                        Your destination itinerary is tailored to ensure ease of travel with as little disruption possible when changing hotels.<br><br>
+                                            @foreach (var interval in _vacation.VacationIntervals.OrderBy(c => c.SortOrderNr))
+                                            {
+                                                <strong>@interval.NightCount Nights at @interval.Lodging.Name </strong>
+                                                <p style="margin-top:0;">
+                                                    @interval.Description
+                                                </p>
+                                            }
+                                    <p>
+                                        All hotels and lodges selected for this tailored itinerary are of 5 star luxury quality. Arrangements are made to accommodate both golfers and non golfers; you will have a choice in the amount of golf you wish to play.
+                                    </p>
+                                    <p>
+                                        All transportation is taken care of from the time of arrival in South Africa until departure. This includes the regional flights within South Africa. Excess luggage arrangements are made and a special allowance for golf equipment is included in this service.
+                                    </p>
+                                    <p>
+                                        All accommodation includes a full breakfast daily. Special dinners are included to ensure you sample the best of African cuisine. Upgrades are available should you wish to upgrade rooms and/or safari lodges.
+                                    </p>
+                                    <p>
+                                        A dedicated tour director will travel with the group from the day of arrival in South Africa until the day of departure.
+                                    </p>
+                                    <p>
+                                        The tour director has extensive experience in dealing with luxury golf groups and will take care of all aspects of the trip during your stay.
+                                    </p>
+                                    </p>
+                                    </p>
+                                </div>
+                            }
+                        </div>
+
+                        @if (!_vacation.Banner2ImageUrl(Configuration).Contains("_content"))
+                        {
+                            <div class="col-md-12" style="padding-top:50px;"><img src="@_vacation.Banner2ImageUrl(Configuration)" alt="" width="1505" height="372"></div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+            
+            @* ITINERARY *@
+            <span id="itinenary"></span>
+            <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+                <div class="container">
+
+                    <div class="row row-fix row-60">
+
+                        <div class="col-sm-12 text-center group-event">
+
+                            <div class="row row-fix row-30 post-event">
+
+                                <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">DETAILED ITINERARY</h4>
+
+                                <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+                                    @{
+                                        foreach (var itineraryColumn in _vacation.Itinerary.OrderBy(c => c.Date).Take(_vacation.Itinerary.Count / 2))
+                                        {
+
+                                            <p style="font-size:16px !important;">
+                                                <strong>@itineraryColumn.Title: @itineraryColumn.Date?.ToLongDateString()</strong> <br>
+                                                <ul class="dash-list" style="line-height:1.88889">
+                                                    @foreach (var detail in itineraryColumn.Details.OrderBy(c => c.Time))
+                                                    {
+                                                        <li>@detail.Description</li>
+                                                    }
+                                                </ul>
+                                            </p>
+
+                                        }
+                                    }
+                                </div>
+                                <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+                                    @foreach (var itineraryColumn in _vacation.Itinerary.OrderBy(c => c.Date).Skip(_vacation.Itinerary.Count / 2))
+                                    {
+
+                                        <p style="font-size:16px !important;">
+                                            <strong>@itineraryColumn.Title: @itineraryColumn.Date?.ToLongDateString()</strong> <br>
+                                            <ul class="dash-list" style="line-height:1.88889">
+                                                @foreach (var detail in itineraryColumn.Details)
+                                                {
+                                                    <li>@detail.Description</li>
+                                                }
+                                            </ul>
+                                        </p>
+
+                                    }
+                                </div>
+                                @if (!_vacation.Banner3ImageUrl(Configuration).Contains("_content"))
+                                {
+                                    <div class="col-md-12" style="padding-top:50px;"><img src="@_vacation.Banner3ImageUrl(Configuration)" alt="" width="1505" height="372"></div>
+                                }
+                            </div>
+                            <span id="accommodation" style="margin-top:-60px;"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            @* DESTINATIONS *@
+            <span id="destinations"></span>
+            <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+            <div class="container">
+                <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">DESTINATIONS VISITED</h4>
+
+                <div class="row row-fix">
+                    <div class="col-sm-12 text-center group-event">
+                        @foreach (var item in _vacation.VacationIntervals.OrderBy(c => c.SortOrderNr))
+                        {
+                            if (item.Destination is not null)
+                            {
+                                <hr style="margin-top:40px;">
+                                <div class="row row-fix post-event">
+
+                                    <div class="col-md-6 text-md-start post-event-body">
+                                        <h4 style="color:#F90;">@item.Destination?.Name</h4>
+                                        <p style="font-size:13px !important;">
+                                            @((MarkupString)item.Destination?.Description)
+                                        </p>
+                                    </div>
+
+                                    <div class="col-md-6" style="padding-bottom:20px;">
+                                        <Carousel ShowPreviousNextControls="false">
+                                            <CarouselItem Active="true">
+                                                <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item?.Destination?.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" />
+                                            </CarouselItem>
+                                            @if (item?.Destination?.Images is not null)
+                                            {
+                                                foreach (var image in item.Destination.Images.Where(c => c.ImageType == UploadType.Image).Take(5))
+                                                {
+                                                    <CarouselItem>
+                                                        <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{image.RelativePath}")" />
+                                                    </CarouselItem>
+                                                }
+                                            }
+                                        </Carousel>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+            @* LODGINGS *@
+            <span id="hotels"></span>
+            <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+                <div class="container">
+                    <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">HOTELS AND LODGES</h4>
+        
+                    <div class="row row-fix">
+                        <div class="col-sm-12 text-center group-event">
+                            @foreach (var lodging in _vacation.VacationIntervals.OrderBy(c => c.SortOrderNr))
+                            {
+                                <hr style="margin-top:40px;">
+                                <div class="row row-fix post-event">
+                                    <div class="col-md-6" style="padding-bottom:20px;">
+                                        <Carousel>
+                                            <CarouselItem Active="true">
+                                                <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{lodging.Lodging.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" />
+                                            </CarouselItem>
+                                            @foreach (var image in lodging.Lodging.Images.Where(c => c.ImageType == UploadType.Image).Take(5))
+                                            {
+                                                <CarouselItem>
+                                                    <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{image.RelativePath}")" />
+                                                </CarouselItem>
+                                            }
+                                        </Carousel>
+                                    </div>
+        
+                                    <div class="col-md-6 text-md-start post-event-body">
+                                        <h4 style="color:#F90;">@lodging.Lodging.Name</h4>
+                                        <p style="color:#F90; font-size:12px; margin-top:0px;"><em>@lodging.Lodging.City</em></p>
+        
+                                        <p style="font-size:13px !important;">
+                                            @(string.IsNullOrEmpty(lodging?.Lodging?.Description) ? "" : (MarkupString)lodging.Lodging.Description)
+                                        </p>
+        
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            @* GOLFER PACKAGES *@
+            @if (_vacation.GolferPackages.Any())
+            {
+                <span id="golfcourses" style="margin-top:-30px;"></span>
+                <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+                <div class="container">
+                    <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">GOLF COURSES</h4>
+
+                    <div class="row row-fix">
+                        <div class="col-sm-12 text-center group-event">
+                            @foreach (var item in _vacation.GolferPackages.OrderBy(c => c.DayNr))
+                            {
+                                <hr style="margin-top:40px;">
+                                <div class="row row-fix post-event">
+
+
+                                    <div class="col-md-6 text-md-start post-event-body">
+
+                                        <h4 style="color:#F90;">@item.GolfCourse.Name</h4>
+
+                                        <p style="font-size:13px !important;">
+                                            @((MarkupString)item.GolfCourse.Description)
+                                        </p>
+
+
+                                    </div>
+
+
+                                    <div class="col-md-6" style="padding-bottom:20px;">
+
+                                        <Carousel ShowPreviousNextControls="false">
+                                            <CarouselItem Active="true">
+                                                <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item?.GolfCourse.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}")" />
+                                            </CarouselItem>
+                                            @foreach (var image in item?.GolfCourse.Images?.Where(c => c.ImageType == UploadType.Image)?.Take(5))
+                                            {
+                                                <CarouselItem>
+                                                    <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{image.RelativePath}")" />
+                                                </CarouselItem>
+                                            }
+                                        </Carousel>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            }
+        
+            @* GENERAL INFORMATION *@
+            @if (_vacation.GeneralInformation != null)
+            {
+                <span id="includes"></span>
+                <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+                <div class="container">
+
+                    <div class="row row-fix row-60">
+
+                        <div class="col-sm-12 text-center group-event">
+
+                            <div class="row row-fix row-30 post-event">
+
+                                <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">GENERAL INFORMATION AND WHAT TO PACK</h4>
+
+                                <div class="col-md-12 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important; font-size:13px;">
+
+                                    @_generalInformationText
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        @if (!_vacation.Banner4ImageUrl(Configuration).Contains("_content"))
+                        {
+                            <div class="col-md-12" style="padding-top:50px;"><img src="@_vacation.Banner4ImageUrl(Configuration)" alt="" width="1505" height="372"></div>
+                        }
+                    </div>
+                </div>
+            </section>
+            }
+        
+            @* REFERENCES *@
+            @if (_vacation.References.Any())
+            {
+                <section class="section novi-bg novi-bg-img section-lg bg-gray-lighter text-center" style="padding-top: 50px !important;">
+                <div class="container">
+
+                    <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">REFERENCES FROM CLIENTS WHO HAVE TRAVELED WITH US</h4>
+                    <div class="row row-50">
+
+                        @foreach (var reference in _vacation.References)
+                        {
+                            <div class="quote-default" style="max-width:100% !important;" id="iain">
+                                <div class="quote-default__image">
+                                            <img src="@Configuration["ApiConfiguration:BaseApiAddress"]/@reference.Review.Images.FirstOrDefault(c => c.ImageType == UploadType.Profile).RelativePath" alt="" width="120" height="120" />
+                                    <p class="blurb__title">@reference.Review.Name.ToUpper()</p>
+                                    <p style="margin-top:0px; font-style:italic; font-size:14px; color:#F90;">@reference.Review.JobTitle - @reference.Review.CompanyName - @reference.Review.Location</p>
+                                </div>
+
+                                <div class="container" style="padding-top:50px;">
+                                    <div>
+                                        <div class="col-md-12 col-lg-12">
+                                                    <img src="@Configuration["ApiConfiguration:BaseApiAddress"]/@reference.Review.Images.FirstOrDefault(c => c.ImageType == UploadType.Logo).RelativePath">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="quote-default__text">
+                                    <p class="q" style="font-size:11px !important;">@((MarkupString)reference?.Review.ReviewText)</p>
+                                </div>
+                            </div>
+                            <div class="container">
+                                @if (reference != _vacation.References.Last())
+                                {
+                                    <div class="divider"></div>
+                                }
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </section>
+            }
+        }
+    }
+    else
+    {
+        <section class="section parallax-container text-center context-dark" style="background-image: url('@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{_vacation?.Images?.FirstOrDefault(c => c.ImageType == UploadType.Slider)?.RelativePath?.Replace('\\', '/')}")'); background-size: cover; background-position: center;" id="destinations">
+            <div class="parallax-content" style="padding-top: 180px !important; padding-bottom: 180px !important;">
+            <div class="container">
+                <div class="row row-50" style="margin-bottom:0px !important;">
+                    <div class="col-md-12 col-xl-12">
+                        <h4 style="padding-top:50px; padding-bottom:10px; font-size:40px !important;">@_vacation?.VacationTitle?.VacationTitle?.ToUpper()</h4>
+                            <p style="margin-top:0px;"><em>@(_vacation?.StartDate != null ? $"{_vacation?.StartDate?.Month.GetMonthFromMonthNr()} {_vacation?.StartDate?.Day}, {_vacation?.StartDate?.Year} - {_vacation?.EndDate.Value.Month.GetMonthFromMonthNr()} {_vacation?.EndDate.Value.Day}, {_vacation?.EndDate.Value.Year}" : "")</em></p>
+                           
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        
+        <div id="nav_stick" class="nav_stick" style="margin-top:-5px;">
+        <div class="scrollmenu">
+            <a href="@($"/packages/{Slug}/#overview")">Overview</a>
+            <a href="@($"/packages/{Slug}/#highlights")">Highlights</a>
+            @if (_vacation.ItineraryEntryItemTemplates.Any())
+            {
+                <a href="@($"/packages/{Slug}/#itinerary")">Itinerary</a>
+            }
+            @if (_vacation.VacationIntervals.Any())
+            {
+                <a href="@($"/packages/{Slug}/#accommodation")">Accommodation</a>
+            }
+            <a href="@($"/packages/{Slug}/#includes")">Includes</a>
+            <a href="@($"/packages/{Slug}/#book")">Enquire</a>
+        </div>
+    </div>
+        
+        <span id="overview" style="scroll-margin-top:100px;"></span>
+        <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+        <div class="container">
+
+            <div class="row row-fix row-60">
+
+                <div class="col-sm-12 text-center group-event">
+
+                    <div class="row row-fix row-30 post-event">
+
+                        <div class="col-md-9 text-md-start post-event-body">
+                            <h4>@_vacation?.VacationTitle?.VacationTitle?.ToUpper()</h4>
+
+                            <p style="font-size:16px !important;">
+                                @_shortDescriptionText
+                            </p>
+                        </div>
+                        
+                        <div class="col-md-3 text-md-start post-event-body">
+                            <p style="font-style:italic; font-size:20px; color:#F90; font-weight:bold;">@_vacation?.Nights NIGHTS</p>
+                            @if (_vacation?.VacationPrices is not null)
+                            {
+                                @foreach (var selector in _vacation.VacationPriceGroups)
+                                {
+                                    <p style="margin-top:0; font-size:13px !important;"><strong>@selector.Name</strong></p>
+                                    @foreach (var item in _vacation!.VacationPrices.Where(c => c.Selector == selector.Name).OrderBy(c => c.Order))
+                                    {
+                                        <p style="margin-top:0; font-size:13px !important;">@item.Name @_vacation.CurrencySymbol @(item.Price.ToString("N2")) <span style="font-size:10px; font-style:italic;">@item.Description</span></p>
+                                    }
+                                    <hr style="margin-top:10px; margin-bottom:10px;">
+                                }
+                            }
+                            
+                            @if (_vacation.StartDate is not null)
+                            {
+                                <p style="font-size:13px !important; margin-top:0 !important;">Limited to @_vacation?.RoomCount Double Rooms <br><strong>Tour start:</strong> @(_vacation?.StartDate != null ? $"{_vacation?.StartDate?.Month.GetMonthFromMonthNr()} {_vacation?.StartDate?.Day}, {_vacation?.StartDate?.Year}" : "Day 1") <br><strong>Tour ends:</strong> @(_vacation.StartDate != null ? $"{_vacation?.EndDate.Value.Month.GetMonthFromMonthNr()} {_vacation?.EndDate.Value.Day}, {_vacation?.EndDate.Value.Year}" : $"Day {_vacation.Nights + 1}") <br>@_vacation?.DayCount Days / @_vacation?.Nights Nights</p>
+
+                            }
+                            <a class="button button-primary" type="submit" href="@($"/packages/{Slug}/#book")">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <span id="highlights" style="scroll-margin-top:110px;"></span>
+    <section class="section novi-bg novi-bg-img bg-gray-lighter section-xl text-center">
+        <div class="container">
+    
+            <div class="row row-fix row-60">
+    
+                <div class="col-sm-12 text-center group-event">
+    
+                    <div class="row row-fix row-30 post-event">
+    
+                        <div class="col-md-7 text-md-start post-event-body" style="text-align:left !important;">
+                            <h4>Highlights of this tour</h4>
+    
+                            <p>
+                                @(((MarkupString)_vacation?.GeneralInformation?.Information))
+                            </p>
+    
+    
+                        </div>
+                        <div class="col-md-5"><img src="/Assets/2024/images/2533package1_map.png" alt="" width="652" height="491" /></div>
+                            
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </section>
+
+        @if (_vacation.ItineraryEntryItemTemplates.Any())
+        {
+            @* ITINERARY *@
+            <span id="itinerary" style="scroll-margin-top:110px;"></span>
+            <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+                <div class="container">
+
+                    <div class="row row-fix row-60">
+
+                        <div class="col-sm-12 text-center group-event">
+
+                            <div class="row row-fix row-30 post-event">
+
+                                <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">DETAILED ITINERARY</h4>
+
+                                <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+                                    @{
+                                        foreach (var itineraryColumn in _vacation.ItineraryEntryItemTemplates.OrderBy(c => c.DayNr).Take(_vacation.Itinerary.Count / 2))
+                                        {
+
+                                            <p style="font-size:16px !important;">
+                                                @{
+                                                    var asdb = @_vacation.StartDate?.AddDays(itineraryColumn.DayNr - 1);
+                                                    var displayText = asdb is not null ? $": {asdb?.Month.GetMonthFromMonthNr()} {asdb?.Day}, {asdb?.Year}" : "";
+
+                                                    <strong>@($"Day {itineraryColumn.DayNr}{displayText}")</strong> <br>
+                                                }
+                                                
+                                                @((MarkupString)itineraryColumn.Content)
+                                            </p>
+
+                                        }
+                                    }
+                                </div>
+                                <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+                                    @foreach (var itineraryColumn in _vacation.ItineraryEntryItemTemplates.OrderBy(c => c.DayNr).Skip(_vacation.Itinerary.Count / 2))
+                                    {
+
+                                        <p style="font-size:16px !important;">
+                                            @{
+                                                var asdb2 = @_vacation.StartDate?.AddDays(itineraryColumn.DayNr - 1);
+                                                var displayText2 = asdb2 is not null ? $": {asdb2?.Month.GetMonthFromMonthNr()} {asdb2?.Day}, {asdb2?.Year}" : "";
+                                                <strong>@($"Day {itineraryColumn.DayNr}{displayText2}")</strong> <br>
+                                            }
+                                            @((MarkupString)itineraryColumn.Content)
+                                        </p>
+
+                                    }
+                                </div>
+                                @if (!_vacation.Banner3ImageUrl(Configuration).Contains("_content"))
+                                {
+                                    <div class="col-md-12" style="padding-top:50px;"><img src="@_vacation.Banner3ImageUrl(Configuration)" alt="" width="1505" height="372"></div>
+                                }
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+
+       
+        
+        @if(_vacation.VacationIntervals.Any())
+        {
+            <span id="accommodation" style="scroll-margin-top:110px;"></span>
+            <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+                <div class="container">
+                    <h4 style="padding-bottom:30px;">HOTELS &amp; LODGES</h4>
+
+                    <div class="row row-fix row-60">
+                        <div class="col-sm-12 text-center group-event">
+                            @foreach (var lodging in _vacation?.VacationIntervals.OrderBy(c => c.SortOrderNr))
+                            {
+                                <div class="row row-fix  row-30 post-event">
+                                    <div class="col-md-6" style="padding-bottom:20px;">
+                                        <Carousel>
+                                            <CarouselItem Active="true">
+                                                <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{lodging.Lodging?.Images?.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath}")" />
+                                            </CarouselItem>
+                                            @foreach (var image in lodging.Lodging.Images.Where(c => c.ImageType == UploadType.Image).Take(5))
+                                            {
+                                                <CarouselItem>
+                                                    <Image Src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{image.RelativePath}")" />
+                                                </CarouselItem>
+                                            }
+                                        </Carousel>
+                                    </div>
+        
+                                    <div class="col-md-6 text-md-start post-event-body">
+                                        <h4 style="color:#F90;">@lodging.Lodging.Name</h4>
+                                        <p style="color:#F90; font-size:12px; margin-top:0px;"><em>@lodging.Lodging.City</em></p>
+        
+                                        <p style="font-size:13px !important;">
+                                            @((MarkupString)lodging.Lodging.Description!)
+                                        </p>
+        
+                                    </div>
+                                </div>
+                            }
+                            
+                            @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                            {
+                                <span id="destinations" style="margin-top:-60px;"></span>
+                            }
+                            else
+                            {
+                                <span id="includes" style="margin-top:-60px;"></span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+
+        <span id="includes" style="scroll-margin-top:110px;"></span>
+        <section class="section novi-bg novi-bg-img bg-gray-lighter section-xl text-center">
+            <div class="container">
+        
+                <div class="row row-fix row-60">
+        
+                    <div class="col-sm-12 text-center group-event">
+
+                        <h4 style="text-align:left !important; margin-bottom:10px !important;">Included in this tour</h4>
+
+                        <div class="row row-fix row-30 post-event">
+                            <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+
+                                @if (!string.IsNullOrEmpty(_vacation?.AccommodationInclusionSummaryInformation.HtmlToPlainText()))
+                                {
+                                    <p id="pack_head" style="font-size:16px;">ACCOMMODATION</p>
+                                    <p style="margin-top:5px;">
+                                        @((MarkupString)_vacation.AccommodationInclusionSummaryInformation)
+                                    </p>
+
+                                    <br/>
+                                }
+
+                                @if (!string.IsNullOrEmpty(_vacation?.MealsAndActivitiesInclusionsSummaryInformation.HtmlToPlainText()))
+                                {
+                                    <p id="pack_head" style="font-size:16px;">MEALS & ACTIVITIES</p>
+                                    <p style="margin-top:5px;">
+                                        @((MarkupString)_vacation.MealsAndActivitiesInclusionsSummaryInformation)
+                                    </p>
+
+                                    <br />
+                                }
+
+                                @if (!string.IsNullOrEmpty(_vacation?.GeneralInclusionsSummaryInformation.HtmlToPlainText()))
+                                {
+                                    <p id="pack_head" style="font-size:16px;">GENERAL INCLUSIONS</p>
+                                    <p style="margin-top:5px;">
+                                        @((MarkupString)_vacation.GeneralInclusionsSummaryInformation)
+                                    </p>
+
+                                }
+                                
+                            </div>
+        
+                            <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important;">
+
+                                @if (!string.IsNullOrEmpty(_vacation?.GolfRoundSummaryInclusionInformation.HtmlToPlainText()))
+                                {
+                                    <p id="pack_head" style="font-size:16px;">ROUNDS OF GOLF</p>
+                                    <p style="margin-top:5px;">
+                                        @((MarkupString)_vacation.GolfRoundSummaryInclusionInformation)
+                                    </p>
+                                    <br/>
+                                }
+
+
+                                @if (!string.IsNullOrEmpty(_vacation?.TransportAndFlightsInclusionsSummaryInformation.HtmlToPlainText()))
+                                {
+                                    <p id="pack_head" style="font-size:16px;">TRANSPORT & FLIGHTS</p>
+                                    <p style="margin-top:5px;">
+                                        @((MarkupString)_vacation.TransportAndFlightsInclusionsSummaryInformation)
+                                    </p>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <span id="book" style="scroll-margin-top:110px;"></span>
+        <ContactFormPartial Subject="@($"{_vacation?.VacationTitle?.VacationTitle}")" />
+    }
+}

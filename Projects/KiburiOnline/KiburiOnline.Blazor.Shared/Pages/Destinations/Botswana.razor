@@ -1,0 +1,67 @@
+﻿@page "/destinations/botswana"
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Contacts
+@using KiburiOnline.Blazor.Shared.Pages.Destinations.Partials
+
+@layout WebsiteLayout
+
+<PageTitle>Botswana Safaris & Okavango Delta | ProGolf Africa Safaris</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Experience Botswana’s wildest corners—Okavango Delta, Chobe, Savuti and Linyanti—with mokoro water safaris, vast elephant herds and unforgettable sunsets. Crafted to pair with your golf travel." />
+    <link rel="canonical" href="/destinations/botswana" />
+</HeadContent>
+
+@* Destination Section *@
+<section class="section parallax-container text-center context-dark" style="background-image: url('Assets/images/parallax-botswana.jpg'); background-size: cover; background-position: center;">
+    <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <div class="row row-50" style="margin-bottom:-80px !important;">
+
+
+
+                <div class="col-md-6 col-xl-6">
+                    <h4>Botswana</h4>
+                    <p>
+                        <InnerMenu PageName="botswana" />
+                    </p>
+                    <hr>
+                    <p style="font-size:14px; font-style:italic;">
+                        Botswana offers an amazing array of different landscapes, making it one of Africa's preferred Safari destinations. Some of the most popular areas within Botswana include the Okavango Delta, Linyanti, Savuti and of course Chobe. The Okavango Delta is best known for perennial water in its lagoons and water channels offering various water activities, including game viewing by Mokoro.
+                    </p>
+                    <hr>
+                    <p>
+                        <ul style="font-size:14px !important; font-style:italic; list-style-type:circle !important;">
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Safari at its wildest</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit the Okavango Delta, Kalahari Desert, Makgadikgadi Pans, Chobe National Park</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Water Safari on a Mokoro (dug-out canoe)</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Witness the best Africa sunsets</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>One of the best places on earth for Stargazing</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Experience the largest Elephant populations in the world</li>
+
+                        </ul>
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 col-xl-6">
+                    <AfricaMap Country="Botswana"/>
+                </div>
+
+            </div>
+        </div>
+        <span id="packages" style="padding-top:70px;"></span>
+    </div>
+</section>
+
+<DestinationVacationsControl CountryName="Botswana" Vacations="_vacations"/>
+
+<ContactsBanner/>
+
+<script type="text/javascript" language="javascript">
+    window.location.hash = "botswana";
+</script>

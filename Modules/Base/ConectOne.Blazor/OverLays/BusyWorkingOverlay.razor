@@ -1,0 +1,16 @@
+﻿@using MudBlazor
+<MudOverlay @bind-Visible="@Visible" DarkBackground="@DarkBackground" Absolute="true">
+    <div style="text-align:center">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+        
+        @if (!string.IsNullOrEmpty(BusyText))
+        {
+            <MudText Typo="Typo.h4" Color="Color.Primary">@BusyText</MudText>
+        }
+
+        @if (!string.IsNullOrEmpty(CaptionText))
+        {
+            <MudText Color="Color.Primary" Class="mb-2">@CaptionText</MudText>
+        }
+    </div>
+</MudOverlay>

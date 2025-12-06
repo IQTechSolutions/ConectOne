@@ -1,6 +1,5 @@
 using GeckoAfrica.Blazor.ServerClient.Components.Account.Pages;
 using GeckoAfrica.Blazor.ServerClient.Components.Account.Pages.Manage;
-using GeckoAfrica.Blazor.ServerClient.Data;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using System.Text.Json;
+using IdentityModule.Domain.Entities;
 
 namespace Microsoft.AspNetCore.Routing
 {

@@ -1,0 +1,27 @@
+﻿@using MudBlazor
+@using Variant = MudBlazor.Variant\
+
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                Create New User Role
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="_userRole.RoleName" Label="Role Name" Required="true" RequiredError="Role name is required." FullWidth="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="_userRole.RoleDescription" Label="Role Description" FullWidth="true" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="Submit" Color="Color.Success">Add Role</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,0 +1,38 @@
+@using LocationModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+
+<EditForm Model="@City" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => City.Code)" @bind-Value="City.Code" Label="Code" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => City.Name)" @bind-Value="City.Name" Label="Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => City.ShortName)" @bind-Value="City.ShortName" Label="Short Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudSelect T="CountryDto" ToStringFunc="@_countryConverter" Label="Country" @bind-Value="City.Country" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                        @foreach (var country in Countries)
+                        {
+                            <MudSelectItem T="CountryDto" Value="@country">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="3" For="@(() => City.Description)" @bind-Value="City.Description" Label="Description" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="MudBlazor.ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

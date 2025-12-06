@@ -1,0 +1,28 @@
+@using FeedbackModule.Domain.DataTransferObjects
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout WebsiteLayout
+
+<EditForm Model="@Review" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" md="12">
+                    <MudSelect ToStringFunc="@_reviewConverter" T="ReviewDto" Label="Reviewer" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined" @bind-Value="Review.Review">
+                        @foreach (var r in Reviews)
+                        {
+                            <MudSelectItem T="ReviewDto" Value="@r">@r.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

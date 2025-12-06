@@ -118,7 +118,7 @@
                 else
                 {
                     <MudTabPanel Text="Event Teams">
-                        <ActivityGroupTableV2 @ref="_activityGroupsTable" ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" LearnerSelectionSelectionChanged="OnActivityGroupTeamMemberSelectionChanged" />
+                        <ActivityGroupTableV2 @ref="_activityGroupsTable" ShowLinkActivityGroupButtons="true" OnSelectionChange="OnActivityGroupSelectionChanged" LearnerSelectionSelectionChanged="OnActivityGroupTeamMemberSelectionChanged"/>
                     </MudTabPanel>
                 }
                 
@@ -136,9 +136,9 @@
                         </HeaderContent >
                         <RowTemplate Context="bb">
                             <MudTd DataLabel="Ticket Type">@bb.Name</MudTd>
-                            <MudTd DataLabel="Ticket Type">@bb.QuantityAvailable</MudTd>
-                            <MudTd DataLabel="Ticket Type">@bb.Price.ToString("C")</MudTd>
-                            <MudTd DataLabel="Ticket Type">@bb.QuantitySold</MudTd>
+                            <MudTd DataLabel="Qty">@bb.QuantityAvailable</MudTd>
+                            <MudTd DataLabel="Price">@bb.Price.ToString("C")</MudTd>
+                            <MudTd DataLabel="Qty Sold">@bb.QuantitySold</MudTd>
                             <MudTd>
                                 <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
                                     <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => UpdateTicketType(bb))">Edit</MudMenuItem>
@@ -150,7 +150,7 @@
                     <MudCardContent>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="CreateTicketType">Create New Ticket Type</MudMenuItem>
+                        <MudButton FullWidth="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="CreateTicketType">Create New Ticket Type</MudButton>
                     </MudCardActions>
                 </MudTabPanel>
 

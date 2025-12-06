@@ -1,0 +1,215 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using ConectOne.Blazor.Components.SortableItems
+@using MudBlazor
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudCard Style="width:100%; padding-left:20px;">
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudCard Elevation="2">
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="12">
+                                        <MudText Typo="Typo.h6" Class="mb-4">List of Price Groupings</MudText>
+                                        <MudTable Items="@Vacation.VacationPriceGroups" Hover="true" Breakpoint="Breakpoint.Sm">
+                                            <HeaderContent>
+                                                <MudTh>Name</MudTh>
+                                                <MudTh></MudTh>
+                                            </HeaderContent>
+                                            <RowTemplate>
+                                                <MudTd DataLabel="Nr">@context.Name</MudTd>
+                                                <MudTd Style="float:right">
+                                                    <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                                        <MudMenuItem OnClick="@(() => UpdateVacationPriceGroupItem(context))" Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                                                        <MudMenuItem OnClick="@(() => RemoveVacationPriceGroupItem(context))" Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
+                                                    </MudMenu>
+                                                </MudTd>
+                                            </RowTemplate>
+                                        </MudTable>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudGrid>
+                                    <MudItem xs="12">
+                                        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Error" OnClick="CreateVacationPriceGroupItem">Add Grouping</MudButton>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    
+    @if (_pricingDropBoxItems is not null && _pricingDropBoxItems.Any())
+    {
+        <MudItem xs="12">
+            <MudCard Style="width:100%; padding-left:20px;">
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudCard Elevation="2">
+                                <MudCardContent>
+                                    <MudGrid>
+                                        @foreach (var dropboxItems in _pricingDropBoxItems)
+                                        {
+                                            <MudItem xs="6">
+                                                <MudText Typo="Typo.h6" Class="mb-4">@dropboxItems.Selector</MudText>
+                                                <SortableList2 T="VacationPricingItemDto" Group="sharedLists" Id="@dropboxItems.Selector" Items="dropboxItems.Items" OnStart="PricingItemDragStart" Context="context" OnUpdate="@SortPricingList" OnRemove="PricingItemRemovedFromSortableList" OnAdd="PricingItemUpdatedOnSortableList">
+                                                    <SortableItemTemplate>
+                                                        <MudCard Elevation="1" Style="margin-bottom: 5px;">
+                                                            <MudCardContent>
+                                                                <MudText><strong>@context.Name</strong> - @string.Format(nfi, "{0:C}", context.Price)</MudText>
+                                                                <MudText Typo="Typo.body2">@context.Description</MudText>
+                                                            </MudCardContent>
+                                                            <MudCardActions>
+                                                                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => UpdateVacationPricingItem(context))">Edit</MudButton>
+                                                                <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="@(() => RemoveVacationPricingItem(context.VacationPriceItemId))">Delete</MudButton>
+                                                            </MudCardActions>
+                                                        </MudCard>
+                                                    </SortableItemTemplate>
+                                                </SortableList2>
+                                            </MudItem>
+                                        }
+                                    </MudGrid>
+                                </MudCardContent>
+                                <MudCardActions>
+                                    <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Error" OnClick="CreateVacationPricingItem">Add New</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+
+                        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                        {
+                            <MudItem xs="12">
+                                <label style="padding-left:20px;">Payment Schedule</label>
+                                <MudTable RowsPerPage="100" Elevation="25" Items="Vacation.PaymentRules" Dense="true" Hover="true" Context="vv">
+                                    <HeaderContent>
+                                        <MudTh>Months Before Vacation Start</MudTh>
+                                        <MudTh>Description</MudTh>
+                                        <MudTh>Value</MudTh>
+                                        <MudTh>Payment Type</MudTh>
+                                        <MudTh></MudTh>
+                                    </HeaderContent>
+
+                                    <RowTemplate>
+                                        <MudTd>@vv.MonthsBeforeVacationStart</MudTd>
+                                        <MudTd>@vv.Description</MudTd>
+                                        <MudTd><strong>@vv.Value</strong></MudTd>
+                                        <MudTd><strong>@vv.PaymentType</strong></MudTd>
+                                        <MudTd>
+                                            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                                <MudMenuItem OnClick="@(() => UpdatePaymentRule(vv))" Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                                                <MudMenuItem OnClick="@(() => RemovePaymentRule(vv.PaymentRuleId))" Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
+                                            </MudMenu>
+                                        </MudTd>
+                                    </RowTemplate>
+
+                                    <FooterContent>
+                                        <MudTd colspan="6">
+                                            <MudButton Variant="Variant.Filled" FullWidth OnClick="CreatePaymentRule" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New Payment Rule</MudButton>
+                                        </MudTd>
+                                    </FooterContent>
+                                </MudTable>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudCard>
+                                    <MudCardHeader>
+                                        <MudSelect ToStringFunc="@_bookingTermsDescriptionTemplateConverter" T="BookingTermsDescriptionTemplateDto" Label="Booking Terms" Value="Vacation.BookingTerms" ValueChanged="OnBookingTermsTemplateSelectionChanged" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                            @foreach (var state in _availableBookingTermsDescriptionTemplates)
+                                            {
+                                                <MudSelectItem T="BookingTermsDescriptionTemplateDto" Value="@state">@state.TemplateName</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudCardHeader>
+                                    <MudCardContent>
+                                        <MudPaper Style="padding:10px 20px 20px 20px; margin-top:-20px;">
+                                            @_bookingTermsText
+                                        </MudPaper>
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudCard>
+                                    <MudCardHeader>
+                                        <MudSelect ToStringFunc="@_bookingPaymentExclusionTemplateConverter" T="PaymentExclusionTemplateDto" Label="Payment Exceptions" Value="Vacation.PaymentExclusion" ValueChanged="OnPaymentExclusionTemplateSelectionChanged" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                            @foreach (var state in _availablePaymentExclusionsDescriptionTemplates)
+                                            {
+                                                <MudSelectItem T="PaymentExclusionTemplateDto" Value="@state">@state.TemplateName</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudCardHeader>
+                                    <MudCardContent>
+                                        <MudPaper Style="padding:10px 20px 20px 20px; margin-top:-20px;">
+                                            @_paymentExclusionText
+                                        </MudPaper>
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudCard>
+                                    <MudCardHeader>
+                                        <MudSelect ToStringFunc="@_cancellationTermsTemplateConverter" T="CancellationTermsTemplateDto" Label="Cancellation Terms" Value="Vacation.CancellationTerms" ValueChanged="OnCancellationTermsTemplateSelectionChanged" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                            @foreach (var state in _availableCancellationTermsTemplates)
+                                            {
+                                                <MudSelectItem T="CancellationTermsTemplateDto" Value="@state">@state.TemplateName</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudCardHeader>
+                                    <MudCardContent>
+                                        <MudPaper Style="padding:10px 20px 20px 20px; margin-top:-20px;">
+                                            @_cancellationTermsText
+                                        </MudPaper>
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudCard>
+                                    <MudCardHeader>
+                                        <MudSelect ToStringFunc="@_termsAndConditionsTemplateConverter" T="TermsAndConditionsTemplateDto" Label="Terms And Condtions" Value="Vacation.TermsAndConditions" ValueChanged="OnTermsAndConditionsTemplateSelectionChanged" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                            @foreach (var state in _availableTermsAndConditionsTemplates)
+                                            {
+                                                <MudSelectItem T="TermsAndConditionsTemplateDto" Value="@state">@state.TemplateName</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudCardHeader>
+                                    <MudCardContent>
+                                        <MudPaper Style="padding:10px 20px 20px 20px; margin-top:-20px;">
+                                            @_termsAndConditionsText
+                                        </MudPaper>
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudItem>
+                        }
+                        
+                        
+
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    }
+    
+    @if (Update.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    @if (NextTab.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnPreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+    </MudItem>
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+    </MudItem>
+</MudGrid>

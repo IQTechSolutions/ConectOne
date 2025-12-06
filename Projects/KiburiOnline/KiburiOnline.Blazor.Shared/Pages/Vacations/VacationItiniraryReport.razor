@@ -1,0 +1,687 @@
+﻿@page "/vacations/{VacationId}/itinirary"
+@using AccomodationModule.Domain.Enums
+@using BlazorBootstrap
+@using ConectOne.Domain.Extensions
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+@using NeuralTech.Shared.Extensions
+
+@layout WebsiteLayout
+
+<style>
+    .img-fluid {
+    width: 100%;
+    max-width: none;
+    }
+
+    .carousel-control-prev {
+    opacity: 1;
+    width: auto;
+    }
+
+    .carousel-control-prev-icon {
+    background-color: white;
+    padding: 20px;
+    background-size: 20px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e") !important;
+    }
+
+    .carousel-control-next {
+    opacity: 1;
+    width: auto;
+    }
+
+    .carousel-control-next-icon {
+    background-color: white;
+    padding: 20px;
+    background-size: 20px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+    }
+</style>
+
+<div class="page" id="intro">
+
+    @* SLIDER *@
+    <MudHidden Breakpoint="Breakpoint.Xs">
+        <Carousel Style="width:100%;" ShowPreviousNextControls="false">
+            <CarouselItem Active="true">
+                <Image Src="@_vacation?.MainSliderImageUrl(Configuration)" />
+            </CarouselItem>
+        </Carousel>
+    </MudHidden>
+
+
+
+    @* DETAILS *@
+    <span id="overview" style="margin-top:-30px;"></span>
+    <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+        <div class="container">
+            <div class="row row-fix row-60">
+                <div class="col-sm-12 text-center group-event">
+                    <div class="row row-fix row-30 post-event">
+                        <div class="col-md-12 text-md-start post-event-body">
+                            @(_vacation?.ShortDescription.Content == null ? "" : (MarkupString)_vacation.ShortDescription.Content)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @if (_vacation is not null)
+    {
+        <section class="section novi-bg novi-bg-img bg-default section-xl">
+            <div class="container">
+                <div class="row row-fix row-60">
+                    <div class="col-sm-12 group-event">
+                        <div class="row row-fix row-30 post-event">
+                            <MudTabs>
+                                <MudTabPanel Text="Vacation Report By Section">
+                                    <MudGrid Style="padding-top:15px;">
+                                        <MudItem xs="2">
+                                            <strong>Group Name:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            @_vacation.Host?.Name
+                                        </MudItem>
+
+                                        <MudItem xs="2">
+                                            <strong>Vacation:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            @_vacation.VacationTitle.VacationTitle
+                                        </MudItem>
+                                        <MudItem xs="2">
+                                            <strong>Reference Nr:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            @_vacation.ReferenceNr
+                                        </MudItem>
+
+                                        <MudItem xs="2">
+                                            <strong>Date of Travel:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            @_vacation.StartDate?.ToLongDateString() to @* @_vacation.EndDate?.ToLongDateString() *@
+                                        </MudItem>
+                                        <MudItem xs="2">
+                                            <strong>Rooms:</strong>
+                                        </MudItem>
+                                        <MudItem xs="4">
+                                            @_vacation.RoomCount
+                                        </MudItem>
+                                        <MudItem xs="2">
+                                            <strong>Free of Charge:</strong>
+                                        </MudItem>
+                                        <MudItem xs="4">
+                                            @_vacation.RoomCountFOC
+                                        </MudItem>
+
+                                        <MudItem xs="2">
+                                            <strong>Pricing:</strong>
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                            <table class="table">
+                                                <tr>
+                                                    <th>Group Type</th>
+                                                    <th>Price</th>
+                                                </tr>
+                                                @foreach (var item in _vacation.VacationPrices)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @item.Name (@item.Description)
+                                                        </td>
+                                                        <td>
+                                                            @string.Format(nfi, "{0:C}", item.Price)
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            </table>
+                                        </MudItem>
+                                        <MudItem xs="4">
+                                        </MudItem>
+
+                                        <MudItem xs="2">
+                                            <strong>Payment Terms:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            <table class="table">
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Date</th>
+                                                    <th>Amount</th>
+                                                </tr>
+
+                                                @* @if (_vacation.PaymentRules.Any(c => c.OnPurchase))
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            Book your seat
+                                                        </td>
+                                                        <td>
+                                                            Imidiate
+                                                        </td>
+                                                        <td>
+                                                            @string.Format(nfi, "{0:C}", _vacation.PaymentRules?.FirstOrDefault(c => c.OnPurchase)?.Value)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                @if (_vacation.PaymentRules.Any(c => !c.OnPurchase))
+                                                {
+                                                    @foreach (var gsd in _vacation.PaymentRules.Where (c => !c.OnPurchase))
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                Deposit
+                                                            </td>
+                                                            <td>
+                                                                @gsd.RuleDate?.ToString("dd-MMM-yy")
+                                                            </td>
+                                                            <td>
+                                                                @string.Format(nfi, "{0:C}", gsd.Value)
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                } *@@* 
+                                                @if (_vacation.CutOffDateForReservation is not null)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            Balance
+                                                        </td>
+                                                        <td>
+                                                            @_vacation.CutOffDateForReservation.Value.ToShortDateString()
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                } *@
+                                            </table>
+                                        </MudItem>
+
+                                        <MudItem xs="2">
+                                            <strong>Consultant:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            @_vacation.Consultant.Name @_vacation.Consultant.Surname
+                                        </MudItem>
+
+                                        <MudItem xs="2">
+                                            <strong>Coordinator:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            @_vacation.Coordinator.Name @_vacation.Coordinator.Surname
+                                        </MudItem>
+                                        <MudItem xs="2">
+                                            <strong>Tour Director:</strong>
+                                        </MudItem>
+                                        <MudItem xs="10">
+                                            @_vacation.TourDirector.Name @_vacation.TourDirector.Surname
+                                        </MudItem>
+                                        @if (_vacation.VacationIntervals.Any())
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Accommodation:</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Hotel Name</th>
+                                                        <th>Room Types</th>
+                                                        <th>Nights</th>
+                                                        <th>Arrival</th>
+                                                        <th>Depart</th>
+                                                        <th>Meal Plan</th>
+                                                        <th>Check-In</th>
+                                                        <th>Check-Out</th>
+                                                        <th>Notes</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.VacationIntervals)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Lodging.Name</td>
+                                                            <td>@item.RoomType</td>
+                                                            <td>@((item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount) - item.StartDate(_vacation.ToDto()))?.Days)</td>
+                                                            <td>@item.StartDate(_vacation.ToDto())?.ToString("dd-MMM-yy")</td>
+                                                            <td>@item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount).ToString("dd-MMM-yy")</td>
+                                                            <td>@item.MealPlan.GetDescription()</td>
+                                                            <td>@item.CheckInTime?</td>
+                                                            <td>@item.CheckOutTime?</td>
+                                                            <td>@item.Notes</td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td>TOTAL</td>
+                                                        <td></td>
+                                                        <td>@_vacation.VacationIntervals.Sum(c => (c.StartDate(_vacation.ToDto())?.AddDays(c.NightCount) - c.StartDate(_vacation.ToDto()))?.Days)</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </MudItem>
+                                        }
+                                        @if (_vacation.Gifts.Any())
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Gifts/Room Drops</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>What</th>
+                                                        <th>Where</th>
+                                                        <th>Who</th>
+                                                        <th>Date</th>
+                                                        <th>Day</th>
+                                                        <th>How</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.Gifts)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Gift.Description</td>
+                                                            <td>@item.Gift.TimeDescription</td>
+                                                            <td>@item.Gift.GuestType.GetDescription()</td>
+                                                            <td>@_vacation.StartDate?.AddDays(item.DayNr).ToString("dd-MMM-yy")</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == _vacation.StartDate?.AddDays(item.DayNr)))+1)
+                                                            </td>
+                                                            <td>@item.Gift.GiftType</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+                                        }
+                                        <MudItem xs="12">
+                                            <strong>Meet & Greet</strong>
+                                        </MudItem>
+                                        <MudItem xs="12">
+                                            <table class="table">
+                                                <tr>
+                                                    <th>Time</th>
+                                                    <th>Where</th>
+                                                    <th>Who</th>
+                                                    <th>When</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        @_vacation.MeetAndGreetTime
+                                                    </td>
+                                                    <td>
+                                                        @_vacation.MeetAndGreetTemplate.TimeDescription
+                                                    </td>
+                                                    <td>
+                                                        @_vacation.MeetAndGreetTemplate.Contact?.DisplayName
+                                                    </td>
+                                                    <td>
+                                                        @_vacation.MeetAndGreetTemplate.Location
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </MudItem>
+
+                                        @if (_vacation.GolferPackages.Any())
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Golfer Inclusions</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Golf Course</th>
+                                                        <th>Day</th>
+                                                        <th>Date</th>
+                                                        <th>Tee Times</th>
+                                                        <th>Carts</th>
+                                                        <th>Caddies</th>
+                                                        <th>Halfway</th>
+                                                        <th>Notes</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.GolferPackages)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.GolfCourse.Name</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == _vacation.StartDate?.AddDays(item.DayNr)))+1)
+                                                            </td>
+                                                            <td>@_vacation.StartDate?.AddDays(item.DayNr).ToString("dd-MMM-yy")</td>
+                                                            <td>@(item.StartTime == null ? "tba" : item.StartTime)</td>
+                                                            <td>@item.Carts</td>
+                                                            <td>@item.Caddies</td>
+                                                            <td>@item.Halfway</td>
+                                                            <td>@item.Notes</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+                                        }
+
+                                        @* @if (_vacation.DayTourActivities.Any(c => c.GuestType == (int)GuestType.NonGolfer))
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Non-Golfer Inclusions</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Day Tour/Activity</th>
+                                                        <th>Day</th>
+                                                        <th>Date</th>
+                                                        <th>Departure Time</th>
+                                                        <th style="width:250px;">Summary</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.DayTourActivities.Where(c => c.GuestType == (int)GuestType.NonGolfer))
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Name</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == item.Date)) +1)
+                                                            </td>
+                                                            <td>@item.Date.Value.ToString("dd-MMM-yy")</td>
+                                                            <td>@(item.StartTime == null ? "tba" : item.StartTime)</td>
+                                                            <td style="width:250px;">@item.Summary</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+                                        }
+
+                                        @if (_vacation.DayTourActivities.Any(c => c.GuestType == (int)GuestType.All))
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Group Activities</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Day Tour/Activity</th>
+                                                        <th>Day</th>
+                                                        <th>Date</th>
+                                                        <th>Departure Time</th>
+                                                        <th style="width:250px;">Summary</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.DayTourActivities.Where(c => c.GuestType == (int)GuestType.All))
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Name</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == item.Date)) +1)
+                                                            </td>
+                                                            <td>@item.Date.Value.ToString("dd-MMM-yy")</td>
+                                                            <td>@(item.StartTime == null ? "tba" : item.StartTime)</td>
+                                                            <td style="width:250px;">@item.Summary</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+                                        } *@
+
+                                        @if (_vacation.Meals is not null && _vacation.Meals.Any(c => c.MealAdditionTemPlate.MealType == MealType.Breakfast))
+                                        {
+
+                                            @if (_vacation.StartDate != null && _vacation.Meals.Count(c => c.MealAdditionTemPlate.MealType == MealType.Breakfast) == DateTimeExtensions.GetDatesBetween(_vacation.StartDate.Value, _vacation.StartDate.Value).Count())
+                                            { <MudItem xs="2">
+                                                    <strong>Meals - Breakfasts</strong>
+                                                </MudItem>
+                                                <MudItem xs="10">
+                                                    <li style="font-size:13px;">
+                                                        Full English breakfast daily
+                                                    </li>
+                                                </MudItem>
+                                            }
+                                            else
+                                            {
+                                                <MudItem xs="12">
+                                                    <strong>Meals - Breakfasts</strong>
+                                                </MudItem>
+                                                <MudItem xs="12">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <th>Restaurant</th>
+                                                            <th>Day(@_vacation.Meals.Count(c => c.MealAdditionTemPlate.MealType == MealType.Breakfast))</th>
+                                                            <th>Date</th>
+                                                            <th>Time</th>
+                                                            <th>Who</th>
+                                                            <th>Notes</th>
+                                                        </tr>
+                                                        @foreach (var item in _vacation.Meals.Where(c => !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Breakfast))
+                                                        {
+                                                            <tr>
+                                                                <td>@item.MealAdditionTemPlate.Restaurant</td>
+                                                                <td>
+                                                                    Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == _vacation.StartDate?.AddDays(item.DayNr))) + 1)
+                                                                </td>
+                                                                <td>@_vacation.StartDate?.AddDays(item.DayNr).ToString("dd-MMM-yy")</td>
+                                                                <td>@(item.StartTime == null ? "tba" : item.StartTime)</td>
+                                                                <td>@((item.MealAdditionTemPlate.GuestType).GetDescription())</td>
+                                                                <td>@item.MealAdditionTemPlate.Notes</td>
+                                                            </tr>
+                                                        }
+                                                    </table>
+                                                </MudItem>
+                                            }
+
+
+                                        }
+                                        @if (_vacation.Meals is not null && _vacation.Meals.Any(c => c.MealAdditionTemPlate.MealType == MealType.Lunch))
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Meals - Lunches</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Restaurant</th>
+                                                        <th>Day(@_vacation.Meals.Count(c => c.MealAdditionTemPlate.MealType == MealType.Lunch))</th>
+                                                        <th>Date</th>
+                                                        <th>Time</th>
+                                                        <th>Who</th>
+                                                        <th>Notes</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.Meals.Where(c => !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Lunch))
+                                                    {
+                                                        <tr>
+                                                            <td>@item.MealAdditionTemPlate.Restaurant</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == _vacation.StartDate?.AddDays(item.DayNr))) + 1)
+                                                            </td>
+                                                            <td>@_vacation.StartDate?.AddDays(item.DayNr).ToString("dd-MMM-yy")</td>
+                                                            <td>@(item.StartTime == null ? "tba" : item.StartTime)</td>
+                                                            <td>@((item.MealAdditionTemPlate.GuestType).GetDescription())</td>
+                                                            <td>@item.MealAdditionTemPlate.Notes</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+                                        }
+                                        @if (_vacation.Meals is not null && _vacation.Meals.Any(c => c.MealAdditionTemPlate.MealType == MealType.Dinner))
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Meals Dinners</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Restaurant</th>
+                                                        <th>Day(@_vacation.Meals.Count(c => c.MealAdditionTemPlate.MealType == MealType.Dinner))</th>
+                                                        <th>Date</th>
+                                                        <th>Time</th>
+                                                        <th>Notes</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.Meals.Where(c => !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Dinner))
+                                                    {
+                                                        <tr>
+                                                            <td>@item.MealAdditionTemPlate.Restaurant</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == _vacation.StartDate?.AddDays(item.DayNr))) + 1)
+                                                            </td>
+                                                            <td>@_vacation.StartDate?.AddDays(item.DayNr).ToString("dd-MMM-yy")</td>
+                                                            <td>@(item.StartTime == null ? "tba" : item.StartTime)</td>
+                                                            <td>@item.MealAdditionTemPlate.Notes</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+                                        }
+
+                                        @if (_vacation.VacationIntervals.Any())
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Meals & Activities (Overview)</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                @foreach (var inclusion in _vacation.VacationInclusionDisplayTypeInfos.Where(c => c.VacationInclusionDisplayType == VacationInclusionDisplayTypes.MealsAndActivities))
+                                                {
+                                                    <div style="padding-top:15px;">
+                                                        <ul style="margin-top:5px; margin-bottom:10px;" class="dash-list">
+
+                                                            @if (_vacation.StartDate is not null && _vacation.Meals is not null && _vacation.Meals.Count(c => c.MealAdditionTemPlate.MealType == MealType.Breakfast) == DateTimeExtensions.GetDatesBetween(_vacation.StartDate.Value, _vacation.StartDate.Value).Count())
+                                                            {
+                                                                <li>
+                                                                    Full English breakfast daily
+                                                                </li>
+                                                            }
+                                                            @foreach (var item in _vacation.VacationIntervals.OrderBy(c => c.SortOrderNr))
+                                                            {
+                                                                if (_vacation.StartDate is not null && _vacation.Meals is not null && _vacation.Meals.Count(c => c.MealAdditionTemPlate.MealType == MealType.Breakfast) != DateTimeExtensions.GetDatesBetween(_vacation.StartDate.Value, _vacation.StartDate.Value).Count() - 1 && _vacation.Meals.Any(c => _vacation.StartDate?.AddDays(c.DayNr) >= item.StartDate(_vacation.ToDto()) && _vacation.StartDate?.AddDays(c.DayNr) <= item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount) && !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Breakfast))
+                                                                {
+                                                                    <li>
+                                                                        @_vacation.Meals.Count(c => _vacation.StartDate?.AddDays(c.DayNr) >= item.StartDate(_vacation.ToDto()) && _vacation.StartDate?.AddDays(c.DayNr) <= item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount) && !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Breakfast) special breakfasts during your stay at @item.Lodging.Name
+                                                                    </li>
+                                                                }
+                                                                if (_vacation.StartDate is not null && _vacation.Meals is not null && _vacation.Meals.Any(c => _vacation.StartDate?.AddDays(c.DayNr) >= item.StartDate(_vacation.ToDto()) && _vacation.StartDate?.AddDays(c.DayNr) <= item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount) && !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Breakfast))
+                                                                {
+                                                                    <li>
+                                                                        @_vacation.Meals.Count(c => _vacation.StartDate?.AddDays(c.DayNr) >= item.StartDate(_vacation.ToDto()) && _vacation.StartDate?.AddDays(c.DayNr) <= item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount) && !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Breakfast) special lunches during your stay at @item.Lodging.Name
+                                                                    </li>
+                                                                }
+                                                                if (_vacation.StartDate is not null && _vacation.Meals is not null && _vacation.Meals.Any(c => _vacation.StartDate?.AddDays(c.DayNr) >= item.StartDate(_vacation.ToDto()) && _vacation.StartDate?.AddDays(c.DayNr) <= item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount) && !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Breakfast))
+                                                                {
+                                                                    <li>
+                                                                        @_vacation.Meals.Count(c => _vacation.StartDate?.AddDays(c.DayNr) >= item.StartDate(_vacation.ToDto()) && _vacation.StartDate?.AddDays(c.DayNr) <= item.StartDate(_vacation.ToDto())?.AddDays(item.NightCount) && !c.IntervalInclusion && c.MealAdditionTemPlate.MealType == MealType.Breakfast) special dinners during your stay at @item.Lodging.Name
+                                                                    </li>
+                                                                }
+                                                            }
+                                                            <li>
+                                                                Selected wine and soft drinks at all hosted dinners
+                                                            </li>
+                                                            <li>
+                                                                Full non-golfers program on the day of golf
+                                                            </li>
+                                                            @* @foreach (var item in _vacation.DayTourActivities.OrderBy(c => c.Date))
+                                                            {
+                                                                <li>
+                                                                    @item.Summary
+                                                                </li>
+                                                            } *@
+                                                            
+                                                        </ul>
+                                                    </div>
+                                                }
+                                            </MudItem>
+                                        }
+
+                                        @if (_vacation.Flights.Any())
+                                        {
+                                            <MudItem xs="12">
+                                                <strong>Group Flights</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Routing</th>
+                                                        <th>Day</th>
+                                                        <th>Date</th>
+                                                        <th>Flight</th>
+                                                        <th>Departure</th>
+                                                        <th>Arrival</th>
+                                                        <th>Conformation</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.Flights)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Routing</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == _vacation.StartDate.Value.Date.AddDays(item.ArrivalDayNr).Date)))
+                                                            </td>
+                                                            <td>@(_vacation.StartDate.Value.Date.AddDays(item.ArrivalDayNr).ToString("dd-MMM-yy"))</td>
+                                                            <td>@item.FlightNumber</td>
+                                                            <td>@item.DepartureTime</td>
+                                                            <td>@item.ArrivalTime</td>
+                                                            <td>@item.ConfirmationNumber</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+
+                                            <MudItem xs="12">
+                                                <strong>Departure Movements</strong>
+                                            </MudItem>
+                                            <MudItem xs="12">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Destination</th>
+                                                        <th>Day</th>
+                                                        <th>Date</th>
+                                                        <th>Departure Time</th>
+                                                        <th>Mode</th>
+                                                        <th>Notes</th>
+                                                    </tr>
+                                                    @foreach (var item in _vacation.Flights.Where(c => c.DepartureDayNr is not null))
+                                                    {
+                                                        <tr>
+                                                            <td>@item.DepartureMovementDestination</td>
+                                                            <td>
+                                                                Day: @(dates.IndexOf(dates.FirstOrDefault(c => c.Date == _vacation.StartDate.Value.Date.AddDays(item.DepartureDayNr!.Value).Date)))
+                                                            </td>
+                                                            <td>@_vacation.StartDate.Value.Date.AddDays(item.DepartureDayNr.Value).ToString("dd-MMM-yy") </td>
+                                                            <td>@item.DepartureMovementTime</td>
+                                                            <td>@item.DepartureMovementMode</td>
+                                                            <td>@item.DepartureMovementNotes</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </MudItem>
+                                        }
+                                    </MudGrid>
+                                </MudTabPanel>
+                                <MudTabPanel Text="Itinirary Report">
+                                    <MudGrid>
+                                        @foreach (var itineraryColumn in _vacation.Itinerary.OrderBy(c => c.Date))
+                                        {
+                                            <MudItem xs="12">
+                                                <p style="font-size:13px !important; padding-top:15px;">
+                                                    <strong>@itineraryColumn.Title: @itineraryColumn.Date?.ToLongDateString()</strong> <br>
+                                                    <ul class="dash-list" style="line-height:1.88889">
+                                                        @foreach (var detail in itineraryColumn.Details.OrderBy(c => c.Time))
+                                                        {
+                                                            <li>@detail.Description</li>
+                                                        }
+                                                    </ul>
+                                                </p>
+                                            </MudItem>
+                                        }
+                                    </MudGrid>
+                                </MudTabPanel>
+                            </MudTabs>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+    <footer>
+        <div class="footer-corporate novi-bg novi-bg-img">
+            <div class="container">
+                <div class="footer-corporate__inner">
+                    <p class="rights" style="font-size:12px !important"><span>© ProGolf Africa Safaris</span><span>&nbsp;</span><span class="copyright-year"></span>.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+<EditForm Model="@ItineraryItem" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>      
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => ItineraryItem.Description)" @bind-Value="ItineraryItem.Description" Label="Name" Lines="4" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

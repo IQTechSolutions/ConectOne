@@ -1,0 +1,164 @@
+@page "/cookie-policy"
+
+@using KiburiOnline.Blazor.Shared.Layouts
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<section class="section novi-bg novi-bg-img section-xl bg-default text-center" style="padding-top:40px; padding-bottom:40px;" id="team">
+    <div class="container">
+        <div class="row row-30 justify-content-lg-center">
+            <h4>COOKIE POLICY</h4>
+            <div class="col-lg-12" style="text-align:left !important;">
+                <strong>🍪 COOKIE POLICY FOR @Configuration["ApplicationConfiguration:WebAddress"].ToUpper()</strong><br />
+                <strong>Effective Date: October 7, 2025</strong><br />
+                <strong>Last Updated: October 7, 2025</strong>
+
+                <p>
+                    <strong>1. Introduction</strong>
+                </p>
+                <p>
+                    Pro Golf Safaris ("we," "our," or "us") uses cookies and similar technologies to enhance your browsing
+                    experience, improve our services, and analyze website traffic. This Cookie Policy explains what cookies are,
+                    how we use them, and how you can control their use on @Configuration["ApplicationConfiguration:WebAddress"].
+                </p>
+
+                <p>
+                    <strong>2. What Are Cookies?</strong>
+                </p>
+                <p>
+                    Cookies are small text files placed on your computer or mobile device when you visit a website. They help the
+                    site remember your actions and preferences (such as login, language, and region) over time so you don’t have to
+                    re-enter them whenever you return.
+                </p>
+                <p>
+                    Cookies may be:
+                </p>
+                <ul>
+                    <li>Session cookies (expire when you close your browser), or</li>
+                    <li>Persistent cookies (stay on your device for a set period or until you delete them).</li>
+                </ul>
+
+                <p>
+                    <strong>3. How We Use Cookies</strong>
+                </p>
+                <p>
+                    We use cookies for the following purposes:
+                </p>
+                <div class="table-custom-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Purpose</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Essential Cookies</td>
+                                <td>Required for the website to function properly, such as page navigation and access to secure areas.</td>
+                                <td>Login authentication, shopping cart management</td>
+                            </tr>
+                            <tr>
+                                <td>Performance &amp; Analytics Cookies</td>
+                                <td>Help us understand how visitors use our website to improve content and user experience.</td>
+                                <td>Google Analytics, traffic statistics</td>
+                            </tr>
+                            <tr>
+                                <td>Functional Cookies</td>
+                                <td>Remember your preferences and settings (e.g., language or region).</td>
+                                <td>Saving booking form details</td>
+                            </tr>
+                            <tr>
+                                <td>Marketing Cookies</td>
+                                <td>Track visitors across websites to deliver more relevant advertising and offers.</td>
+                                <td>Google Ads, Meta Pixel</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>
+                    <strong>4. Third-Party Cookies</strong>
+                </p>
+                <p>
+                    Some cookies are placed by third-party services that appear on our pages (e.g., analytics providers, social media,
+                    or advertising partners). These third parties may collect data about your browsing behavior across different sites.
+                </p>
+                <p>
+                    We use trusted providers such as:
+                </p>
+                <ul>
+                    <li>Google Analytics – for website analytics</li>
+                    <li>Facebook/Meta Pixel – for targeted marketing campaigns</li>
+                    <li>YouTube – to display embedded video content</li>
+                </ul>
+                <p>
+                    Each provider has its own privacy policy governing the use of cookies and data.
+                </p>
+
+                <p>
+                    <strong>5. Managing and Disabling Cookies</strong>
+                </p>
+                <p>
+                    You can manage your cookie preferences anytime:
+                </p>
+                <p>
+                    <strong>Browser Controls:</strong><br />
+                    Most web browsers allow you to delete cookies or block certain types. Check your browser’s “Help” or “Settings”
+                    section for guidance.
+                </p>
+                <p>
+                    <strong>Cookie Banner Settings:</strong><br />
+                    When you first visit our site, you can choose to accept, reject, or customize cookie categories.
+                </p>
+                <p>
+                    <strong>Opt-Out Links:</strong>
+                </p>
+                <ul>
+                    <li>Google Analytics Opt-Out Add-on</li>
+                    <li>Your Online Choices</li>
+                </ul>
+                <p>
+                    Please note that disabling certain cookies may affect the functionality of the website.
+                </p>
+
+                <p>
+                    <strong>6. Data Retention</strong>
+                </p>
+                <p>
+                    We retain cookie data for as long as necessary to fulfill the purposes outlined in this policy or as required by law.
+                    Session cookies expire when you close your browser; persistent cookies last up to 12 months unless you delete them sooner.
+                </p>
+
+                <p>
+                    <strong>7. Updates to This Policy</strong>
+                </p>
+                <p>
+                    We may update this Cookie Policy periodically to reflect changes in technology, legislation, or our practices.
+                    We will post the updated version on this page and update the “Last Updated” date at the top.
+                </p>
+
+                <p>
+                    <strong>8. Contact Us</strong>
+                </p>
+                <p>
+                    If you have any questions or concerns about our use of cookies, please contact us:
+                </p>
+                <p>
+                    Pro Golf Safaris<br />
+                    Email: <a href="mailto:@Configuration["ApplicationConfiguration:InfoEmailAddress"]">@Configuration["ApplicationConfiguration:InfoEmailAddress"]</a><br />
+                    Website: <a href="@Configuration["ApplicationConfiguration:WebAddress"]" target="_blank" rel="noopener">@Configuration["ApplicationConfiguration:WebAddress"]</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

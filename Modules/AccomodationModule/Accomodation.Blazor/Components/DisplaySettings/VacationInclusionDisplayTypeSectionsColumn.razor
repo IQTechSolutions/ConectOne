@@ -1,0 +1,84 @@
+﻿@using AccomodationModule.Domain.Enums
+@using ConectOne.Domain.Extensions
+
+<style>
+    .dash-list { /* ① hide the normal bullet          */
+        list-style: none; /*    (also resets left‑padding)      */
+        padding-left: 0;
+    }
+
+        .dash-list li::before { /* ② inject your own marker           */
+            content: "-"; /* the dash itself                    */
+            margin-right: .5em; /* a little gap before the text       */
+        }
+</style>
+
+ @if (Vacation is not null)
+{
+    foreach (var inclusion in Vacation.VacationInclusionDisplayTypeInfos.Where(c => c.ColumnSelection == ColumnName).OrderBy(c => c.DisplayOrder))
+    {
+        @if (inclusion.VacationInclusionDisplayType == VacationInclusionDisplayTypes.General && !string.IsNullOrWhiteSpace(Vacation.GeneralInclusionsSummaryInformation))
+        {
+            <div style="padding-top:13px;">
+                <p id="pack_head">@inclusion.VacationInclusionDisplayType.GetDescription().ToUpper()</p>
+                <p style="margin-top:5px; margin-bottom:10px; font-size:13px !important; line-height:1.88889">
+                    (MarkupString)Vacation.VacationInclusionGeneralInfo
+                </p>
+            </div>
+        }
+        else if (inclusion.VacationInclusionDisplayType == VacationInclusionDisplayTypes.Accommodation)
+        {
+            <div style="padding-top:15px;">
+                <p id="pack_head">@inclusion.VacationInclusionDisplayType.GetDescription().ToUpper()</p>
+                <ul style="margin-top:5px; margin-bottom:10px;" class="dash-list">
+                    @foreach (var item in Vacation.VacationIntervals.OrderBy(c => c.SortOrderNr))
+                    {
+                        <li style="font-size:13px; list-style-type:none;">
+                            @item.NightCount Nights at @item.Lodging.Name
+                            @if (item.Destination != null)
+                            {
+                                <span> (@item.Destination.Name)</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        else if (inclusion.VacationInclusionDisplayType is VacationInclusionDisplayTypes.GolfRounds)
+        {
+            <div style="padding-top:15px;">
+                <p id="pack_head">@inclusion.VacationInclusionDisplayType.GetDescription().ToUpper()</p>
+                <ul style="margin-top:5px; margin-bottom:10px;" class="dash-list">
+                    @foreach (var item in Vacation.GolferPackages.OrderBy(c => c.DayNr))
+                    {
+                        <li style="font-size:13px;">
+                            1 Round at @item.GolfCourse.Name
+                            @if (item.Carts)
+                            {
+                                <span> including golf carts</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        else if (inclusion.VacationInclusionDisplayType == VacationInclusionDisplayTypes.MealsAndActivities && !string.IsNullOrWhiteSpace(Vacation.MealsAndActivitiesInclusionsSummaryInformation))
+        {
+            <div style="padding-top:13px;">
+                <p id="pack_head">@inclusion.VacationInclusionDisplayType.GetDescription().ToUpper()</p>
+                <p style="margin-top:5px; margin-bottom:10px; font-size:13px !important; line-height:1.88889">
+                    (MarkupString)Vacation.MealsAndActivitiesInclusionsSummaryInformation
+                </p>
+            </div>
+        }
+        else if (inclusion.VacationInclusionDisplayType == VacationInclusionDisplayTypes.TransportAndFlights && !string.IsNullOrWhiteSpace(Vacation.TransportAndFlightsInclusionsSummaryInformation))
+        {
+            <div style="padding-top:13px;">
+                <p id="pack_head">@inclusion.VacationInclusionDisplayType.GetDescription().ToUpper()</p>
+                <p style="margin-top:5px; margin-bottom:10px; font-size:13px !important; line-height:1.88889">
+                    (MarkupString)Vacation.TransportAndFlightsInclusionsSummaryInformation
+                </p>
+            </div>
+        }
+    }
+}

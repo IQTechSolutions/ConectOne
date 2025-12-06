@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AccomodationModule\AccomodationModule.Domain\AccomodationModule.Domain.csproj" />
     <ProjectReference Include="..\..\Base\ConectOne.Domain\ConectOne.Domain.csproj" />
     <ProjectReference Include="..\..\FilingModule\FilingModule.Domain\FilingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\GroupingModule\GroupingModule.Domain\GroupingModule.Domain.csproj" />
     <ProjectReference Include="..\..\IdentityModule\IdentityModule.Domain\IdentityModule.Domain.csproj" />
   </ItemGroup>
 

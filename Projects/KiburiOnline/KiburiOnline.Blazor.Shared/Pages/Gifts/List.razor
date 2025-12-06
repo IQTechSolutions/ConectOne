@@ -1,0 +1,50 @@
+@page "/gifts"
+
+@using ConectOne.Blazor.Components
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Gifts" Caption="All available gifts" />
+
+    @if (!_loaded)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Elevation="25" Items="_gifts" Hover="true">
+            <ToolBarContent>
+                <MudSpacer />
+                <MudButton Color="Color.Primary" OnClick="AddGift" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Description</MudTh>
+                <MudTh>Gift Type</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Description">
+                    <MudHighlighter Text="@context.Description" />
+                </MudTd>
+                <MudTd DataLabel="Gift Type">
+                    <MudHighlighter Text="@context.GiftType.ToString()" />
+                </MudTd>
+                <MudTd DataLabel="Actions" Style="text-align: right">
+                    <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => UpdateGift(context))">Edit</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteGift(context.GiftId))">Delete</MudMenuItem>
+                    </MudMenu>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</div>
+

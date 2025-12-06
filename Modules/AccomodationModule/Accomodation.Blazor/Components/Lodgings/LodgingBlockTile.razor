@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+
+<div class="box col-md-3" style="padding-top:15px; padding-bottom:15px">
+    <figure @onclick="() => NavigationManager.NavigateTo(Url)">
+        <a class="hover-effect" href="@Url" title="@($"{Name} Cover Image")">
+            <NeuralTech.Blazor.Components.NeuralTechImage Src="@ImageSrc" AltText="@($"{Name} Cover Image")" />
+        </a>
+    </figure>
+    <div class="details" style="min-height:75px;" @onclick="() => NavigationManager.NavigateTo(Url)">
+        <span class="price"><small>FROM</small>@Rate.ToString("c") </span>
+        <h4 class="box-title"><a href="@Url">@Name</a></h4>
+    </div>
+    <div class="action" style="text-align:center; padding-bottom:5px; padding-top:8px;">
+        <a class="button btn-small yellow" href="@Url">SELECT</a>
+        <a class="button btn-small" style="z-index:-1000" @onclick="ShowMap">VIEW ON MAP</a>
+    </div>
+</div>

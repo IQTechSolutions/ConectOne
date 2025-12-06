@@ -1,7 +1,8 @@
-﻿@using Progolf.Blazor.ServerClient.Components.Account.Shared
-<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+﻿@using KiburiOnline.Blazor.Shared.Layouts
+@using Progolf.Blazor.ServerClient.Components.Account.Shared
+<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)" AdditionalAssemblies="new[] { typeof(KiburiOnline.Blazor.Shared.AssemblyReference).Assembly }">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(WebsiteLayout)">
             <NotAuthorized>
                 <RedirectToLogin />
             </NotAuthorized>
@@ -9,3 +10,6 @@
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
+
+<BytexDigital.Blazor.Components.CookieConsent.CookieConsentHandler @rendermode="@RenderMode.InteractiveServer" />
+<BytexDigital.Blazor.Components.CookieConsent.CookieConsentInitializer @rendermode="@RenderMode.InteractiveServer" />

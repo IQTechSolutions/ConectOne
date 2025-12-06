@@ -1,0 +1,66 @@
+﻿@page "/destinations/rwanda"
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Contacts
+@using KiburiOnline.Blazor.Shared.Pages.Destinations.Partials
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+@layout WebsiteLayout
+
+<PageTitle>Rwanda Gorilla Trekking | ProGolf Africa Safaris</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Plan a once-in-a-lifetime gorilla-trekking extension in Rwanda with boutique stays and expert guiding—an unforgettable add-on to your East Africa golf and safari journey." />
+    <link rel="canonical" href="/destinations/rwanda" />
+</HeadContent>
+ 
+@* Destination Section *@
+<section class="section parallax-container text-center context-dark" style="background-image: url('Assets/images/parallax-rwanda.jpg'); background-size: cover; background-position: center;">
+    <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <div class="row row-50" style="margin-bottom:-80px !important;">
+
+
+
+                <div class="col-md-6 col-xl-6">
+                    <h4>Rwanda</h4>
+                    <p>
+                        <InnerMenu PageName="rwanda" />
+                    </p>
+                    <hr>
+                    <p style="font-size:14px; font-style:italic;">
+                        Rwanda is the smallest of our popular destinations in East Africa and will always be known for its troubled past. Notwithstanding the history, this beautiful country is best known for its Mountain Gorillas. For the more adventurous traveler, Gorilla trekking promises to be one of the most exhilarating wildlife encounters imaginable. Rwanda is the most easily accessible destination to witness these endangered and majestic primates in their natural habitat – The Virungas rain forest.
+                    </p>
+                    <hr>
+                    <p>
+                        <ul style="font-size:14px !important; font-style:italic; list-style-type:circle !important;">
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Embark on a Gorilla trek to experience intimate Gorilla family life</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Hike one of several volcanos to get a birds eye view of the Rwanda landscape</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit the Kinunu Coffee Washing Station near the lakeside town of Gisenyi</li>
+
+                        </ul>
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 col-xl-6">
+                    <AfricaMap Country="Rwanda" />
+                </div>
+
+            </div>
+        </div>
+        <span id="packages" style="padding-top:70px;"></span>
+    </div>
+</section>
+
+<DestinationVacationsControl CountryName="Rwanda" Vacations="_vacations"/>
+
+<ContactsBanner/>
+
+<script type="text/javascript" language="javascript">
+    window.location.hash = "rwanda";
+</script>

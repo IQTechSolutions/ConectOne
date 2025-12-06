@@ -1,0 +1,100 @@
+﻿@page "/contacts/create/{ContactType:int}"
+@page "/contacts/create"
+@using AccomodationModule.Domain.Entities
+@using AccomodationModule.Domain.Enums
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using Radzen.Blazor
+
+@attribute [Authorize]
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <EditForm Model="_contact" OnValidSubmit="CreateAsync">
+        <MudGrid>
+            <MudItem md="6">
+                <DefaultTitle Title="@($"Create New Contact")" Caption="Complete the information to add new guide" />
+            </MudItem>
+            <MudItem md="6" Style="float:right">
+                <MudBreadcrumbs Items="_items" Style="float:right"></MudBreadcrumbs>
+            </MudItem>
+            <MudItem md="12">
+        
+                <MudTabs>
+                   
+                    <DataAnnotationsValidator />
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="3" lg="3">
+                            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@($"{_contact.Name} {_contact.Surname}")" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Contact)" ParentId="@_contact.ContactId" />
+                            <MudDivider />
+                            <MudCard>
+                                <MudCardContent>
+                                    <MudGrid>
+                                            
+                                    </MudGrid>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+                        <MudItem xs="12" sm="12" md="9" lg="9">
+                            <MudCard>
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem md="12">
+                                            <MudSwitch Style="float:right;" @bind-Value="@_contact.Featured" Color="Color.Info" UncheckedColor="Color.Error" Label="Featured" />
+                                        </MudItem>
+                                        <MudItem md="6">
+                                            <MudTextField Label="First Name" Class="mt-3" @bind-Value="_contact.Name" For="@(() => _contact.Name)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem md="6">
+                                            <MudTextField Label="Last Name" Class="mt-3" @bind-Value="_contact.Surname" For="@(() => _contact.Surname)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+
+                                        <MudItem md="6">
+                                            <MudTextField Label="Phone Nr" Class="mt-3" @bind-Value="_contact.Phone" For="@(() => _contact.Phone)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem md="6">
+                                            <MudTextField Label="Email Address" Class="mt-3" @bind-Value="_contact.Email" For="@(() => _contact.Email)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem md="12">
+                                            <MudSelect T="ContactType" Label="Work Title" @bind-Value="_contact.ContactType" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                                @foreach (ContactType contact in Enum.GetValues(typeof(ContactType)))
+                                                {
+                                                    <MudSelectItem T="ContactType" Value="@contact">@contact.GetDescription()</MudSelectItem>
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                        <MudItem xs="12">
+                                            <label style="padding-left:20px;">Short Descriptions</label>
+                                            <RadzenHtmlEditor @bind-Value="@_contact.Bio" style="height: 300px;" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudItem>
+        
+                    </MudGrid>
+                      
+                </MudTabs>
+            </MudItem>
+            <MudItem xs="6" sm="6" md="6" lg="6">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+            </MudItem>
+        
+            <MudItem xs="6" sm="6" md="6" lg="6">
+                <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+</div>    

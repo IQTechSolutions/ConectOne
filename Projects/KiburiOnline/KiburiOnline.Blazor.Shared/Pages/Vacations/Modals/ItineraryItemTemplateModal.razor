@@ -1,0 +1,97 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using Radzen.Blazor
+<style>
+    .editorPlaceholderDropdown .mud-button-label {
+        font-size: 13.2px;
+        text-transform: capitalize !important;
+    }
+
+    .editorPlaceholderDropdown .mud-svg-icon {
+        margin-left: -10px;
+    }
+
+    .editorPlaceholderDropdownButton .mud-menu-item-text {
+        font-size: 13.2px;
+        margin: 0;
+    }
+</style>
+
+<EditForm Model="@Template" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Template.DayNr)" AdornmentText="Day-" @bind-Value="Template.DayNr" Label="Day Nr" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12">
+                    <label style="padding-left:20px;">Content</label>
+                    <RadzenHtmlEditor @bind-Value="@Template.Content" style="height: 300px;">
+                        <RadzenHtmlEditorUndo />
+                        <RadzenHtmlEditorRedo />
+                        <RadzenHtmlEditorSeparator />
+                        <RadzenHtmlEditorBold />
+                        <RadzenHtmlEditorItalic />
+                        <RadzenHtmlEditorStrikeThrough />
+                        <RadzenHtmlEditorSeparator />
+                        <RadzenHtmlEditorAlignLeft />
+                        <RadzenHtmlEditorAlignCenter />
+                        <RadzenHtmlEditorAlignRight />
+                        <RadzenHtmlEditorJustify />
+                        <RadzenHtmlEditorSeparator />
+                        <RadzenHtmlEditorIndent />
+                        <RadzenHtmlEditorOutdent />
+                        <RadzenHtmlEditorUnorderedList />
+                        <RadzenHtmlEditorOrderedList />
+                        <RadzenHtmlEditorSeparator />
+                        <RadzenHtmlEditorColor />
+                        <RadzenHtmlEditorBackground />
+                        <RadzenHtmlEditorSeparator />
+                        <RadzenHtmlEditorRemoveFormat />
+                        <RadzenHtmlEditorSubscript />
+                        <RadzenHtmlEditorSuperscript />
+                        <RadzenHtmlEditorLink />
+                        <RadzenHtmlEditorUnlink />
+                        <RadzenHtmlEditorImage />
+                        <RadzenHtmlEditorSeparator />
+                        <RadzenHtmlEditorFontName />
+                        <RadzenHtmlEditorFontSize />
+                        <RadzenHtmlEditorFormatBlock />
+                        <RadzenHtmlEditorCustomTool>
+                            <Template Context="editor">
+                                <MudMenu Class="editorPlaceholderDropdown" Label="Add Placeholder Tag" Variant="Variant.Text" Size="Size.Small" EndIcon="@Icons.Material.Filled.ArrowDropDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---ReferenceNr--->", editor))" Class="editorPlaceholderDropdownButton">Reference Nr</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---HostName--->", editor))" Class="editorPlaceholderDropdownButton">Host Name</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---ArrivalCity--->", editor))" Class="editorPlaceholderDropdownButton">Arrival City</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---StartDate--->", editor))" Class="editorPlaceholderDropdownButton">Start Date</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---EndDate--->", editor))" Class="editorPlaceholderDropdownButton">End Date</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---NightCount--->", editor))" Class="editorPlaceholderDropdownButton">Night Count</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---DayCount--->", editor))" Class="editorPlaceholderDropdownButton">Day Count</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---AccommodationCount--->", editor))" Class="editorPlaceholderDropdownButton">LodgingCount</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---FlightCount--->", editor))" Class="editorPlaceholderDropdownButton">Flight Count</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---GolferPackagesCount--->", editor))" Class="editorPlaceholderDropdownButton">Golf Package Count</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---ExtensionCount--->", editor))" Class="editorPlaceholderDropdownButton">Extension Count</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---Consultant--->", editor))" Class="editorPlaceholderDropdownButton">Consultant</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---Coordinator--->", editor))" Class="editorPlaceholderDropdownButton">Coordinator</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---TourDirector--->", editor))" Class="editorPlaceholderDropdownButton">Tour Director</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---CompanyEmail--->", editor))" Class="editorPlaceholderDropdownButton">Company Email</MudMenuItem>
+                                    <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked("<---CompanyPhoneNr--->", editor))" Class="editorPlaceholderDropdownButton">Company Phone Nr</MudMenuItem>
+                                    @foreach (var customTag in _availableCustomVariablePlaceholders)
+                                    {
+                                        <MudMenuItem OnClick="@(args => OnAddPlaceHolderEditorDropdownButtonClicked($"<---{@customTag.Name}--->", editor))" Class="editorPlaceholderDropdownButton">customTag.Name</MudMenuItem>
+                                    }
+                                </MudMenu>
+                            </Template>
+                        </RadzenHtmlEditorCustomTool>
+                        <RadzenHtmlEditorSource />
+                    </RadzenHtmlEditor>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="MudBlazor.ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

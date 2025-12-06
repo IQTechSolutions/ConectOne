@@ -1,0 +1,67 @@
+﻿@using MudBlazor
+
+<MudCard Style="width:100%">
+    <MudCardContent>
+        <MudCard Style="width:100%; padding-left:20px;">
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTable Items="@(Vacation.Flights?.OrderBy(c => @Vacation?.StartDate?.AddDays(c.ArrivalDayNr)))" Elevation="25">
+                            <HeaderContent>
+                                <MudTh>Date</MudTh>
+                                <MudTh>Departure</MudTh>
+                                <MudTh>Departure Airport</MudTh>
+                                <MudTh>Arrival Airport</MudTh>
+                                <MudTh>Arrival</MudTh>
+                                <MudTh>Routing</MudTh>
+                                <MudTh>FlightNr</MudTh>
+                                <MudTh>Conformation Nr</MudTh>
+                                <MudTh></MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>@(context.DepartureDayNr is not null ? Vacation?.StartDate?.AddDays(context.ArrivalDayNr - 1).ToLongDateString() : "")</MudTd>
+                                <MudTd>@context.DepartureTime</MudTd>
+                                <MudTd>@context.DepartureAirport?.Name</MudTd>
+                                <MudTd>@context.ArrivalAirport?.Name</MudTd>
+                                <MudTd>@context.ArrivalTime</MudTd>
+                                <MudTd>@context.Routing</MudTd>
+                                <MudTd>@context.FlightNumber</MudTd>
+                                <MudTd>@context.ConfirmationNumber</MudTd>
+                                <MudTd>
+                                    <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                        <MudMenuItem OnClick="@(() => UpdateFlight(context))" Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => RemoveFlight(context.FlightId))" Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
+                                    </MudMenu>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudItem>
+                    <MudItem md="12">
+                        <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" OnClick="CreateFlight">
+                            New Flight Item
+                        </MudButton>
+                    </MudItem>
+                    
+                    @if (Update.HasDelegate)
+                    {
+                        <MudItem xs="4" sm="4" md="4" lg="4">
+                            <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+                        </MudItem>
+                    }
+                    @if (NextTab.HasDelegate)
+                    {
+                        <MudItem xs="4" sm="4" md="4" lg="4">
+                            <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+                        </MudItem>
+                    }
+                    <MudItem xs="4" sm="4" md="4" lg="4">
+                        <MudButton OnClick="OnPreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+                    </MudItem>
+                    <MudItem xs="4" sm="4" md="4" lg="4">
+                        <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudCardContent>
+</MudCard>

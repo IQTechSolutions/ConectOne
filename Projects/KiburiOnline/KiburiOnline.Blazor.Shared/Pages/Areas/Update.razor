@@ -1,0 +1,94 @@
+﻿@page "/areas/update/{AreaId}"
+
+
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="_area" OnValidSubmit="UpdateAsync" class="card card-body bg-light mt-5">
+
+    <DefaultTitle Title="Update Area" Caption="Please complete the following information to update the current areas" />
+
+    <DataAnnotationsValidator />
+
+    <MudGrid>
+
+        <MudItem xs="12" sm="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudTextField Label="Name" Class="mt-3" @bind-Value="_area.Name" For="@(() => _area.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+                        
+                        <MudItem xs="12" md="12">
+                            <MudTextField Lines="4" Label="Description" Class="mt-3" @bind-Value="_area.Description" For="@(() => _area.Description)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="12">
+                            <MudTable Elevation="25" Items="_area.AverageTemperatures.OrderBy(c => c.Month.Month)" Context="context2">
+
+                                <ToolBarContent>
+
+                                    @if (_canCreateArea)
+                                    {
+                                        <MudSpacer />
+                                        <div style="padding-right:15px;">
+                                            <MudButton OnClick="CreateAverageTemperatureAsync" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">Create</MudButton>
+                                        </div>
+                                    }
+
+                                </ToolBarContent>
+
+                                <HeaderContent>
+                                    <MudTh><strong>Name</strong></MudTh>
+                                    <MudTh><strong>Short Description</strong></MudTh>
+                                    <MudTh>
+                                    @if (_canCreateArea)
+                                    {
+                                    }
+                                    </MudTh>
+                                </HeaderContent>
+
+                                <RowTemplate>
+
+                                    <MudTd>@DateTimeExtensions.GetAbbreviatedMonth(context2.Month.Month)</MudTd>
+                                    <MudTd><strong>@context2.AvgLow</strong></MudTd>
+                                    <MudTd><strong>@context2.AvgHigh</strong></MudTd>
+
+                                    @if (_canUpdateArea && _canDeleteArea)
+                                    {
+                                        <MudTd DataLabel="Actions" Style="text-align: right">
+                                            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                                @if (_canUpdateArea)
+                                                {
+                                                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => UpdateAverageTemperatureAsync(context2))">Edit</MudMenuItem>
+                                                }
+                                                @if (_canDeleteArea)
+                                                {
+                                                    <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => RemoveAverageTemperatureAsync(context2))">Delete</MudMenuItem>
+                                                }
+                                            </MudMenu>
+                                        </MudTd>
+                                    }
+
+                                </RowTemplate>
+
+                            </MudTable>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>

@@ -1,0 +1,19 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        Please add name of vacation
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+
+            <MudItem xs="12" md="12">
+                <MudTextField For="@(() => Name)" @bind-Value="Name" Label="Name" Variant="Variant.Outlined"/>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SaveAsync" Color="Color.Success">Save</MudButton>
+    </DialogActions>
+</MudDialog>

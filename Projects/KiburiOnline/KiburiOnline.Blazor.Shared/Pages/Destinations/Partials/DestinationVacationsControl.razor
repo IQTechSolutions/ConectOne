@@ -1,0 +1,37 @@
+﻿@using ConectOne.Domain.Extensions
+@using FilingModule.Domain.Enums
+
+@if (Vacations is not null && Vacations.Count > 0 && Vacations.Any(c => c.VacationIntervals is not null && c.Published && c.AvailabilityCutOffDate?.Date == null && c.VacationIntervals.Any(g => g.Lodging?.Country?.Name == CountryName) || c.VacationIntervals is not null && c.Published && c.AvailabilityCutOffDate?.Date >= DateTime.Now.Date && c.VacationIntervals.Any(c => c.Lodging?.Country?.Name == CountryName)))
+{
+    <section class="section novi-bg novi-bg-img section-xl bg-gray-lighter text-center" style="padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <h3>Most requested packages</h3>
+            <div class="row">
+                @foreach (var item in Vacations.Where(c => c.Published && c.AvailabilityCutOffDate?.Date == null && c.VacationIntervals.Any(c => c.Lodging?.Country?.Name == CountryName) || c.Published && c.AvailabilityCutOffDate?.Date >= DateTime.Now.Date && c.VacationIntervals.Any(c => c.Lodging?.Country?.Name == CountryName)))
+                {
+                    <div class="col-md-6 col-xl-4">
+
+                        <article class="post-minimal" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px; padding:20px;">
+                            <a href="@($"/vacations/{item.Slug}")"><img src="@Configuration["ApiConfiguration:BaseApiAddress"]/@item.Images.FirstOrDefault(c => c.ImageType == UploadType.Slider)?.RelativePath" alt="@item.VacationTitle?.VacationTitle Cover Image" width="418" height="315" /></a>
+                            <div class="post-classic-title">
+                                <h6><a href="@($"/vacations/{item.Slug}")">@item.VacationTitle?.VacationTitle.ToUpper()</a></h6>
+                                <p style="margin-top:0px; font-size:13px !important; font-weight:bold;">South Africa</p>
+                                <p style="margin-top:0px; font-size:13px !important;">@(item.Destinations == null ? "" : string.Join(" | ", item.Destinations.Select(c => c.Name)))</p>
+                            </div>
+                            <hr style="margin-top:10px !important; border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+                            <p style="margin-top:10px; font-size:16px !important; color:#F90; font-weight:bold;">@item.Nights NIGHTS</p>
+                            <p style="margin-top:0px; font-size:13px !important;"><strong>Starting from @( item.VacationPrices != null && item.VacationPrices.Any() ? $"{item.CurrencySymbol}{item.VacationPrices?.Select(c => c.Price).Min()}" : $"{item.CurrencySymbol}0.00")</strong> <span style="font-size:10px; font-style:italic;">per person sharing</span></p>
+
+                            <p style="margin-top:0px; font-size:13px !important;">@item.StartDate?.Day @item.StartDate?.Month.GetMonthFromMonthNr() @item.EndDate?.Year – @item.EndDate?.Month.GetMonthFromMonthNr() @item.EndDate?.Year</p>
+                            <p style="margin-top:0px; font-size:13px !important;"><strong>15 Days / 14 Nights</strong></p>
+
+
+                            <div class="post-minimal-footer"><a class="button button-link" href="@($"/vacations/{item.Slug}")">View Package</a></div>
+                        </article>
+                    </div>
+                }
+            </div>
+            <span id="team" style="padding-top:70px;"></span>
+        </div>
+    </section>
+}

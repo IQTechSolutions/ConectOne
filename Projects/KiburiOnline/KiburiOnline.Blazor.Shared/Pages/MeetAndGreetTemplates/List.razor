@@ -1,0 +1,49 @@
+@page "/meet-and-greet-templates"
+
+@using ConectOne.Blazor.Components
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Meet &amp; Greet Templates" Caption="All meet and greet templates" />
+
+    @if (!_loaded)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Elevation="25" Items="_templates" Hover="true" @ref="_table">
+            <ToolBarContent>
+                <MudSpacer />
+                <MudButton Color="Color.Primary" OnClick="AddTemplate" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Location</MudTh>
+                <MudTh>Description</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Location">
+                    <MudHighlighter Text="@context.Location" />
+                </MudTd>
+                <MudTd DataLabel="Description">
+                    <MudHighlighter Text="@context.Description" />
+                </MudTd>
+                <MudTd DataLabel="Actions" Style="text-align: right">
+                    <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => UpdateTemplate(context))">Edit</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteTemplate(context.Id))">Delete</MudMenuItem>
+                    </MudMenu>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</div>

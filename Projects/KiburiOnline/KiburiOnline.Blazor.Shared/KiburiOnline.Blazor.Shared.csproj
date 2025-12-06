@@ -12,7 +12,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="3.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="MudBlazor.ThemeManager" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\AccomodationModule\Accomodation.Blazor\Accomodation.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\AccomodationModule\AccomodationModule.Application\AccomodationModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\AccomodationModule\AccomodationModule.Domain\AccomodationModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Base\ConectOne.Blazor\ConectOne.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\BeneficiariesModule\BeneficiariesModule.Domain\BeneficiariesModule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Modules\FeedbackModule\FeedbackModule.Application\FeedbackModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Modules\IdentityModule\IdentityModule.Blazor\IdentityModule.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Modules\LocationModule\LocationModule.Application\LocationModule.Application.csproj" />
+    <ProjectReference Include="..\..\..\Vendors\Google\Recapcha\Recapcha.csproj" />
+    <ProjectReference Include="..\..\SchoolsEnterprise\SchoolsEnterprise.Base\SchoolsEnterprise.Base.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,282 @@
+﻿@page "/packages/update/{VacationId}"
+@page "/packages/update/{VacationId}/{SelectedTabIndex:int?}"
+
+@using ConectOne.Blazor.Components
+@using ConectOne.Blazor.OverLays
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Vacations.Partials
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+@layout WebsiteLayout
+
+<style>
+    #bullet_mob{
+        font-size: 16px !important;
+    }
+
+    .editorPlaceholderDropdown .mud-button-label {
+        font-size:13.2px;
+        text-transform: capitalize !important;
+    }
+
+    .editorPlaceholderDropdown .mud-svg-icon {
+        margin-left:-10px;
+    }
+
+    .editorPlaceholderDropdownButton .mud-menu-item-text {
+        font-size:13.2px;
+        margin:0;
+    }
+
+</style>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+
+    <BusyWorkingOverlay Visible="@_visible" BusyText="Saving Vacation" CaptionText="Please be patient while we save your changes" DarkBackground="true" />
+        
+    <div style="padding-left: 1rem">
+        <DefaultTitle Title="Update Package" Caption="Please change the following information and save to change the package details"/>
+    </div>
+        
+    @if (!_loaded)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
+    }
+    else
+    {
+        <EditForm Model="_vacation" class="card card-body bg-light mt-5" Context="dsdf" OnValidSubmit="@(() => UpdateAsync())">
+        
+            <MudGrid>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary />
+                    <MudTabs Elevation="0" Color="Color.Transparent" Rounded="true" Position="Position.Start" @bind-ActivePanelIndex="_selectedTab">
+    
+                        @* Details *@
+                        <MudTabPanel Text="Details">
+                            <VacationDetailsPartial 
+                                Vacation="_vacation" 
+                                Update="@(() => UpdateAsync(1))" 
+                                Cancel="Cancel"/>
+                        </MudTabPanel>
+    
+                        @* Images *@
+                        <MudTabPanel Text="Images">
+                            <VacationImagesPartial 
+                                Vacation="_vacation" 
+                                Update="@(() => UpdateAsync(2))" 
+                                PreviousTab="() => _selectedTab = 0" 
+                                Cancel="Cancel" />
+                        </MudTabPanel>
+    
+                        @* Pricing *@
+                        <MudTabPanel Text="Pricing" Style="width:100%">
+                            <VacationPricingPartial 
+                                Vacation="_vacation" 
+                                Update="@(() => UpdateAsync(3))" 
+                                PreviousTab="() => _selectedTab = 1" 
+                                Cancel="Cancel" />
+                        </MudTabPanel>
+    
+                        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                        {
+                            @* Meet & Greet *@
+                            <MudTabPanel Text="Meet & Greet" Style="padding-left:20px;">
+                                <VacationMeetAndGreetPartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync(4))" 
+                                    PreviousTab="() => _selectedTab = 2" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+                        }
+
+                        @* Intervals *@
+                        <MudTabPanel Text="Accomodation" Style="padding-left:20px; width:100%">
+                            <VacationIntervalPartial 
+                                Vacation="_vacation"
+                                                     Update="@(() => UpdateAsync(Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 5 : 4))"
+                                                     PreviousTab="@(() => _selectedTab = Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 3 : 2)" 
+                                Cancel="Cancel"/>
+                        </MudTabPanel>
+
+                        @if (Configuration["ApplicationConfiguration:AppliactionName"] == "Pro Golf" || Configuration["ApplicationConfiguration:AppliactionName"] == "Gecko")
+                        {
+                            @* Itinerary *@
+                            <MudTabPanel Text="Itinerary" Style="padding-left:20px; width:100%">
+                                <MudGrid>
+                                    @foreach (var item in _vacation.ItineraryEntryItemTemplates.OrderBy(c => c.DayNr))
+                                    {
+                                        <MudItem xs="9">
+                                            <MudCard Elevation="2">
+                                                <MudCardHeader>
+                                                    <MudText Typo="Typo.h6">Day - @item.DayNr: @_vacation.StartDate?.AddDays(item.DayNr - 1).ToLongDateString()</MudText>
+                                                </MudCardHeader>
+                                                <MudCardContent>
+                                                    @((MarkupString)item.Content)
+                                                </MudCardContent>
+                                            </MudCard>
+
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudStack>
+                                                <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => UpdateItineraryEntryItemTemplate(item))">Update Day</MudButton>
+                                                <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => RemoveItineraryEntryItemTemplate(item))">Remove Day</MudButton>
+                                            </MudStack>
+                                        </MudItem>
+                                    }
+                                    <MudItem xs="12">
+                                        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Error" OnClick="CreateItineraryEntryItemTemplate">Create Day</MudButton>
+                                    </MudItem>
+                                    
+                                    <MudItem xs="4" sm="4" md="4" lg="4">
+                                        <MudButton OnClick="@(() => UpdateAsync(5))" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+                                    </MudItem>
+                                    <MudItem xs="4" sm="4" md="4" lg="4">
+                                        <MudButton OnClick="() => _selectedTab = 3" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+                                    </MudItem>
+                                    <MudItem xs="4" sm="4" md="4" lg="4">
+                                        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+                                    </MudItem>
+                                </MudGrid>
+                                
+                            </MudTabPanel>
+                        }
+
+                        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                        {
+
+
+                            @* Flights *@
+                            <MudTabPanel Text="Flights" Style="padding-left:20px;">
+                                <VacationFlightsPartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync(5))" 
+                                    PreviousTab="() => _selectedTab = 3" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+
+                            @* Golfer Packages *@
+                            <MudTabPanel Text="Golfer Inclusions" Style="padding-left:20px;">
+                                <VacationGolferPackagesPartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync(6))" 
+                                    PreviousTab="() => _selectedTab = 4" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+
+                            @* Meals *@
+                            <MudTabPanel Text="Meals" Style="padding-left:20px; width:100%;">
+                                <VacationMealsPartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync(7))" 
+                                    PreviousTab="() => _selectedTab = 5" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+                            
+                            @* Gift Types *@
+                            <MudTabPanel Text="Gifts/Room Drops" Style="padding-left:20px; width:100%;">
+                                <VacationGiftPartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync(8))" 
+                                    PreviousTab="() => _selectedTab = 6" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+                            
+                            @* Day Tour *@
+                            <MudTabPanel Text="Day Tour/Activity" Style="padding-left:20px; width:100%;">
+                                <VacationDayTourActivityPartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync(9))" 
+                                    PreviousTab="() => _selectedTab = 7" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+                        }
+
+                        @* General Information *@
+                        <MudTabPanel Text="General Information" Style="padding-left:20px; width:100%;">
+                            <VacationGeneralInformationPartial 
+                                Vacation="_vacation" 
+                                Update="@(() => UpdateAsync(Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 10 : 6))" 
+                                PreviousTab="@(() => _selectedTab = Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 8 : 4)" 
+                                Cancel="Cancel" />
+                        </MudTabPanel>
+                                     
+                        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                        {
+                            @* Extensions *@
+                            <MudTabPanel Text="Extensions" Style="padding-left:20px;">
+                                <VacationExtensionPartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync(11))" 
+                                    PreviousTab="() => _selectedTab = 9" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+                        }
+
+                        @* General Settings *@
+                        <MudTabPanel Text="General Settings" Style="padding-left:20px; width:100%;">
+                            <VacationGeneralSettingsPartial 
+                                Vacation="_vacation" 
+                                Update="@(() => UpdateAsync(Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 12 : 7))" 
+                                PreviousTab="@(() => _selectedTab = Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 10 : 5)" 
+                                Cancel="Cancel" />
+                        </MudTabPanel>
+                                                                
+                        @* Display Settings *@
+                        <MudTabPanel Text="Inclusion Settings" Style="padding-left:20px; width:100%;">
+                            <VacationInclusionSettingsPartial 
+                                Vacation="_vacation" 
+                                Update="@(() => UpdateAsync(Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 13 : null))" 
+                                PreviousTab="@(() => _selectedTab = Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? 11 : 6)" 
+                                Cancel="Cancel" />
+                        </MudTabPanel>
+                        
+                        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                        {
+                            @* References *@
+                            <MudTabPanel Text="References" Style="padding-left:20px; width:100%;">
+                                <VacationReferencePartial 
+                                    Vacation="_vacation" 
+                                    Update="@(() => UpdateAsync())" 
+                                    PreviousTab="() => _selectedTab = 12" 
+                                    Cancel="Cancel" />
+                            </MudTabPanel>
+                        }
+
+                    </MudTabs>
+                </MudItem>
+            
+                @* <MudItem xs="4" sm="4" md="4" lg="4">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+                </MudItem> *@
+
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    @if (!_vacation.Published)
+                    {
+                        <MudButton OnClick="PublishVacation" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" FullWidth>Pubish</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton OnClick="UnPublishVacation" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Un-Publish</MudButton>
+                    }
+                </MudItem>
+
+               @*  <MudItem xs="4" sm="4" md="4" lg="4">
+                    <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+                </MudItem> *@
+                
+            </MudGrid>
+        
+        </EditForm>
+    }
+</div>
+

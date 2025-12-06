@@ -1,0 +1,67 @@
+﻿@page "/user/{UserId}"
+
+@attribute [Authorize]
+
+@layout WebsiteLayout
+
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using Microsoft.AspNetCore.Authorization
+@using KiburiOnline.Blazor.Shared.Layouts
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject IConfiguration Config;
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Create new Group" Caption="Please complete the following information to create a new group" />
+    <EditForm Model="_user" OnValidSubmit="Submit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        @if (_user != null)
+        {
+            <MudGrid>
+                <MudItem xs="12" sm="4" md="3">
+                    <MudSingleImageCropperUpload style="width:100%;" OnFileAccepted="CoverImageChanged" Caption="@_user.DisplayName" Src="@_imageSource" ImageType="UploadType.Cover" TEntity="typeof(ApplicationUser)" ParentId="@_user.UserId" PlaceHolder="/_content/Identity.Blazor/images/profileImage128x128.png"/>
+                </MudItem>
+                <MudItem xs="12" sm="8" md="9">
+                        <MudCard Elevation="25">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <MudText>Profile Details</MudText>
+                                </CardHeaderContent>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="@_user.FirstName" For="@(() => _user.FirstName)" Label="First Name" Variant="Variant.Outlined"/>
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="@_user.LastName" For="@(() => _user.LastName)" Label="Last Name" Variant="Variant.Outlined"/>
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="@_user.PhoneNr" For="@(() => _user.PhoneNr)" Label="Phone Number" Variant="Variant.Outlined"/>
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="@_user.EmailAddress" Label="Email" For="@(() => _user.EmailAddress)" Variant="Variant.Outlined" InputType="InputType.Email" Disabled=true/>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardContent>
+                            <MudCardActions Class="pb-4 pl-4">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" ButtonType="MudBlazor.ButtonType.Submit">Save Changes</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                 
+                </MudItem>
+            </MudGrid>
+        }
+    </EditForm>
+</div>
+

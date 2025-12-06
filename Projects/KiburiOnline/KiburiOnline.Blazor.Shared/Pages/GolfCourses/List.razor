@@ -1,0 +1,16 @@
+﻿@page "/golfcourses"
+@using Accomodation.Blazor.Components.GolfCourses
+@using ConectOne.Blazor.Components
+@using KiburiOnline.Blazor.Shared.Layouts
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Golf Courses" Caption="This is a paged list of all the current golf courses available" />
+    <GolfCourseTable/>
+</div>

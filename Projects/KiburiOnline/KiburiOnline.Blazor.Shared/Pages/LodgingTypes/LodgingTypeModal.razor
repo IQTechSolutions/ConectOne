@@ -1,0 +1,26 @@
+﻿@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.TypeSpecimen" Class="mr-3 mb-n1" />
+            Add/Update Accommodation Type
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="LodgingType.Name" Label="Name" Required="true" RequiredError="Name is a required field." FullWidth="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="LodgingType.Description" Label="Description" FullWidth="true" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="Submit" Color="Color.Success">Save</MudButton>
+    </DialogActions>
+</MudDialog>

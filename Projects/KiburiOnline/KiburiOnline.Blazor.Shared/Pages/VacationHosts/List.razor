@@ -1,0 +1,17 @@
+﻿@page "/vacationhosts"
+
+@using Accomodation.Blazor.Components.VacationHosts
+@using ConectOne.Blazor.Components
+@using KiburiOnline.Blazor.Shared.Layouts
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light">
+    <DefaultTitle Title="Group Index" Caption="This is a paged list of all the current groups registered" />
+    <VacationHostsTable/>
+</div>

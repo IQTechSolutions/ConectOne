@@ -1,0 +1,75 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using AccomodationModule.Domain.Enums
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@VacationInterval" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>        
+                @* <MudItem xs="4" md="4">
+                    <MudTextField Label="Start Date" ReadOnly="true" Value="VacationInterval.StartDate" ShowToolbar="false" Variant="Variant.Outlined" />
+                </MudItem> *@
+                <MudItem xs="2" md="2">
+                    <MudNumericField Label="Acc Nr" @bind-Value="VacationInterval.SortOrderNr" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="2" md="2">
+                    <MudNumericField Label="NightCount" @bind-Value="VacationInterval.NightCount" Variant="Variant.Outlined" />
+                </MudItem>
+                @* <MudItem xs="4" md="4">
+                    <MudTextField Label="End Date" ReadOnly="true" Value="VacationInterval.EndDate" Variant="Variant.Outlined" />
+                </MudItem> *@
+               
+                <MudItem xs="6" md="6">
+                    <MudTimePicker Label="Check-In" @bind-Time="VacationInterval.CheckInTime" ShowToolbar="false" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="6" md="6">
+                    <MudTimePicker Label="Check-Out" @bind-Time="VacationInterval.CheckOutTime" ShowToolbar="false" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudAutocomplete @bind-Value="VacationInterval.Lodging"
+                                     T="LodgingDto"
+                                     ToStringFunc="@(e => e == null ? null : e.Name)"
+                                     SearchFunc="SearchLodgings"
+                                     Variant="Variant.Outlined"
+                                     Label="Hotel"
+                                     Placeholder="Please Select"
+                                     Clearable="true" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudAutocomplete @bind-Value="VacationInterval.Destination"
+                                     T="DestinationDto"
+                                     ToStringFunc="@(e => e == null ? null : e.Name)"
+                                     SearchFunc="SearchDestinations"
+                                     Variant="Variant.Outlined"
+                                     Label="Destination"
+                                     Placeholder="Please Select"
+                                     Clearable="true" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => VacationInterval.RoomType)" @bind-Value="VacationInterval.RoomType" Label="Room Type" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudRadioGroup @bind-Value="VacationInterval.MealPlan">
+                        @foreach (MealPlanTypes item in Enum.GetValues(typeof(MealPlanTypes)))
+                        {
+                            <MudRadio Value="@item" Color="Color.Primary">@item.GetDescription()</MudRadio>
+                        }
+                    </MudRadioGroup>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="8" For="@(() => VacationInterval.Notes)" @bind-Value="VacationInterval.Notes" Label="Notes" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="8" For="@(() => VacationInterval.Description)" @bind-Value="VacationInterval.Description" Label="Description" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

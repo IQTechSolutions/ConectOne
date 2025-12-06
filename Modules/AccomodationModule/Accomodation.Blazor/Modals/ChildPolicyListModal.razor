@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        @if (ContentList != null && ContentList.Any())
+        {
+            @foreach (var item in ContentList)
+            {
+                <MudText>@(string.IsNullOrEmpty(item.CustomDescription) ? item.DescriptionAlt : item.CustomDescription)</MudText>
+            }
+        }
+        
+    </DialogContent>
+    <DialogActions>
+            <MudButton OnClick="Cancel">@AcceptButtonText</MudButton>
+    </DialogActions>
+</MudDialog>

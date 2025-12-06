@@ -1,0 +1,52 @@
+﻿@using MudBlazor
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudTable Elevation="25" Items="Vacation.VacationExtensions" Hover="true">
+
+            <ToolBarContent>
+                <div class="form-group" style="width:100%; padding-right:15px;">
+                    <input asp-for="Params.SearchText" class="form-control" placeholder="Type to Search"/>
+                </div>
+                <MudSpacer/>
+                <div style="padding-right:15px;">
+                    <MudButton Variant="Variant.Filled" OnClick="AddVacationExtension" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">Create</MudButton>
+                </div>
+            </ToolBarContent>
+
+            <HeaderContent>
+                <MudTh><strong>Name</strong></MudTh>
+                <MudTh><strong>Url</strong></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd>@context.VacationTitle.VacationTitle</MudTd>
+                <MudTd><strong><MudLink Href="@($"{Configuration["ApplicationConfiguration:WebAddress"]}/packages/{context.Slug}")">@($"{Configuration["ApplicationConfiguration:WebAddress"]}/packages/extensions/{context.Slug}")</MudLink></strong></MudTd>
+                <MudTd DataLabel="Actions" Style="text-align: right">
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => RemoveVacationExtension(context.VacationId))" StartIcon="@Icons.Material.Filled.Add" Color="Color.Error" IconColor="Color.Surface">Remove</MudButton>
+                </MudTd>
+            </RowTemplate>
+
+        </MudTable>
+    </MudItem>
+    
+    @if (Update.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    @if(NextTab.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnPreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+    </MudItem>
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+    </MudItem>
+</MudGrid>

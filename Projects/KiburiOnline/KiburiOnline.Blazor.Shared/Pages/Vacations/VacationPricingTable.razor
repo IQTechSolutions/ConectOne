@@ -1,0 +1,41 @@
+﻿\
+@using AccomodationModule.Domain.DataTransferObjects
+@using MudBlazor
+
+<MudCard Elevation="2">
+    <MudCardContent>
+        <MudDropContainer @ref="_inclusionsDropBox" T="VacationPricingItemDto" Items="@_vacationPrices" ItemsSelector="@((item,dropzone) => item.Selector == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+            <ChildContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudDropZone T="VacationPricingItemDto" Identifier="Golfer" Class="flex-grow-1" AllowReorder="true">
+                            <MudText Typo="Typo.h6" Class="mb-4">Golfer</MudText>
+                        </MudDropZone>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudDropZone T="VacationPricingItemDto" Identifier="Non-Golfer" Class="flex-grow-1" AllowReorder="true">
+                            <MudText Typo="Typo.h6" Class="mb-4">Non-Golfer</MudText>
+                        </MudDropZone>
+                    </MudItem>
+                </MudGrid>
+            </ChildContent>
+            <ItemRenderer>
+                <MudCard Elevation="1" Style="margin-bottom: 5px;">
+                    <MudCardContent>
+                        <MudText><strong>@context.Name</strong> - @context.Price.ToString("C")</MudText>
+                        <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => UpdateVacationPricingItem(context))">Edit</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="@(() => RemoveVacationPricingItem(context.VacationPriceItemId))">Delete</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </ItemRenderer>
+        </MudDropContainer>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Error" OnClick="CreateVacationPricingItem">Add New</MudButton>
+    </MudCardActions>
+</MudCard>
+
+

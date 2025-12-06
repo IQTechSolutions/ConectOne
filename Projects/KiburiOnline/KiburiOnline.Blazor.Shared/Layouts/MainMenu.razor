@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+@if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+{
+    <MudHidden Breakpoint="Breakpoint.LgAndDown" Invert="true">
+        <div class="horizontal-nav" style="white-space:nowrap; padding-right:25px; background:#363835; padding-right:20px;">
+            <MudMenu Icon="@Icons.Material.Filled.Menu" Color="Color.Primary" AriaLabel="Open user menu">
+                <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync(" overview"))" Match="NavLinkMatch.All" Label="Overview" />
+                <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync("inclusions"))" Match="NavLinkMatch.All" Label="Inclusions" />
+                <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync("pricing"))" Match="NavLinkMatch.All" Label="Pricing" />
+                @if (!NavigationManager.Uri.Contains("summaries") && !NavigationManager.Uri.Contains("extensions"))
+                {
+                    <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync("itinenary"))" Match="NavLinkMatch.All" Label="Itinenary" />
+                    <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync("destinations"))" Match="NavLinkMatch.All" Label="Destinations" />
+                }
+                @if (!NavigationManager.Uri.Contains("summaries"))
+                {
+                    <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync("hotels"))" Match="NavLinkMatch.All" Label="Hotels" />
+                }
+                @if (!NavigationManager.Uri.Contains("summaries") && !NavigationManager.Uri.Contains("extensions"))
+                {
+                    <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync("golfcourses"))" Match="NavLinkMatch.All" Label="Golf Courses" />
+                    <MudMenuItem OnClick="@(async () => await ScrollOrNavigateAsync("extensions"))" Match="NavLinkMatch.All" Label="Extensions" />
+                }
+                @if (displayBookNowButton)
+                {
+                    <MudMenuItem OnClick="BookNow" Match="NavLinkMatch.All" Label="BOOK NOW" />
+                }
+            </MudMenu>
+        </div>
+    </MudHidden>
+    <MudHidden Breakpoint="Breakpoint.LgAndDown" Invert="false">
+        <div class="horizontal-nav" style="white-space:nowrap; padding-right:25px; background:#363835; padding-right:20px;">
+            <MudNavMenu Style="padding-top:8px; font-size:small" Class="rd-navbar-nav">
+                <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("overview"))" Match="NavLinkMatch.All" Style="color:white">Overview</MudNavLink>
+                <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("inclusions"))" Style="color:white">Inclusions</MudNavLink>
+                <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("pricing"))" Style="color:white">Pricing</MudNavLink>
+                @if (!NavigationManager.Uri.Contains("summaries") && !NavigationManager.Uri.Contains("extensions"))
+                {
+                    <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("itinenary"))" Style="color:white">Itinenary</MudNavLink>
+                    <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("destinations"))" Style="color:white">Destinations</MudNavLink>
+                }
+                @if (!NavigationManager.Uri.Contains("summaries"))
+                {
+                    <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("hotels"))" Style="color:white">Hotels</MudNavLink>
+                }
+                @if (!NavigationManager.Uri.Contains("summaries") && !NavigationManager.Uri.Contains("extensions"))
+                {
+                    <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("golfcourses"))" Style="color:white">Golf Courses</MudNavLink>
+                    <MudNavLink OnClick="@(async () => await ScrollOrNavigateAsync("extensions"))" Style="color:white">Extensions</MudNavLink>
+                }
+            </MudNavMenu>
+            @if (displayBookNowButton)
+            {
+                <div class="rd-navbar-nav-wrap__element">
+                    <MudButton Class="button button-gray-light-outline" Style="color:white" OnClick="BookNow">BOOK NOW</MudButton>
+                </div>
+            }
+        </div>
+    </MudHidden>
+}
+else
+{
+        <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
+        <div class="horizontal-nav " style="white-space:nowrap; padding-right:10px; background:#363835;float:right;margin-top:5px;">
+                <MudMenu Icon="@Icons.Material.Filled.Menu" Color="Color.Primary" AriaLabel="Open user menu">
+                    <MudMenuItem Style="color:black" OnClick="@(() => { NavigationManager.NavigateTo("/", true); })" Match="NavLinkMatch.All" Label="Home" />
+                    <MudMenuItem Style="color:black" OnClick="@(async () => await ScrollOrNavigateAsync("destinations"))" Match="NavLinkMatch.All" Label="Destinations" />
+                    <MudMenuItem Style="color:black" OnClick="@(async () => await ScrollOrNavigateAsync("packages"))" Match="NavLinkMatch.All" Label="Packages" />
+                    <MudMenuItem Style="color:black" OnClick="@(async () => await ScrollOrNavigateAsync("team"))" Match="NavLinkMatch.All" Label="About us" />
+                    <MudMenuItem Style="color:black" OnClick="@(async () => await ScrollOrNavigateAsync("testimonials"))" Match="NavLinkMatch.All" Label="Testimonials" />
+                    <MudMenuItem Style="color:black" Href="/contact-us" Match="NavLinkMatch.All" Label="Contact us" />
+                </MudMenu>
+            </div>
+            </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="false">
+        <div class="horizontal-nav" style="white-space:nowrap; padding-right:25px; background:#363835; padding-right:20px;">
+                <div id="centerVideo" style="display:flex;" class="rd-navbar-nav-wrap con toggle-original-elements">
+                    <MudNavMenu Style="padding-top:8px; font-size:small" Class="rd-navbar-nav">
+                        <MudMenuItem Style="color:white; display:table;" OnClick="@(() => { NavigationManager.NavigateTo("/", true); })" Match="NavLinkMatch.All" Label="HOME" />
+                        <MudMenuItem Style="color:white; display:table;" OnClick="@(async () => await ScrollOrNavigateAsync("destinations"))" Match="NavLinkMatch.All" Label="DESTINATIONS" />
+                        <MudMenuItem Style="color:white; display:table;" OnClick="@(async () => await ScrollOrNavigateAsync("packages"))" Match="NavLinkMatch.All" Label="Packages" />
+                    <MudMenuItem Style="color:white; display:table;" OnClick="@(async () => await ScrollOrNavigateAsync("team"))" Match="NavLinkMatch.All" Label="About us" />
+                    <MudMenuItem Style="color:white; display:table;" OnClick="@(async () => await ScrollOrNavigateAsync("testimonials"))" Match="NavLinkMatch.All" Label="Testimonials" />
+                        <MudMenuItem Style="color:white; display:table;" OnClick="@(() => NavigationManager.NavigateTo("/contact-us", true))" Match="NavLinkMatch.All" Label="Contact us" />
+                    </MudNavMenu>
+                </div>
+
+                <div class="rd-navbar-nav-wrap__element" style="width:200px; margin-left:40px;">
+                <MudButton Class="button button-gray-light-outline" Style="color:white" OnClick="@(() => NavigationManager.NavigateTo("/contact-us", true))">ENQUIRE NOW</MudButton>
+                </div>
+            </div>
+        </MudHidden>
+}

@@ -1,0 +1,123 @@
+﻿@page "/destinations/{DestinationId}"
+@using KiburiOnline.Blazor.Shared.Pages.Contacts
+
+<PageTitle>ProGolf Africa Safaris — Luxury Golf & Safari Packages</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Tailor-made African golf vacations and luxury safaris across South Africa, Botswana, Zambia & beyond. Play iconic courses, experience Rovos Rail, and see the Big Five." />
+    <link rel="canonical" href="/" />
+</HeadContent>
+
+<section class="section parallax-container text-center context-dark" data-parallax-img="../../Assets/images/parallax-botswana.jpg" id="destinations">
+    <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <div class="row row-50" style="margin-bottom:-80px !important;">
+                <div class="col-md-6 col-xl-6">
+
+                    <h4>Botswana</h4>
+                    <p>
+                        <InnerMenu PageName="botswana"/>
+                    </p>
+                    <hr>
+                    <p style="font-size:14px; font-style:italic;">
+                        Botswana offers an amazing array of different landscapes, making it one of Africa's preferred Safari destinations. Some of the most popular areas within Botswana include the Okavango Delta, Linyanti, Savuti and of course Chobe. The Okavango Delta is best known for perennial water in its lagoons and water channels offering various water activities, including game viewing by Mokoro.
+                    </p>
+                    <hr>
+                    <p>
+                        <ul style="font-size:14px !important; font-style:italic; list-style-type:circle !important;">
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Safari at its wildest</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit the Okavango Delta, Kalahari Desert, Makgadikgadi Pans, Chobe National Park</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Water Safari on a Mokoro (dug-out canoe)</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Witness the best Africa sunsets</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>One of the best places on earth for Stargazing</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Experience the largest Elephant populations in the world</li>
+
+                        </ul>
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 col-xl-6">
+                    <div id="map-africa">
+                        <ul class="africa">
+                            <li class="afr51"><a href="/destinations/south-africa">South Africa</a></li>
+                            <li class="afr4"><a href="/destinations/botswana">Botswana</a></li>
+                            <li class="afr59"><a href="/destinations/zambia">Zambia</a></li>
+                            <li class="afr39"><a href="/destinations/namibia">Namibia</a></li>
+                            <li class="afr58"><a href="/destinations/tanzania">Tanzania</a></li>
+                            <li class="afr43"><a href="/destinations/rwanda">Rwanda</a></li>
+                            <li class="afr26"><a href="/destinations/kenya">Kenya</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section novi-bg novi-bg-img section-xl bg-gray-lighter text-center" style="padding-top: 80px !important; padding-bottom: 80px !important; display:none;" id="packages">
+    <div class="container">
+        <h3>Most requested packages</h3>
+        <div class="row row-50">
+
+            <div class="col-md-6 col-xl-4">
+
+                <article class="post-minimal" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px; padding:20px;">
+                    <img src="/Assets/images/itinerary1.jpg" alt="" width="418" height="315" />
+                    <div class="post-classic-title">
+                        <h6><a href="package.html">Ultimate Africa</a></h6>
+                        <p style="margin-top:0px; font-size:13px !important;">South Africa | George | Cape Town | Safari</p>
+                    </div>
+                    <hr style="margin-top:10px !important; border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+                    <p style="margin-top:10px; font-size:16px !important; color:#F90; font-weight:bold;">14 Nights</p>
+                    <p style="margin-top:0px; font-size:13px !important;"><strong>Starting from $13,500</strong> <span style="font-size:10px; font-style:italic;">per person sharing</span></p>
+
+
+                    <div class="post-minimal-footer"><a class="button button-link" href="package.html">View Package</a></div>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+
+                <article class="post-minimal" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px; padding:20px;">
+                    <img src="/Assets/images/itinerary2.jpg" alt="" width="418" height="315" />
+                    <div class="post-classic-title">
+                        <h6><a href="package.html">The Bucket List - 5 star all the way</a></h6>
+                        <p style="margin-top:0px; font-size:13px !important;">South Africa | George | Cape Town | Safari</p>
+                    </div>
+                    <hr style="margin-top:10px !important; border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+                    <p style="margin-top:10px; font-size:16px !important; color:#F90; font-weight:bold;">14 Nights</p>
+                    <p style="margin-top:0px; font-size:13px !important;"><strong>Starting from $13,500</strong> <span style="font-size:10px; font-style:italic;">per person sharing</span></p>
+
+                    <div class="post-minimal-footer"><a class="button button-link" href="package.html">View Package</a></div>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+
+                <article class="post-minimal" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px; padding:20px;">
+                    <img src="/Assets/images/itinerary3.jpg" alt="" width="418" height="315" />
+                    <div class="post-classic-title">
+                        <h6><a href="package.html">South Africa in true Luxury</a></h6>
+                        <p style="margin-top:0px; font-size:13px !important;">South Africa | George | Cape Town | Safari</p>
+                    </div>
+                    <hr style="margin-top:10px !important; border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+                    <p style="margin-top:10px; font-size:16px !important; color:#F90; font-weight:bold;">14 Nights</p>
+                    <p style="margin-top:0px; font-size:13px !important;"><strong>Starting from $13,500</strong> <span style="font-size:10px; font-style:italic;">per person sharing</span></p>
+
+                    <div class="post-minimal-footer"><a class="button button-link" href="package.html">View Package</a></div>
+                </article>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<ContactsBanner/>

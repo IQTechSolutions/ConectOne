@@ -1,0 +1,52 @@
+@using AccomodationModule.Domain.Enums
+@using ConectOne.Domain.Extensions
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@Gift" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Gift.Name)" @bind-Value="Gift.Name" Label="Gift Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="4" For="@(() => Gift.Description)" @bind-Value="Gift.Description" Label="Gift Description" Variant="Variant.Outlined"/>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Gift.TimeDescription)" @bind-Value="Gift.TimeDescription" Label="Time Description" Variant="Variant.Outlined"/>
+                </MudItem>
+                <MudItem xs="12">
+                    <label style="width:100%">
+                        Select guest type
+                        <InputSelect @bind-Value="Gift.GuestType" class="form-select">
+                            <option value="">--Please Select--</option>
+                            @foreach (GuestType item in Enum.GetValues(typeof(GuestType)))
+                            {
+                                <option value="@((int)item)">@item.GetDescription()</option>
+                            }
+                        </InputSelect>
+                    </label>
+                </MudItem>
+                <MudItem xs="12">
+                    <label style="width:100%">
+                        Select gift type
+                        <InputSelect @bind-Value="Gift.GiftType" class="form-select">
+                            <option value="">--Please Select--</option>
+                            @foreach (GiftType item in Enum.GetValues(typeof(GiftType)))
+                            {
+                                <option value="@((int)item)">@item.GetDescription()</option>
+                            }
+                        </InputSelect>
+                    </label>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="MudBlazor.ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+

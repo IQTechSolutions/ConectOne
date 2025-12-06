@@ -12,7 +12,7 @@
         <EditForm Model="TicketType" OnSubmit="Save">
             <MudGrid>
 
-                <MudItem xs="12" sm="12" md="8" lg="9">
+                <MudItem xs="12" sm="12" md="12" lg="12">
                     <MudCard>
                         <MudCardHeader>
                             <MudText Align="Align.Center" Typo="Typo.h4">
@@ -51,10 +51,6 @@
                         Save
                     </MudButton>
                 </MudItem>
-
-                <!--
-                    Cancel button: closes the modal, discarding any changes.
-                -->
                 <MudItem xs="6" sm="6" md="6" lg="6">
                     <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>
                         Cancel

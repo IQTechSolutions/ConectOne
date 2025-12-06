@@ -1,0 +1,37 @@
+@using AccomodationModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@Template" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Template.Name)" @bind-Value="Template.Name" Label="Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="2" For="@(() => Template.Description)" @bind-Value="Template.Description" Label="Description" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudSelect ToStringFunc="@_contactsConverter" T="ContactDto" Label="Contact" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined" @bind-Value="Template.Contact">
+                        @foreach (var r in Contacts)
+                        {
+                            <MudSelectItem T="ContactDto" Value="@r">@r.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Template.Location)" @bind-Value="Template.Location" Label="Where" Variant="Variant.Outlined"/>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="3" For="@(() => Template.TimeDescription)" @bind-Value="Template.TimeDescription" Label="When" Variant="Variant.Outlined"/>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="MudBlazor.ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

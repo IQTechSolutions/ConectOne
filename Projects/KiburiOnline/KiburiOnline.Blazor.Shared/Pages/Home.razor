@@ -1,0 +1,269 @@
+﻿@page "/"
+
+@layout WebsiteLayout
+
+
+<style>
+
+    #video-container {
+        height: 100%;
+        width: 100vw;
+        background-image: url("/Assets/video/video-lg.mp4");
+        background-color: transparent;
+        position: absolute;
+        z-index: 1;
+    }
+</style>
+
+
+@using ConectOne.Domain.Extensions
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Contacts
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using MudBlazor
+
+@rendermode InteractiveServer
+
+<PageTitle>@Configuration["ApplicationConfiguration:AppliactionName"] Africa Safaris — Luxury Golf & Safari Packages</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Tailor-made African golf vacations and luxury safaris across South Africa, Botswana, Zambia & beyond. Play iconic courses, experience Rovos Rail, and see the Big Five." />
+    <link rel="canonical" href="@NavigationManager.Uri" />
+</HeadContent>
+
+@if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+{
+    <div id="dashboard">
+        <img style="width:70%; margin-top:-150px; float:right" src="images/commingsoon.jpg"/>
+    </div>
+
+}
+else
+{
+    @* Slider Section *@
+    <section class="section video-bg-overlay context-dark">
+        <div class="vide_bg" style="position: relative; overflow: hidden;">
+            <div id="video-container">
+            </div>
+            <video autoplay loop muted preload="auto" poster="Assets/video/video-lg.jpg" playsinline="true" disablePictureInPicture="true" style="z-index=-1; position: absolute; width: 100%; height: 100%; object-fit: cover;">
+                <source src="Assets/video/video-lg.webm" type="video/webm">
+                <source src="Assets/video/video-lg.mp4" type="video/mp4"/>
+            </video>
+            <div class="section-xl text-center">
+                <div class="container" id="head_height">
+                    <h2>EXCLUSIVE AFRICA SAFARIS AND GOLF</h2>
+                    <div class="group-lg group-middle"><a class="button button-black" href="#packages" data-custom-scroll-to="packages">Packages</a><a class="button button-black" href="#destinations" data-custom-scroll-to="destinations" target="_blank">Destinations</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* Description Section *@
+    <section class="section novi-bg novi-bg-img section-xl bg-default text-center" style="padding-top:80px !important; padding-bottom:80px !important;">
+        <div class="container">
+            <div class="row justify-content-lg-center">
+                <div class="col-lg-12 col-xl-12">
+                    <h3>AN EXCLUSIVE AFRICA EXPERIENCE</h3>
+                    <p>
+                        You are invited to experience an exclusive and unforgettable bucket list adventure which will include the best of what South Africa has to offer. On your journey through South Africa, you will enjoy breath-taking beauty, cultural diversity, mouth-watering cuisine, world famous wines, unique golf experiences and the opportunity to come face to face with Africa's Big 5 while on Safari in the African bush. <br><br>
+                        If you want to make this Africa experience truly memorable, add on an extension to the world-famous Victoria Falls, or extend your safari into Botswana, the Serengeti or other parts of Southern and East Africa.<br><br>
+                        Your Africa adventure promises to be a journey filled with memories. A journey whereby you are guaranteed to leave this country and continent having fallen in love with the people, the beauty, and the diversity that it represents. Join us on an epic adventure to Africa.
+                    </p>
+                </div>
+            </div>
+           
+        </div>
+    </section>
+
+    @* Destination Section *@
+    <span id="destinations" style="scroll-margin-top:110px;"></span>
+    <section class="section parallax-container text-center context-dark" style="background-image: url('Assets/images/parallax-01.jpg'); background-size: cover; background-position: center;">
+        <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+            <div class="container">
+                <div class="row row-50" style="margin-bottom:-80px !important;">
+                    
+                    <div class="col-md-6 col-xl-6">
+                        <h4>POPULAR DESTINATIONS</h4>
+                        <p style="font-size:15px; font-style:italic;">Africa offers a myriad of popular destinations that can be explored as part of your Africa experience. Why not visit destinations such as Victoria Falls in Zambia, Chobe and the Okavango Delta in Botswana, as well as the Serengeti in Tanzania and Masai Mara in Kenya. Embark on a desert safari in Namibia or for the more adventurous, visit Rwanda on a gorilla tracking expedition.</p>
+
+                        <hr>
+
+                        <p>
+                            <ul style="list-style-type:none;">
+                                <li><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/south-africa#south-africa", true))"><span style="color:white">South Africa</span></MudLink></li>
+                                <li><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/botswana#botswana", true))"><span style="color:white">Botswana</span></MudLink></li>
+                                <li><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/zambia#zambia", true))"><span style="color:white">Zambia</span></MudLink></li>
+                                <li><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/namibia#namibia", true))"><span style="color:white">Namibia</span></MudLink></li>
+                                <li><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/tanzania#tanzania", true))"><span style="color:white">Tanzania</span></MudLink></li>
+                                <li><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/rwanda#rwanda", true))"><span style="color:white">Rwanda</span></MudLink></li>
+                                <li><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/kenya#kenya", true))"><span style="color:white">Kenya</span></MudLink></li>
+                            </ul>
+                        </p>
+                    </div>
+
+                    <div class="col-md-6 col-xl-6">
+                        <AfricaMap/>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <span id="packages" style="scroll-margin-top:110px;"></span>
+    @if (_vacations.Any(c => c.Published && c.AvailabilityCutOffDate == null || c.Published && c.AvailabilityCutOffDate.Value.Date >= DateTime.Now.Date))
+    {
+        <section class="section novi-bg novi-bg-img section-xl bg-gray-lighter text-center" style="padding-top: 80px !important; padding-bottom: 80px !important;">
+            <div class="container">
+                <h3>Most requested packages</h3>
+                <div class="row">
+                    @foreach (var item in _vacations.Where(c => c.Published && c.AvailabilityCutOffDate == null || c.Published && c.AvailabilityCutOffDate.Value.Date >= DateTime.Now.Date))
+                    {
+                        <div class="col-md-6 col-xl-4" style="padding-bottom:15px;">
+
+                            <article class="post-minimal" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px; padding:20px;">
+                                <a href="@($"/packages/{item.Slug}")">
+                                    <img src="@Configuration["ApiConfiguration:BaseApiAddress"]/@item.Images.FirstOrDefault(c => c.ImageType == UploadType.Slider)?.RelativePath" alt="@item.VacationTitle?.VacationTitle Cover Image" width="418" height="315"/>
+                                </a>
+                                <div class="post-classic-title">
+                                    <h6><a href="@($"/packages/{item.Slug}")">@item.VacationTitle?.VacationTitle.ToUpper()</a></h6>
+                                    <p style="margin-top:0px; font-size:13px !important; font-weight:bold;">@item.VacationIntervals?.FirstOrDefault()?.Lodging?.Country?.Name</p>
+                                    @if (item.Destinations is not null && item.Destinations.Any())
+                                    {
+                                        <p style="margin-top:0px; font-size:13px !important; min-height:40px;">@(string.Join(" | ", item.Destinations.Select(c => c.Name)))</p>
+                                    }
+                                    
+                                </div>
+                                <hr style="margin-top:10px !important; border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));">
+                                <div style="min-height:83px;">
+                                    <p style="margin-top:10px; font-size:16px !important; color:#F90; font-weight:bold;">@item.Nights NIGHTS</p>
+                                    <p style="margin-top:0px; font-size:13px !important;"><strong>Starting from @(item.VacationPrices != null && item.VacationPrices.Any() ? $"{item.CurrencySymbol}{item.VacationPrices?.Select(c => c.Price).Min().ToString("N2")}" : $"{item.CurrencySymbol}0.00")</strong> <span style="font-size:10px; font-style:italic;">per person sharing</span></p>
+
+                                    <p style="margin-top:0px; font-size:13px !important;">@(item.StartDate is not null ? $"{item.StartDate?.Month.GetMonthFromMonthNr()} {item.StartDate?.Day}, {item.EndDate?.Year} - {item.EndDate.Value.Month.GetMonthFromMonthNr()} {item.EndDate?.Day}, {item.EndDate?.Year}" : "")</p>
+                                    <p style="margin-top:0px; font-size:13px !important;"><strong>@(item.Nights + 1) Days / @item.Nights Nights</strong></p>
+                                </div>
+
+
+                                <div class="post-minimal-footer"><a class="button button-link" href="@($"/packages/{item.Slug}")">View Package</a></div>
+                            </article>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    <span id="team" style="scroll-margin-top:110px;"></span>
+    <ContactsBanner/>
+
+    @* Testimonial Section *@
+    <span id="testimonials" style="scroll-margin-top:110px;"></span>
+    <section class="section novi-bg novi-bg-img section-lg bg-gray-lighter text-center" style="padding-top:80px; padding-bottom:80px;">
+        <div class="container">
+            <h3>Testimonials</h3>
+            <div class="row row-50">
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="quote-bordered" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px;">
+
+                        <div class="quote-bordered__image">
+                            <img src="Assets/images/testimonials-1.jpg" alt="" width="120" height="120"/>
+                        </div>
+                        <p class="quote-bordered__cite">MIKE WILLIAMS</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic; font-weight:bold;">Head Pro</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">The Cliffs Communities</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">North Carolina</p>
+                        <div class="post-minimal-footer" style="display:block !important;"><a class="button button-link" href="/testimonials/all#mike" style="color:#F79340">Read More</a></div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="quote-bordered" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px;">
+
+                        <div class="quote-bordered__image">
+                            <img src="Assets/images/testimonials-2.jpg" alt="" width="120" height="120"/>
+                        </div>
+                        <p class="quote-bordered__cite">IAIN MOSSMAN</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic; font-weight:bold;">General Manager</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">Old Collier Golf Club</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">Naples, Florida</p>
+                        <div class="post-minimal-footer" style="display:block !important;"><a class="button button-link" href="/testimonials/all#iain" style="color:#F79340">Read More</a></div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="quote-bordered" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px;">
+
+                        <div class="quote-bordered__image">
+                            <img src="Assets/images/testimonials-3.jpg" alt="" width="120" height="120"/>
+                        </div>
+                        <p class="quote-bordered__cite">JOSH HERSHOFF</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic; font-weight:bold;">Head Golf Professional </p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">Wilderness CC</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">Naples, Florida</p>
+                        <div class="post-minimal-footer" style="display:block !important;"><a class="button button-link" href="/testimonials/all#josh" style="color:#F79340">Read More</a></div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="quote-bordered" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px;">
+
+                        <div class="quote-bordered__image">
+                            <img src="Assets/images/testimonials-4.jpg" alt="" width="120" height="120"/>
+                        </div>
+                        <p class="quote-bordered__cite">JOHN METZINGER</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic; font-weight:bold;">Director of Golf</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">Kensington Country Club</p>
+                        <p style="margin-top:0px; font-size:13px !important; font-style:italic;">Naples, Florida</p>
+                        <div class="post-minimal-footer" style="display:block !important;"><a class="button button-link" href="/testimonials/all#john" style="color:#F79340">Read More</a></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="group-lg group-middle"><a class="button button-gray-light-outline" href="/testimonials/all">See all Testimonials</a></div>
+    </section>
+
+    @* Info Banner *@
+    <section class="section novi-bg novi-bg-img bg-default section-xl" style="padding-top:80px; padding-bottom:80px;">
+        <div class="container">
+            <div class="row row-fix row-60">
+
+                <div class="col-sm-12 text-center group-event">
+
+                    <div class="row row-fix row-30 post-event">
+                        <div class="col-md-3">
+                            <img src="Assets/images/multi_travel.jpg" alt="" width="652" height="491"/>
+                        </div>
+                        <div class="col-md-9 text-md-start post-event-body">
+                            <h4>Plan any Africa adventure with us</h4>
+
+                            <p style="font-size:16px !important;">Whether you are planning a trip to Africa as a couple, honeymooners, group of friends, a family, or a group of members from a Club, we will customize everything to meet your needs and budget. We take each client's personal needs to heart when planning your dream Africa vacation. We pride ourselves in the quality of first-hand advice you will receive, based on personal experience of all the destinations, properties and experiences we suggest. </p>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="container">
+        <div class="divider"></div>
+    </div>
+
+    <SuppliersComponent/>
+}

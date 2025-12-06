@@ -1,0 +1,42 @@
+﻿@using MudBlazor
+
+<span id="inclusions" style="margin-top:-30px;"></span>
+
+<section class="section novi-bg novi-bg-img bg-gray-lighter section-xl text-center">
+    <div class="container">
+
+        <div class="row row-fix row-60">
+
+            <div class="col-sm-12 text-center group-event">
+
+                <div class="row row-fix row-30 post-event">
+
+                    <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">INCLUDED IN THIS TOUR</h4>
+                    
+                    <MudGrid>
+                        <MudItem xs="6" Style="text-align:left !important; margin-bottom:5px !important;">
+                            @foreach (var inclusion in _inclusions.Where(c => c.Selector == "1").OrderBy(c => c.Order))
+                            {
+                                <p id="pack_head">@inclusion.Name.ToUpper()</p>
+                                <p style="margin-top:5px; margin-bottom:10px;">
+                                    @((MarkupString)inclusion.Description)
+                                </p>
+                            }
+                        </MudItem>
+                        <MudItem xs="6" Style="text-align:left !important; margin-bottom:5px !important;">
+                            @foreach (var inclusion in _inclusions.Where(c => c.Selector == "2").OrderBy(c => c.Order))
+                            {
+                                <p id="pack_head">@inclusion.Name.ToUpper()</p>
+                                <p style="margin-top:5px; margin-bottom:10px;">
+                                    @((MarkupString)inclusion.Description)
+                                </p>
+                            }
+                        </MudItem>
+                    </MudGrid>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

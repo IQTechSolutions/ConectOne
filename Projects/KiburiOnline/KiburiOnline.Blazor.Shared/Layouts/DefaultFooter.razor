@@ -1,0 +1,234 @@
+﻿@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@rendermode InteractiveServer
+
+<footer>
+    <div class="pre-footer-corporate novi-bg novi-bg-img">
+        <div class="container">
+            <div class="row justify-content-sm-center justify-content-lg-start row-30 row-md-60">
+                <div class="col-sm-10 col-md-6 col-lg-10 col-xl-4">
+
+                    <img src="images/logo_footer.png" width="115" height="50">
+                    <p>
+                        This promises to be a journey filled with memories. A journey whereby you are guaranteed to leave this country having fallen in love with the people, the beauty and the diversity that South Africa represents. Join us on this epic adventure to Africa.
+                    </p>
+                    <p>
+                        <a href="https://www.satsa.com/" target="_blank"><img src="/Assets/images/logo_footer_spon1.png" width="120" height="34" style="padding-right:25px;"></a>
+                        <a href="https://www.iagto.com/" target="_blank"><img src="/Assets/images/logo_footer_spon2.png" width="95" height="34" style="padding-right:25px;"></a>
+                        <a href="https://www.greaterchicagocmaa.org/" target="_blank"><img src="/Assets/images/logo_footer_spon3.png" width="95" height="34"></a>
+                    </p>
+                </div>
+
+                <div class="col-sm-10 col-md-6 col-lg-5 col-xl-2">
+                   
+                    <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
+                        <ul class="list-xs" style="list-style-type:none !important;">
+                            
+                            <li style="display:block;margin-left: 30px;">
+                                <h6>Destinations</h6>
+                            </li>
+
+                            <li style="display:block;margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/south-africa#south-africa", true))">South Africa</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block;margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/botswana#botswana", true))">Botswana</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block;margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/zambia#zambia", true))">Zambia</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block;margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/namibia#namibia", true))">Namibia</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block;margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/tanzania#tanzania", true))">Tanzania</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block;margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/rwanda#rwanda", true))">Rwanda</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block;margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/kenya#kenya", true))">Kenya</MudLink></p>
+                                </article>
+                            </li>
+
+                        </ul>
+                    </MudHidden>
+                    <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="false">
+                        <ul class="list-xs" style="list-style-type:none !important;">
+
+                            <li style="display:block;margin-left: 0px;">
+                                <h6>Destinations</h6>
+                            </li>
+
+                            <li style="display:block; margin-left: 0px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/south-africa#south-africa", true))">South Africa</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block; margin-left: 0px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/botswana#botswana", true))">Botswana</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block; margin-left: 0px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/zambia#zambia", true))">Zambia</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block; margin-left: 0px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/namibia#namibia", true))">Namibia</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block; margin-left: 0px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/tanzania#tanzania", true))">Tanzania</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block; margin-left: 0px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/rwanda#rwanda", true))">Rwanda</MudLink></p>
+                                </article>
+                            </li>
+
+                            <li style="display:block; margin-left: 0px;">
+                                <article class="comment-minimal">
+                                    <p class="comment-minimal__link"><MudLink OnClick="@(() => NavigationManager.NavigateTo("/destinations/kenya#kenya", true))">Kenya</MudLink></p>
+                                </article>
+                            </li>
+
+                        </ul>
+                    </MudHidden>
+                   
+                </div>
+
+                <div class="col-sm-10 col-md-6 col-lg-5 col-xl-3">
+                    <ul class="list-xs" style="list-style-type:none">
+                        
+                        
+                        <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
+                            <li style="display:block;margin-left: 30px;">
+                                <h6>Popular Packages</h6>
+                            </li>
+                            @foreach (var vacation in Vacations.Where(c => c.Published && c.AvailabilityCutOffDate == null || c.Published && c.AvailabilityCutOffDate.Value.Date >= DateTime.Now.Date).Take(10))
+                        {
+                            <li style="display:block; margin-left: 30px;">
+                                <article class="comment-minimal">
+                                    <!-- This is where _view gets added - Gert Myburgh -->
+                                    <p class="comment-minimal__link"><a href="" @onclick="@(() => { NavigationManager.NavigateTo($"/packages/{vacation.Slug}", true); })">@vacation.VacationTitle?.VacationTitle</a></p>
+
+                                </article>
+                            </li>
+                        }
+                        </MudHidden>
+                        <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="false">
+                            <li style="display:block;margin-left: 0px;">
+                                <h6>Popular Packages</h6>
+                            </li>
+                            @foreach (var vacation in Vacations.Where(c => c.Published && c.AvailabilityCutOffDate == null || c.Published && c.AvailabilityCutOffDate.Value.Date >= DateTime.Now.Date))
+                            {
+                                <li style="display:block; margin-left: 0px;">
+                                    <article class="comment-minimal">
+                                        <!-- This is where _view gets added - Gert Myburgh -->
+                                        <p class="comment-minimal__link"><a href="" @onclick="@(() => { NavigationManager.NavigateTo($"/packages/{vacation.Slug}", true); })">@vacation.VacationTitle?.VacationTitle</a></p>
+
+                                    </article>
+                                </li>
+                            }
+                        </MudHidden>
+
+                        
+                    </ul>
+                </div>
+                <div class="col-sm-10 col-md-6 col-lg-4 col-xl-3">
+                    <h6>Contact us</h6>
+                    <ul class="list-xs" style="list-style-type:none">
+                        <li style="display:block;">
+                            <dl class="list-terms-minimal">
+                                <dt>Address</dt>
+                                <dd>
+                                    1st Floor<br>
+                                    Block B<br>
+                                    54 Oxford St, Durbanville<br>
+                                    Cape Town, 7550<br>
+
+                                </dd>
+                            </dl>
+                        </li>
+                        <li style="display:block;">
+                            <dl class="list-terms-minimal">
+                                <dt>Phones</dt>
+                                <dd>
+                                    <ul class="list-semicolon">
+                                        <li><a href="tel:+27 21 913 9281">+27 21 913 9281 <strong>(SA)</strong></a></li>
+                                    </ul>
+                                </dd>
+                            </dl>
+                        </li>
+                        <li style="margin-top:0px;display:block;">
+                            <dl class="list-terms-minimal">
+                                <dt>E-mail</dt>
+                                <dd><a href="mailto:@Configuration["ApplicationConfiguration:SupportEmailAddress"]">@Configuration["ApplicationConfiguration:SupportEmailAddress"]</a></dd>
+                            </dl>
+                        </li>
+
+                        <li style="display:block;">
+                            <dl class="list-terms-minimal">
+                <dd><MudLink OnClick="@(() => NavigationManager.NavigateTo("/terms-and-conditions", true))">Terms and Conditions</MudLink></dd>
+                            </dl>
+                        </li>
+
+                        <li style="margin-top:0px;display:block;">
+                            <dl class="list-terms-minimal">
+                <dd><MudLink OnClick="@(() => NavigationManager.NavigateTo("/popia", true))">POPI</MudLink></dd>
+                            </dl>
+                        </li>
+
+                        <li style="margin-top:0px;display:block;">
+                            <dl class="list-terms-minimal">
+                <dd><MudLink OnClick="@(() => NavigationManager.NavigateTo("/privacy-policy", true))">Privacy Policy</MudLink></dd>
+                            </dl>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-corporate novi-bg novi-bg-img">
+        <div class="container">
+            <div class="footer-corporate__inner">
+                <p class="rights" style="font-size:12px !important"><span>© @Configuration["ApplicationConfiguration:AppliactionName"] Africa Safaris</span><span>&nbsp;</span><span class="copyright-year"></span>.</p>
+                <ul class="list-inline-xxs">
+                    <li><a class="icon novi-icon icon-xxs icon-primary fa fa-facebook" href="#"></a></li>
+                    <li><a class="icon novi-icon icon-xxs icon-primary fa fa-twitter" href="#"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,29 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>        
+            <MudItem xs="12">
+            <MudSelect Label="Vacation Inclusion Type" @bind-Value="VacationInclusionDisplayType.VacationInclusionDisplayType" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                @foreach (var state in _availableVacationInclusionDisplayTypes)
+                    {
+                        <MudSelectItem  Value="@state">@state.GetDescription()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12">
+                <MudSelect Label="Column Name" @bind-Value="VacationInclusionDisplayType.ColumnSelection" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                    @foreach (var state in _availableColumnNames)
+                    {
+                        <MudSelectItem Value="@state">@state</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+    </DialogActions>
+</MudDialog>

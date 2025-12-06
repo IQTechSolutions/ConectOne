@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        Location for @Title
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" md="12">
+                <GoogleMapsComponents.GoogleMap Height="500px" Width="500px" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Close</MudButton>
+    </DialogActions>
+</MudDialog>

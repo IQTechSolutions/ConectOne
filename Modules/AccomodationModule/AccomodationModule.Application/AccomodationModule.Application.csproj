@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\IdentityModule\IdentityModule.Domain\IdentityModule.Domain.csproj" />
+    <ProjectReference Include="..\..\ProductsModule\ProductsModule.Application\ProductsModule.Application.csproj" />
+    <ProjectReference Include="..\AccomodationModule.Domain\AccomodationModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

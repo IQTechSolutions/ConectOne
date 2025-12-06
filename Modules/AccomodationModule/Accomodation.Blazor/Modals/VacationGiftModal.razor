@@ -1,0 +1,31 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@Gift" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="2" md="2">
+                    <MudTextField Label="Day Nr" @bind-Value="@Gift.DayNr" ShowToolbar="false" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="10" md="10">
+                    <MudTimePicker Label="Time" @bind-Time="Gift.Time" ShowToolbar="false" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudSelect ToStringFunc="@_giftTemplateConverter" T="GiftDto" Label="Vacation Host" @bind-Value="Gift.Gift" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                        @foreach (var state in _availableGiftTemplates)
+                        {
+                            <MudSelectItem T="GiftDto" Value="@state">@state?.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

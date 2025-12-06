@@ -1,0 +1,39 @@
+﻿@using MudBlazor
+<MudTable Elevation="25" ServerData="GetAmenitiesAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+
+	<ToolBarContent>
+		<div class="col-md-10">
+			<div class="form-group">
+				<MudTextField @bind-Value="_pageParameters.SearchText" Placeholder="Search here by name or description" Variant="Variant.Outlined" Margin="Margin.Dense" Style="padding-top:5px;" />
+			</div>
+		</div>
+		<div class="col-md-2">
+			<button @onclick="Search" class="btn btn-primary">Search</button>
+		</div>
+		<MudSpacer />
+		<MudButton DisableElevation Variant="Variant.Filled" OnClick="ShowAddAmenities" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New</MudButton>
+	</ToolBarContent>
+
+	<HeaderContent>
+		<MudTh><strong>Icon</strong></MudTh>
+		<MudTh><strong>Name</strong></MudTh>
+		@* <MudTh></MudTh> *@
+	</HeaderContent>
+
+	<RowTemplate>
+		<MudTd><i class="@context.Icon"></i></MudTd>
+		<MudTd>@context.Name</MudTd>
+		<MudTd DataLabel="Actions" Style="text-align: right">
+			<MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+					<MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => ShowUpdateAmenities(context.AmenityId))">Edit</MudMenuItem>
+				<MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteAmenity(context.AmenityId))">Delete</MudMenuItem>
+			</MudMenu>
+		</MudTd>
+
+	</RowTemplate>
+
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+
+</MudTable>

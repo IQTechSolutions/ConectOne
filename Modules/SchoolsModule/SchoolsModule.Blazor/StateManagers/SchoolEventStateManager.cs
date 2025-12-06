@@ -142,7 +142,6 @@ namespace SchoolsModule.Blazor.StateManagers
                 }
             }
 
-            SchoolEvent.SelectedActivityCategories = categories;
             NotifyStateChanged();
 
             return await Result.SuccessAsync();

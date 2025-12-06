@@ -1,5 +1,11 @@
 <Solution>
   <Folder Name="/Modules/" />
+  <Folder Name="/Modules/AccomodationModule/">
+    <Project Path="Modules/AccomodationModule/Accomodation.Blazor/Accomodation.Blazor.csproj" Id="a355d344-2220-43fd-b00c-115ebf41606d" />
+    <Project Path="Modules/AccomodationModule/AccomodationModule.Application/AccomodationModule.Application.csproj" Id="08ec3705-bd9f-4c48-83ac-20ec67e1a8e3" />
+    <Project Path="Modules/AccomodationModule/AccomodationModule.Domain/AccomodationModule.Domain.csproj" Id="4d3713f5-cafe-43d6-b043-6ab45b0a4810" />
+    <Project Path="Modules/AccomodationModule/AccomodationModule.Infrastructure/AccomodationModule.Infrastructure.csproj" Id="8099f33e-147f-4c7e-b982-fe375d004be7" />
+  </Folder>
   <Folder Name="/Modules/AdvertisingModule/">
     <Project Path="Modules/AdvertisingModule/AdvertisingModule.Application/AdvertisingModule.Application.csproj" Id="215fefef-c684-4d28-bb51-607ffcf4988c" />
     <Project Path="Modules/AdvertisingModule/AdvertisingModule.Blazor/AdvertisingModule.Blazor.csproj" Id="59d9dd1d-7278-4bdc-8585-6c92b94681ab" />
@@ -12,6 +18,11 @@
     <Project Path="Modules/Base/ConectOne.Domain/ConectOne.Domain.csproj" />
     <Project Path="Modules/Base/ConectOne.EntityFrameworkCore.Sql/ConectOne.EntityFrameworkCore.Sql.csproj" />
     <Project Path="Modules/Base/ConectOne.Infrastructure/ConectOne.Infrastructure.csproj" Id="c5596050-694d-47b5-bdd0-61003eb844b1" />
+  </Folder>
+  <Folder Name="/Modules/BeneficiariesModule/">
+    <Project Path="Modules/BeneficiariesModule/BeneficiariesModule.Application/BeneficiariesModule.Application.csproj" Id="bda4e449-6bc8-4869-8c98-d914c6d368f1" />
+    <Project Path="Modules/BeneficiariesModule/BeneficiariesModule.Domain/BeneficiariesModule.Domain.csproj" Id="0d9a1343-e191-4962-95a4-27f6c92374bf" />
+    <Project Path="Modules/BeneficiariesModule/BeneficiariesModule.Infrastructure/BeneficiariesModule.Infrastructure.csproj" Id="d72cbe0d-1f2f-4885-9098-990553645839" />
   </Folder>
   <Folder Name="/Modules/BloggingModule/">
     <Project Path="Modules/BloggingModule/BloggingModule.Application/BloggingModule.Application.csproj" Id="b7950293-048a-4300-bfc4-941912d52303" />
@@ -31,7 +42,10 @@
     <Project Path="Modules/CalendarModule/CalendarModule.Domain/CalendarModule.Domain.csproj" Id="ec8a804d-9373-4331-ac7a-ff572adc4bfe" />
     <Project Path="Modules/CalendarModule/CalendarModule.Infrastructure/CalendarModule.Infrastructure.csproj" Id="5f3a6df6-d6b1-4166-b56e-eb25db95f2cd" />
   </Folder>
-  <Folder Name="/Modules/FeedbackModule/" />
+  <Folder Name="/Modules/FeedbackModule/">
+    <Project Path="Modules/FeedbackModule/FeedbackModule.Application/FeedbackModule.Application.csproj" Id="14d2ce06-6800-4fe1-b0ef-704fa01d259e" />
+    <Project Path="Modules/FeedbackModule/FeedbackModule.Domain/FeedbackModule.Domain.csproj" Id="49c38562-7821-44d1-b484-8d92d2727d15" />
+  </Folder>
   <Folder Name="/Modules/FilingModule/">
     <Project Path="Modules/FilingModule/FilingModule.Application/FilingModule.Application.csproj" Id="62258192-5d32-4275-a3dd-9b53cf675164" />
     <Project Path="Modules/FilingModule/FilingModule.Blazor/FilingModule.Blazor.csproj" Id="7699058e-308c-4d99-9238-d3fb3b1b2414" />
@@ -48,6 +62,12 @@
     <Project Path="Modules/IdentityModule/IdentityModule.Blazor/IdentityModule.Blazor.csproj" Id="626637c1-66f0-4875-b5c8-e464db394c5c" />
     <Project Path="Modules/IdentityModule/IdentityModule.Domain/IdentityModule.Domain.csproj" />
     <Project Path="Modules/IdentityModule/IdentityModule.Infrastructure/IdentityModule.Infrastructure.csproj" Id="79213c03-755f-4523-a60d-c013d1d8b191" />
+  </Folder>
+  <Folder Name="/Modules/LocationsModule/">
+    <Project Path="Modules/LocationModule/LocationModule.Application/LocationModule.Application.csproj" Id="db73e188-40fa-400a-8ae1-e032a9fb00c8" />
+    <Project Path="Modules/LocationModule/LocationModule.Blazor/LocationModule.Blazor.csproj" Id="37238a9c-7a61-4787-b864-d57afee1d09e" />
+    <Project Path="Modules/LocationModule/LocationModule.Domain/LocationModule.Domain.csproj" Id="f186b466-005d-4991-af6f-423b10e5081d" />
+    <Project Path="Modules/LocationModule/LocationModule.Infrastructure/LocationModule.Infrastructure.csproj" Id="e056acc3-6b2c-480e-8a97-1b47cde21129" />
   </Folder>
   <Folder Name="/Modules/MessagingModule/">
     <Project Path="Modules/MessagingModule/MessagingModule.Application/MessagingModule.Application.csproj" Id="2399b935-c74b-4c4d-8638-8762170b3fa3" />
@@ -75,13 +95,14 @@
   </Folder>
   <Folder Name="/Projects/" />
   <Folder Name="/Projects/EversdalPrimary/">
-    <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.Maui/EversdalPrimary.Blazor.Maui.csproj" Id="6afe97ff-e4af-4d56-921e-654e8d75cf32" />
+    <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.Maui/EversdalPrimary.Blazor.Maui.csproj" Id="6afe97ff-e4af-4d56-921e-654e8d75cf32">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.Pwa/EversdalPrimary.Blazor.Pwa.csproj" Id="9888bd8a-1f79-4276-a20d-9490800d4cb0" />
     <Project Path="Projects/EversdalPrimary/EversdalPrimary.Blazor.ServerClient/EversdalPrimary.Blazor.ServerClient.csproj" Id="f90ec5ed-d034-4bec-aafe-26cc00c9168b" />
   </Folder>
   <Folder Name="/Projects/KiburiOnline/">
     <Project Path="Projects/KiburiOnline/GeckoAfrica.Blazor.ServerClient/GeckoAfrica.Blazor.ServerClient.csproj" Id="ec93e024-00de-49df-b991-eacf35d46720" />
-    <Project Path="Projects/KiburiOnline/KiburiOnline.Base/KiburiOnline.Base.csproj" Id="752ba6d3-2c63-4c59-a4e4-ea0a8ec275c3" />
     <Project Path="Projects/KiburiOnline/KiburiOnline.Blazor.ServerClient/KiburiOnline.Blazor.ServerClient.csproj" Id="4f0d01bf-4446-4c5b-a4b2-ea7eed1482b3" />
     <Project Path="Projects/KiburiOnline/KiburiOnline.Blazor.Shared/KiburiOnline.Blazor.Shared.csproj" Id="0856fe76-7a72-46d1-9306-71fd757b8dd1" />
     <Project Path="Projects/KiburiOnline/Progolf.Blazor.ServerClient/Progolf.Blazor.ServerClient.csproj" Id="8c97b146-9988-46aa-9242-ad17b13180a0" />
@@ -104,10 +125,13 @@
     <Project Path="Projects/TidyTasks/TidyTasks.Blazor.Shared/TidyTasks.Blazor.Shared.csproj" Id="4bf72a66-daaf-46e0-bae5-56d852b4fe77" />
   </Folder>
   <Folder Name="/Vendors/">
+    <Project Path="Vendors/Cimso/Cimso.csproj" Id="c42694b9-9310-46c9-8934-b39e44351668" />
+    <Project Path="Vendors/NightsBridge/NightsBridge.csproj" Id="80de024d-21bd-4467-9711-0a5aa026ffad" />
     <Project Path="Vendors/PayFast/PayFast.csproj" Id="f93c09c0-6604-4fbf-a599-c26889942061" />
   </Folder>
   <Folder Name="/Vendors/Google/">
     <Project Path="Vendors/Google/GoogleCalendar/GoogleCalendar.csproj" Id="15f46080-d024-4362-9f6f-73a128e3fb80" />
     <Project Path="Vendors/Google/GoogleMapsComponents/GoogleMapsComponents.csproj" Id="2b6881ab-2dc7-4193-9547-35a3506fc583" />
+    <Project Path="Vendors/Google/Recapcha/Recapcha.csproj" Id="e085a2e8-f847-4e27-84ed-a4dcdb4b6498" />
   </Folder>
 </Solution>

@@ -1,0 +1,47 @@
+﻿@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+<section class="section novi-bg novi-bg-img section-xl bg-default text-center">
+    <div class="container">
+        @if (!string.IsNullOrEmpty(Subject))
+        {
+            <h5>@Subject</h5>
+        }
+        else
+        {
+            <h5>General Enquiry</h5>
+        }
+        <div class="row justify-content-lg-center">
+            <div class="col-lg-10 col-xl-8">
+
+                <EditForm Model="_contactForm" OnValidSubmit="@HandleSubmit" class="card card-body bg-light mt-5" Context="dsdf">
+                    <div class="form-wrap form-wrap_icon">
+                        <MudTextField Adornment="Adornment.Start" Placeholder="Enter your first name" AdornmentIcon="@Icons.Material.Outlined.Person" Label="Your Name" Class="mt-3" @bind-Value="_contactForm.Name" For="@(() => _contactForm.Name)" Variant="Variant.Outlined" />
+                    </div>
+                    <div class="form-wrap form-wrap_icon">
+                        <MudTextField Adornment="Adornment.Start" Placeholder="Enter your last name" AdornmentIcon="@Icons.Material.Outlined.Person" Label="Your Last Name" Class="mt-3" @bind-Value="_contactForm.Surname" For="@(() => _contactForm.Surname)" Variant="Variant.Outlined" />
+                    </div>
+                    <div class="form-wrap form-wrap_icon">
+                        <MudTextField Adornment="Adornment.Start" Placeholder="Enter your Phone Nr" AdornmentIcon="@Icons.Material.Outlined.Phone" Label="Contact Number" Class="mt-3" @bind-Value="_contactForm.Cell" For="@(() => _contactForm.Email)" Variant="Variant.Outlined" />
+                    </div>
+                    <div class="form-wrap form-wrap_icon">
+                        <MudTextField Adornment="Adornment.Start" Placeholder="Enter your email" AdornmentIcon="@Icons.Material.Outlined.Email" Label="Email Address" Class="mt-3" @bind-Value="_contactForm.Email" For="@(() => _contactForm.Email)" Variant="Variant.Outlined" />
+                    </div>
+                    <div class="form-wrap form-wrap_icon">
+                        <MudTextField Placeholder="Enter your message" AdornmentIcon="@Icons.Material.Outlined.Message" Label="Your Message" Lines="5" Class="mt-3" @bind-Value="_contactForm.Message" For="@(() => _contactForm.Message)" Variant="Variant.Outlined" />
+                    </div>
+                    <div class="form-wrap form-validation-left">
+                        <!--  Google captcha
+                        <div class="recaptcha" id="captcha1" data-sitekey="6LcILwslAAAAAEEERq_gHPRq6m6cvGK2BVjHjp5n"></div>-->
+                    </div>
+                    <input type="hidden" id="utmLink" name="utmLink"/>
+                    <button class="button button-primary" type="submit">Send</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</section>
+
+      

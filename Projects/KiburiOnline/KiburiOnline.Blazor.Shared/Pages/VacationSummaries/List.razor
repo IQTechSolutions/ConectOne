@@ -1,0 +1,16 @@
+﻿@page "/vacations/summaries"
+@using Accomodation.Blazor.Components.Vacations
+@using ConectOne.Blazor.Components
+@using KiburiOnline.Blazor.Shared.Layouts
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Vacation Summary" Caption="This is a paged list of all the current vacation summaries offered" />
+    <VacationsTable StartUrl="vacations/summaries" VacationHostId="" />
+</div>

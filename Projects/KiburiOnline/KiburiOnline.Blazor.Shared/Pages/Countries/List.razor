@@ -1,0 +1,53 @@
+@page "/countries"
+
+@using ConectOne.Blazor.Components
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Countries" Caption="All available countries" />
+
+    @if (!_loaded)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Elevation="25" Items="_countries" Hover="true" @ref="_table">
+            <ToolBarContent>
+                <MudSpacer />
+                <MudButton Color="Color.Primary" OnClick="AddCountry" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh><strong>Code</strong></MudTh>
+                <MudTh><strong>Name</strong></MudTh>
+                <MudTh><strong>Short Name</strong></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Code">
+                    <MudHighlighter Text="@context.Code" />
+                </MudTd>
+                <MudTd DataLabel="Name">
+                    <MudHighlighter Text="@context.Name" />
+                </MudTd>
+                <MudTd DataLabel="Short Name">
+                    <MudHighlighter Text="@context.ShortName" />
+                </MudTd>
+                <MudTd DataLabel="Actions" Style="text-align: right">
+                    <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" @onclick="@(() => UpdateCountry(context))">Edit</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCountry(context.CountryId))">Delete</MudMenuItem>
+                    </MudMenu>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</div>

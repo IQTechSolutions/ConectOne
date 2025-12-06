@@ -1,6 +1,6 @@
+using IdentityModule.Domain.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
-using Progolf.Blazor.ServerClient.Data;
 
 namespace Progolf.Blazor.ServerClient.Components.Account
 {

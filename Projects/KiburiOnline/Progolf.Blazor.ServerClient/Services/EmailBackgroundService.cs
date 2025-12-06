@@ -1,0 +1,87 @@
+﻿using ConectOne.Domain.Mailing.Interfaces;
+using ConectOne.Domain.Mailing.Services;
+
+namespace Progolf.Blazor.ServerClient.Services
+{
+    /// <summary>
+    /// A hosted background service that continuously checks an <see cref="IEmailSender"/> for messages 
+    /// to send. Once it finds messages, it uses an <see cref="EmailQueue"/> to deliver them.
+    /// The loop continues until the application stops or the service is canceled.
+    /// </summary>
+    public class EmailBackgroundService : BackgroundService
+    {
+        // Used for logging service messages and errors.
+        private readonly ILogger<EmailBackgroundService> _logger;
+
+        // ServiceScopeFactory allows creating a new scope to resolve scoped/transient services 
+        // (e.g., EmailQueue, IEmailSender) independently in each loop iteration.
+        private readonly IServiceScopeFactory _scopeFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmailBackgroundService"/>.
+        /// </summary>
+        /// <param name="logger">
+        /// Logger for writing informational and error messages to the application logs.
+        /// </param>
+        /// <param name="scopeFactory">
+        /// Factory used to create service scopes for retrieving scoped services.
+        /// </param>
+        public EmailBackgroundService(ILogger<EmailBackgroundService> logger, IServiceScopeFactory scopeFactory)
+        {
+            _logger = logger;
+            _scopeFactory = scopeFactory;
+        }
+
+        /// <summary>
+        /// The main execution method for the background service. It runs continuously until 
+        /// cancellation is requested, checking for email messages in the queue and sending them.
+        /// </summary>
+        /// <param name="stoppingToken">
+        /// Token that signals when the service should stop processing and shut down.
+        /// </param>
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            _logger.LogInformation("EmailBackgroundService is starting.");
+
+            // Continue until the application stops or this service is canceled.
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    // Create a new DI scope so each iteration can retrieve fresh, scoped services.
+                    using (var scope = _scopeFactory.CreateScope())
+                    {
+                        // Retrieve the queued emails and the sending service from DI
+                        var emailQueue = scope.ServiceProvider.GetRequiredService<EmailQueue>();
+                        var emailService = scope.ServiceProvider.GetRequiredService<IEmailSender>();
+
+                        // Check if there's an email message waiting to be sent
+                        if (emailQueue.TryDequeue(out var emailMessage))
+                        {
+                            _logger.LogInformation("Sending email to {To}", emailMessage.ToName);
+
+                            // Attempt to send the email asynchronously
+                            var result = await emailService.SendEmailAsync(emailMessage);
+
+                            // If sending failed, log the error messages
+                            if (!result.Succeeded)
+                                _logger.LogError("Failed to send email: {Errors}", string.Join(',', result.Messages));
+                        }
+                        else
+                        {
+                            // No pending emails, so wait briefly before checking again.
+                            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log any unexpected errors that occur during execution.
+                    _logger.LogError(ex, "Error occurred executing EmailBackgroundService.");
+                }
+            }
+
+            _logger.LogInformation("EmailBackgroundService is stopping.");
+        }
+    }
+}

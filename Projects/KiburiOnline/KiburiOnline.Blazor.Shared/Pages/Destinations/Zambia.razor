@@ -1,0 +1,63 @@
+﻿@page "/destinations/zambia"
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Destinations.Partials
+
+@layout WebsiteLayout
+
+<PageTitle>Zambia & Victoria Falls Safaris | ProGolf Africa Safaris</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Discover Victoria Falls, Zambezi river cruises, Hwange and Mana Pools. Luxury lodges and custom routes that fit seamlessly with your golf-and-safari itinerary." />
+    <link rel="canonical" href="/destinations/zambia" />
+</HeadContent>
+
+@* Destination Section *@
+<section class="section parallax-container text-center context-dark" style="background-image: url('Assets/images/parallax-zambia.jpg'); background-size: cover; background-position: center;">
+    <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <div class="row row-50" style="margin-bottom:-80px !important;">
+
+
+
+                <div class="col-md-6 col-xl-6">
+                    <h4>Zambia</h4>
+                    <p>
+                        <InnerMenu PageName="zambia" />
+                    </p>
+                    <hr>
+                    <p style="font-size:14px; font-style:italic;">
+                        Zambia and Zimbabwe's biggest attraction is undoubtedly Victoria Falls, one of the world's seven natural wonders. Victoria Falls is simply one of the most spectacular natural waterfalls in the world – twice the height of North America's Niagara Falls. Combining this spectacle with luxury accommodation on the banks of the mighty Zambezi river, makes for an African Safari experience that will remain etched in your memory forever.
+                    </p>
+                    <hr>
+                    <p>
+                        <ul style="font-size:14px !important; font-style:italic; list-style-type:circle !important;">
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Victoria Falls – one of the 7 Natural Wonders of the World</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>River Safari on the great Zambezi</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Hwange National Park – Home to one of the world's largest elephant populations</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit Mana Pools – a UNESCO World Heritage Site</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>White water river rafting below the Victoria Falls</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Catch Tiger Fish</li>
+                        </ul>
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 col-xl-6">
+                    <AfricaMap Country="Zambia" />
+                </div>
+
+            </div>
+        </div>
+        <span id="packages" style="padding-top:70px;"></span>
+    </div>
+</section>
+
+<DestinationVacationsControl CountryName="Zambia" Vacations="_vacations"/><ContactsBanner/>
+
+<script type="text/javascript" language="javascript">
+    window.location.hash = "zambia";
+</script>

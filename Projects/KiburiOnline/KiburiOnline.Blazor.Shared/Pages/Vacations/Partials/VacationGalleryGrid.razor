@@ -1,0 +1,26 @@
+﻿@using MudBlazor
+
+@foreach (var item in _images.Where(c => c.ImageType == ImageType))
+{
+    <MudItem xs="xs" md="md" lg="lg" xl="xl">
+        <MudDivider/>
+        <MudImage Style="width:100%" Src="@($"{@Configuration["ApiConfiguration:BaseApiAddress"]}/{item.RelativePath}")"></MudImage>
+        <MudDivider/>
+        <MudGrid>
+            <MudItem xs="6">
+                @if (ActionMenu is null)
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="() => OnSetAs(item)" Color="Color.Default" FullWidth="true">Set As</MudButton>
+                }
+                else
+                {
+                    @ActionMenu(item)
+                }
+                
+            </MudItem>
+            <MudItem xs="6">
+                <MudButton Variant="Variant.Filled" OnClick="() => OnRemoveImage(item)" Color="Color.Error" FullWidth="true">Remove</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+}

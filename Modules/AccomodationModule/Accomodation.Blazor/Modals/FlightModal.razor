@@ -1,0 +1,106 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@Flight" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudTabs>
+
+            </MudTabs>
+            <MudGrid>
+                <MudItem xs="2" md="2">
+                    <label class="sq-radio" style="padding-right:20px !important; padding-top:4px;">
+                        Arrival
+                        <InputCheckbox @bind-Value="VacationArrival" class="form-control"></InputCheckbox>
+                        <span class="checkmark"></span>
+                    </label>
+                </MudItem>
+                @if (!VacationArrival)
+                {
+                    <MudItem xs="5" md="5">
+                        <MudNumericField Label="Departure Day Nr" @bind-Value="Flight.DepartureDayNr" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="5" md="5">
+                        <MudNumericField Label="Arrival Day Nr" @bind-Value="Flight.ArrivalDayNr" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="6" md="6">
+                        <MudTimePicker Label="Departure Time" @bind-Time="Flight.DepartureTime" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="6" md="6">
+                        <MudTimePicker Label="Arrival Time" @bind-Time="Flight.ArrivalTime" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="6" md="6">
+                        <MudSelect ToStringFunc="@_airportConverter" T="AirportDto" Label="Departure Airport" @bind-Value="Flight.DepartureAirport" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                            @foreach (var state in _availableAirports)
+                            {
+                                <MudSelectItem T="AirportDto" Value="@state">@state.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="6" md="6">
+                        <MudSelect ToStringFunc="@_airportConverter" T="AirportDto" Label="Arrival Airport" @bind-Value="Flight.ArrivalAirport" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                            @foreach (var state in _availableAirports)
+                            {
+                                <MudSelectItem T="AirportDto" Value="@state">@state.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudTextField T="string" Label="Routing" ReadOnly="true" Value="@Flight.Routing" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="6" md="6">
+                        <MudTextField T="string" Label="Flight Nr" @bind-Value="Flight.FlightNumber" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="6" md="6">
+                        <MudTextField T="string" Label="Conformation Nr" @bind-Value="Flight.ConfirmationNumber" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                    {
+                        <MudItem xs="12" md="12">
+                            <MudText Typo="Typo.h5">Departure Movements</MudText>
+                        </MudItem>
+                        <MudItem xs="4" md="4">
+                            <MudTimePicker Label="Depart for Flight" @bind-Value="Flight.DepartureMovementTime" ShowToolbar="false" Variant="Variant.Outlined"/>
+                        </MudItem>
+                        <MudItem xs="4" md="4">
+                            <MudTextField T="string" Label="Depart To" @bind-Value="Flight.DepartureMovementDestination" ShowToolbar="false" Variant="Variant.Outlined"/>
+                        </MudItem>
+                        <MudItem xs="4" md="4">
+                            <MudTextField T="string" Label="Mode of Transport" @bind-Value="Flight.DepartureMovementMode" ShowToolbar="false" Variant="Variant.Outlined"/>
+                        </MudItem>
+                        <MudItem xs="12" md="12">
+                            <MudTextField T="string" Lines="2" Label="Notes" @bind-Value="Flight.DepartureMovementNotes" ShowToolbar="false" Variant="Variant.Outlined"/>
+                        </MudItem>
+                    }
+                }
+                else
+                {
+                    <MudItem xs="5" md="5">
+                        <MudNumericField Label="Arrival Day Nr" @bind-Value="Flight.ArrivalDayNr" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="5" md="5">
+                        <MudTimePicker Label="Expected Arrival Time" @bind-Time="Flight.ArrivalTime" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudSelect ToStringFunc="@_airportConverter" T="AirportDto" Label="Arrival Airport" @bind-Value="Flight.ArrivalAirport" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                            @foreach (var state in _availableAirports)
+                            {
+                                <MudSelectItem T="AirportDto" Value="@state">@state.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudTextField T="string" Lines="2" Label="Notes" @bind-Text="Flight.DepartureMovementNotes" ShowToolbar="false" Variant="Variant.Outlined" />
+                    </MudItem>
+                }
+                
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

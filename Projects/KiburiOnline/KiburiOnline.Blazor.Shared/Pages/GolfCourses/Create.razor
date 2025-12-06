@@ -1,0 +1,112 @@
+﻿@page "/golfcourses/create"
+
+@using AccomodationModule.Domain.DataTransferObjects
+@using AccomodationModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+@using Radzen.Blazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<EditForm Model="_golfCourse" OnValidSubmit="CreateAsync" class="card card-body bg-light mt-5" FormName="VacationHostCreationForm">
+
+    <DefaultTitle Title="Create new Golf Course" Caption="Please complete the following information to create a new golf course" />
+
+    <DataAnnotationsValidator />
+
+    <MudGrid>
+
+        <MudItem xs="12" sm="12" md="4" lg="3">
+            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_golfCourse.Name" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(VacationHost)" ParentId="@_golfCourse.GolfCourseId" />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="8" lg="9">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudTextField Label="Golf Course Name" Class="mt-3" @bind-Value="_golfCourse.Name" For="@(() => _golfCourse.Name)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField Label="Address" Class="mt-3" @bind-Value="_golfCourse.Address" For="@(() => _golfCourse.Address)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudTextField Label="Latitude" Class="mt-3" @bind-Value="_golfCourse.Lat" For="@(() => _golfCourse.Lat)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudTextField Label="Longitude" Class="mt-3" @bind-Value="_golfCourse.Lng" For="@(() => _golfCourse.Lng)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="4">
+
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudTextField Label="Ranking" Class="mt-3" @bind-Value="_golfCourse.Ranking" For="@(() => _golfCourse.Ranking)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudTextField Label="Designed By" Class="mt-3" @bind-Value="_golfCourse.DesignedBy" For="@(() => _golfCourse.DesignedBy)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudTextField Label="Course Type" Class="mt-3" @bind-Value="_golfCourse.CourseType" For="@(() => _golfCourse.CourseType)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                </MudItem>
+
+                                <MudItem xs="6">
+                                    <MudSelect MultiSelection="true" @bind-SelectedValues="_golfCourse.Destinations" ToStringFunc="@_destinationConverter" T="DestinationDto" Label="Destination" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                        @foreach (var state in _availableDestinations)
+                                        {
+                                            <MudSelectItem T="DestinationDto" Value="@state">@state.Name</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudSwitch @bind-Value="_golfCourse.Carts" Label="Carts" Color="Color.Primary" />
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudSwitch @bind-Value="_golfCourse.Caddies" Label="Caddies" Color="Color.Primary" />
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudSwitch @bind-Value="_golfCourse.GolfClubs" Label="Golf Clubs" Color="Color.Primary" />
+                                </MudItem>
+                                <MudItem xs="12" md="12">
+                                    <label style="padding-left:20px;">Proposal Description</label>
+                                    <RadzenHtmlEditor @bind-Value=@_golfCourse.Description style="height: 300px;"/>
+                                </MudItem>
+                                <MudItem xs="12" md="12">
+                                    <label style="padding-left:20px;">Web Descriptions</label>
+                                    <RadzenHtmlEditor @bind-Value=@_golfCourse.OnlineDescription style="height: 300px;"/>
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudItem>
+                                <MudTextField T="string" @ref="_autoCompleteBox" Value="_golfCourse.Address" Margin="Margin.Dense" Variant="Variant.Text" />
+                            </MudItem>
+                            <MudItem>
+                                <GoogleMapsComponents.GoogleMap Width="100%" Height="400px" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+                            </MudItem>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+    
+</EditForm>

@@ -1,0 +1,65 @@
+﻿@using MudBlazor
+
+<MudCard Style="width:100%; padding-left:20px;">
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTable Items="_itineraries" Elevation="25">
+                    <HeaderContent>
+                        <MudTh>Date</MudTh>
+                        <MudTh>Name</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.Date!.Value.Date</MudTd>
+                        <MudTd>@* @context.Name *@</MudTd>
+                        <MudTd>
+                            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                <MudMenuItem OnClick="@(() => CreateItineraryDetailItem(context.ItineraryId))" Icon="@Icons.Material.Filled.Add">Add Detail</MudMenuItem>
+                                <MudMenuItem OnClick="@(() => UpdateItineraryItem(context))" Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                                <MudMenuItem OnClick="@(() => RemoveItineraryItem(context.ItineraryId))" Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
+                            </MudMenu>
+                            <MudButton OnClick="@(() => ShowDetails(context.ItineraryId))">@(context.ShowItems ? "Hide Details" : "ShowDetails" )</MudButton>
+                        </MudTd>
+                    </RowTemplate>
+                    <ChildRowContent>
+                        @if (context.ShowItems)
+                        {
+                            <td colspan="5" style="padding-bottom:20px;">
+                                <MudCard>
+                                    <MudCardHeader>
+                                        <MudText Typo="Typo.body1"><strong>Itinerary Details for @* @context.Name *@</strong></MudText>
+                                    </MudCardHeader>
+                                    <MudCardContent Class="pa-0">
+                                        <MudTable Items="@context.Details" Elevation="25" Context="childContext">
+                                            <HeaderContent>
+                                                <MudTh>Name</MudTh>
+                                                <MudTh></MudTh>
+                                            </HeaderContent>
+                                            <RowTemplate>
+                                                <MudTd>@childContext.Description</MudTd>
+                                                <MudTd>
+                                                    <MudMenu Label="Actions" Variant="Variant.Filled" fEndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                                        <MudMenuItem OnClick="@(() => UpdateItineraryDetailItem(childContext))" Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                                                        <MudMenuItem OnClick="@(() => RemoveItineraryDetailItem(context.ItineraryId, childContext.ItineraryItemId!))" Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
+                                                    </MudMenu>
+                                                </MudTd>
+                                            </RowTemplate>
+                                        </MudTable>
+                                    </MudCardContent>
+                                </MudCard>
+                            </td>
+                        }
+                    </ChildRowContent>
+                </MudTable>
+            </MudItem>
+            <MudItem md="12">
+                <MudButton Variant="Variant.Filled" FullWidth="true"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.CloudUpload" OnClick="CreateItineraryItem">
+                    New Itinerary Item
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>

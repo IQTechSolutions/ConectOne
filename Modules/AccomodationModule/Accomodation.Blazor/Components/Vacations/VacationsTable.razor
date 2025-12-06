@@ -1,0 +1,85 @@
+﻿@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+<MudTable Elevation="25" ServerData="GetVacationsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+		
+    <ToolBarContent>
+        
+        @if (_canSearchVacation)
+        {
+            <div class="form-group" style="width:100%; padding-right:15px;">
+                <input asp-for="Params.SearchText" class="form-control" placeholder="Type to Search"/>
+            </div>
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" OnClick="Search" StartIcon="@Icons.Material.Filled.Search" Color="Color.Tertiary" IconColor="Color.Surface">Search</MudButton>
+            </div>
+            <MudSpacer/>
+        }
+        
+        <div style="padding-right:15px;">
+            <MudButton Variant="Variant.Filled" OnClick="ClearFiltersAsync" StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Secondary" IconColor="Color.Surface">Reload</MudButton>
+        </div>
+        
+        @if (_canCreateVacation)
+        {
+            <MudSpacer/>
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" Href="@($"/packages/create/{VacationHostId}")" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">Create</MudButton>
+            </div>
+        }
+    </ToolBarContent>
+
+    <HeaderContent>
+        <MudTh><strong>Name</strong></MudTh>
+        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+        {
+            <MudTh><strong>Proposal Url</strong></MudTh>
+        }
+        <MudTh></MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd>@context.VacationTitle.VacationTitle</MudTd>
+        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+        {
+            <MudTd><strong><MudLink Href="@($"{Configuration["ApplicationConfiguration:WebAddress"]}/{@StartUrl}/{context.VacationId}/{context.Url}")">@($"{Configuration["ApplicationConfiguration:WebAddress"]}/{StartUrl}/{context.VacationId}/{context.Url}")</MudLink></strong></MudTd>
+        }
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            <MudMenu Style="z-index:1000" Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                <MudMenuItem Style="z-index:1000" Icon="@Icons.Material.Filled.Preview" OnClick="@(() => DuplicateVacation(context.VacationId))">Duplicate</MudMenuItem>
+                <MudMenuItem Style="z-index:1000" Icon="@Icons.Material.Filled.Preview" OnClick="@(() => NavigationManager.NavigateTo($"{@StartUrl}/{context.VacationId}/{@context.Url}", true))">Preview</MudMenuItem>
+                @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                {
+                    <MudMenuItem Style="z-index:1000" Icon="@Icons.Material.Filled.Summarize" OnClick="@(() => NavigationManager.NavigateTo($"packages/summaries/{context.VacationId}/{@context.Url}", true))">Summary</MudMenuItem>
+                    <MudMenuItem Style="z-index:1000" Icon="@Icons.Material.Filled.Print" OnClick="@(() => NavigationManager.NavigateTo($"packages/printSummary/{context.VacationId}/{@context.Url}", true))">Print</MudMenuItem>
+                }
+                @if (_canEditVacation)
+                {
+                    <MudMenuItem Style="z-index:1000" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => NavigationManager.NavigateTo($"packages/update/{@context.VacationId}", true))">Edit</MudMenuItem>
+                }
+                @if (_canDeleteVacation && !StartUrl.Contains("summaries"))
+                {
+                    <MudMenuItem Style="z-index:1000" Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCategory(context.VacationId))">Delete</MudMenuItem>
+                }
+            </MudMenu>
+        </MudTd>
+    </RowTemplate>
+
+    <FooterContent>
+        <MudTd colspan="6">
+            <div class="d-flex">
+                <MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+                <MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                <MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+            </div>
+        </MudTd>		
+    </FooterContent>
+
+    <PagerContent>
+        <MudTablePager/>
+    </PagerContent>
+
+</MudTable>
+
+                

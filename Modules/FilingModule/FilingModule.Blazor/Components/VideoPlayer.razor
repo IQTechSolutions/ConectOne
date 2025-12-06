@@ -1,0 +1,40 @@
+﻿@using Microsoft.JSInterop
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="video-wrapper">
+    <video @ref="_player"
+           class="player"
+           controls
+           preload="metadata"
+           poster="@Poster"
+           loop="@Loop"
+           @onloadedmetadata="SeekIfNeeded">
+        <source src="@SourceUrl" type="@MimeType" />
+        Sorry, your browser doesn’t support the HTML5
+        <code>video</code> element.
+    </video>
+
+    <button class="btn-full" @onclick="ToggleFullScreen">⛶</button>
+</div>
+
+@code {
+    /*************** Parameters ***************/
+    [Parameter, EditorRequired] public string SourceUrl { get; set; } = default!;
+    [Parameter] public string MimeType { get; set; } = "video/mp4";
+    [Parameter] public string? Poster { get; set; }    // thumbnail image
+    [Parameter] public bool Loop { get; set; }     // default false
+    [Parameter] public double StartAtSeconds { get; set; } = 0;
+
+    /*************** Internals ***************/
+    private ElementReference _player;
+
+    private async Task SeekIfNeeded()
+    {
+        if (StartAtSeconds > 0)
+            await JS.InvokeVoidAsync("blazorVideo.seek", _player, StartAtSeconds);
+    }
+
+    private async Task ToggleFullScreen()
+        => await JS.InvokeVoidAsync("blazorVideo.toggleFullScreen", _player);
+}

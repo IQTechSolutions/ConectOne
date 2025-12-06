@@ -1,0 +1,26 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using MudBlazor
+@using Radzen.Blazor
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>   
+            <MudItem xs="12">
+                <MudSelect ToStringFunc="@_vacationConverter" T="VacationDto" Label="Vacation" Value="_selectedVacation" ValueChanged="SetSelectedVacation" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                    @foreach (var state in _availableVacations)
+                    {
+                        <MudSelectItem T="VacationDto" Value="@state">@state.VacationTitle.VacationTitle</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12">
+                <label style="padding-left:20px;">Descriptions</label>
+                <RadzenHtmlEditor @bind-Value=@_generalInformation style="height: 450px;" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+    </DialogActions>
+</MudDialog>

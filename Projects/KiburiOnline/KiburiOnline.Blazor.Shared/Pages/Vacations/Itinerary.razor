@@ -1,0 +1,54 @@
+﻿<span id="itinenary" style="margin-top:-30px;"></span>
+<section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+    <div class="container">
+
+        <div class="row row-fix row-60">
+
+            <div class="col-sm-12 text-center group-event">
+
+                <div class="row row-fix row-30 post-event">
+
+                    <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">DETAILED ITINERARY</h4>
+                    
+                    <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+                        @foreach (var itineraryColumn in _itineraries.Take(_itineraries.Count/2))
+                        {
+                        
+                            <p style="font-size:13px !important;">
+                                @* <strong>@itineraryColumn.Name: @itineraryColumn.Date.Value.ToLongDateString()</strong> <br> *@
+                                <ul>
+                                    @foreach (var detail in itineraryColumn.Details)
+                                    {
+                                        <li>@detail.Description</li>
+                                    }
+                                </ul>
+                            </p>
+                        
+                        }
+                    </div>
+                    <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; margin-bottom:5px !important;">
+                        @foreach (var itineraryColumn in _itineraries.Skip(_itineraries.Count/2))
+                        {
+                        
+                            <p style="font-size:13px !important;">
+                                @* <strong>@itineraryColumn.Name: @itineraryColumn.Date.Value.ToLongDateString()</strong> <br> *@
+                                <ul>
+                                    @foreach (var detail in itineraryColumn.Details)
+                                    {
+                                        <li>@detail.Description</li>
+                                    }
+                                </ul>
+                            </p>
+                        
+                        }
+                    </div>
+                    @if (!BannerImageUrl.Contains("_content"))
+                    {
+
+                        <div class="col-md-12" style="padding-top:50px;"><img src="@BannerImageUrl" alt="" width="1505" height="372"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

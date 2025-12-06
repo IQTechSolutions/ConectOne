@@ -1,0 +1,201 @@
+﻿@page "/vacations/printSummary/{Slug}"
+@using Accomodation.Blazor.Components.DisplaySettings
+@using BlazorBootstrap
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+
+<PageTitle>ProGolf Africa Safaris — Luxury Golf & Safari Packages</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Tailor-made African golf vacations and luxury safaris across South Africa, Botswana, Zambia & beyond. Play iconic courses, experience Rovos Rail, and see the Big Five." />
+    <link rel="canonical" href="/" />
+</HeadContent>
+
+@layout WebsiteLayout
+
+<style>
+    .img-fluid {
+        width: 100%;
+        max-width: none;
+    }
+
+    .carousel-control-prev {
+        opacity: 1;
+        width: auto;
+    }
+
+    .carousel-control-prev-icon {
+        background-color: white;
+        padding: 20px;
+        background-size: 20px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e") !important;
+    }
+
+    .carousel-control-next {
+        opacity: 1;
+        width: auto;
+    }
+
+    .carousel-control-next-icon {
+        background-color: white;
+        padding: 20px;
+        background-size: 20px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+    }
+</style>
+
+<div class="page" id="intro">
+    
+    @* SLIDER *@
+    <MudHidden Breakpoint="Breakpoint.Xs">
+        <Carousel Style="width:100%;" ShowPreviousNextControls="false">
+            <CarouselItem Active="true">
+                <Image Src="@_vacation?.MainSliderImageUrl(Configuration)" />
+            </CarouselItem>
+        </Carousel>
+    </MudHidden>
+
+
+
+    @* DETAILS *@
+<span id="overview" style="margin-top:-30px;"></span>
+<section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+    <div class="container">
+
+        <div class="row row-fix row-60">
+
+            <div class="col-sm-12 text-center group-event">
+
+                <div class="row row-fix row-30 post-event">
+
+                    <div class="col-md-12 text-md-start post-event-body">
+                        @_shortDescriptionText
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (_vacation is not null)
+{
+        @* INCLUSIONS *@
+        <span id="inclusions" style="margin-top:-30px;"></span>
+        <section class="section novi-bg novi-bg-img bg-gray-lighter section-xl text-center">
+            <div class="container">
+                <div class="row row-fix row-60">
+                    <div class="col-sm-12 text-center group-event">
+                        <div class="row row-fix row-30 post-event">
+
+                            <h4 style="text-align:center !important; padding-bottom:30px !important; color:#666;">INCLUDED IN THIS TOUR</h4>
+
+                            <MudGrid>
+                                <MudItem xs="6" Style="text-align:left !important; margin-bottom:5px !important; margin-top:-15px;">
+                                    <VacationInclusionDisplayTypeSectionsColumn Vacation="_vacation" ColumnName="One"/>
+                                </MudItem>
+                                <MudItem xs="6" Style="text-align:left !important; margin-bottom:5px !important; margin-top:-15px;">
+                                    <VacationInclusionDisplayTypeSectionsColumn Vacation="_vacation" ColumnName="Two" />
+                                </MudItem>
+                            </MudGrid>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+}
+
+
+    @if (_vacation is not null && _vacation.VacationPrices!.Any(c => c.Selector == "Golfer") || _vacation is not null && _vacation.VacationPrices!.Any(c => c.Selector == "Non-Golfer"))
+    {
+        <section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+            <div class="container">
+
+                <div class="row row-fix row-60">
+
+                    <div class="col-sm-12 text-center group-event">
+
+                        <div class="row row-fix row-30 post-event">
+
+                            <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important;">
+
+                                <img class="img-fluid" src="@_vacation?.MapImageUrl(Configuration)" width="845" height="695">
+
+                            </div>
+
+
+                            <div class="col-md-6 text-md-start post-event-body" style="text-align:left !important; background-image:url(images/tab_print.jpg); background-size: 100% 100%;">
+
+                                <table align="left" style="text-align:left !important; color:#888 !important; font-size:13px !important; border-color:#FFF !important;">
+                                    <thead>
+                                        <tr style="color:#FFF !important;">
+                                            <th scope="col">PRICING</th>
+                                            <th scope="col">PP SHARING</th>
+                                            <th scope="col">SINGLE</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (_vacation.VacationPrices!.Where(c => c.Selector == "Golfer").Any())
+                                        {
+                                            <tr style="color:#FFF !important;">
+                                                <th scope="row">
+                                                    <strong>Full Golf Package</strong><br>
+                                                    - Includes all golf and tours as stated
+                                                </th>
+                                                @foreach (var price in _vacation!.VacationPrices!.Where(c => c.Selector == "Golfer").OrderBy(c => c.Price))
+                                                {
+                                                    <td>@string.Format(nfi, "{0:C}", price.Price)</td>
+                                                }
+
+                                            </tr>
+                                        }
+                                        @if (_vacation!.VacationPrices!.Where(c => c.Selector == "Non-Golfer").Any())
+                                        {
+                                            <tr style="color:#FFF !important;">
+                                                <th scope="row">
+                                                    <strong>Non Golfers Package</strong><br>
+                                                    - Excludes all golf<br>
+                                                    - Includes all tours stated and additional excursion options
+                                                </th>
+                                                @foreach (var price in _vacation!.VacationPrices!.Where(c => c.Selector == "Non-Golfer").OrderBy(c => c.Price))
+                                                {
+                                                    <td>@string.Format(nfi, "{0:C}", price.Price)</td>
+                                                }
+
+                                            </tr>
+                                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+
+
+<footer>
+    <div class="footer-corporate novi-bg novi-bg-img">
+        <div class="container">
+            <div class="footer-corporate__inner">
+                <p class="rights" style="font-size:12px !important"><span>© ProGolf Africa Safaris</span><span>&nbsp;</span><span class="copyright-year"></span>.</p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+</div>

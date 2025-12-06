@@ -1,0 +1,23 @@
+﻿.video-wrapper {
+    position: relative;
+    max-width: 100%;
+}
+
+.player {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 16px rgba(0 0 0 / .35);
+}
+
+.btn-full {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0 0 0 / .6);
+    color: white;
+    border: none;
+    padding: .35rem .55rem;
+    border-radius: .25rem;
+    cursor: pointer;
+}

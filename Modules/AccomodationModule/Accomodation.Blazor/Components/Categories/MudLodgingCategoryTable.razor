@@ -1,0 +1,64 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudTable Elevation="25" ServerData="GetCategoriesAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="table">
+		
+		<ToolBarContent>
+			<div class="col-md-10">
+				<div class="form-group">
+					<input asp-for="Params.SearchText" class="form-control" placeholder="Type to Search" />
+				</div>
+			</div>
+			<div class="col-md-2">
+				<button type="submit" class="btn btn-primary">Search</button>
+			</div>
+			<MudSpacer />
+			<MudButton DisableElevation Variant="Variant.Filled" Href="/lodgings/categories/create" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New</MudButton>
+		</ToolBarContent>
+	
+		<HeaderContent>
+			@if (!_dense)
+			{
+			<MudTh><strong>Cover</strong></MudTh>
+			}
+
+		<MudTh><strong>Name</strong></MudTh>
+		<MudTh><strong>Short Description</strong></MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+	
+	    <RowTemplate>
+		
+			@if (!_dense)
+			{
+			<MudTd><MudImage Width="50" Height="50" Src="@(!string.IsNullOrEmpty(context.CoverImageUrl) ? context.CoverImageUrl : "/_content/Accomodation.Blazor/images/NoImage.jpg")" /> </MudTd>
+			}
+			<MudTd>@context.Name</MudTd>
+			<MudTd><strong>@context.Description.TruncateLongString(150)</strong></MudTd>
+			<MudTd DataLabel="Actions" Style="text-align: right">
+				<MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+					<MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/lodgings/categories/update/{@context.CategoryId}")">Edit</MudMenuItem>
+					<MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCategory(context.CategoryId))">Delete</MudMenuItem>
+				</MudMenu>
+			</MudTd>
+		
+	</RowTemplate>
+	
+		<FooterContent>
+			<MudTd colspan="6">
+				<div class="d-flex">
+					<MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+				<MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+				<MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+				</div>
+			</MudTd>		
+		</FooterContent>
+	
+		<PagerContent>
+			@if (table is not null && table.Items is not null && table.Items.Any())
+		{
+			<MudTablePager/>
+		}
+	</PagerContent>
+	
+	</MudTable>

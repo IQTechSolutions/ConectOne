@@ -1,0 +1,38 @@
+﻿@using AccomodationModule.Domain.Enums
+@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="9">
+                <MudSelect Label="Payment Type" @bind-Value="PaymentRule.PaymentType" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined">
+                    @foreach (var item in Enum.GetValues<PaymentType>())
+                    {
+                        <MudSelectItem Value="item">@item.GetDescription()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="3">
+                <MudNumericField T="int" Disabled="@(PaymentRule.PaymentType == PaymentType.Balance)" @bind-Value="PaymentRule.MonthsBeforeVacationStart" Label="Months before vacation starts" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudSelect Disabled="@(PaymentRule.PaymentType == PaymentType.Balance)" Label="Cancellation Rule" @bind-Value="PaymentRule.RuleType" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined">
+                    @foreach (var item in Enum.GetValues<PaymentRuleType>())
+                    {
+                        <MudSelectItem Value="item">@item.GetDescription()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Disabled="@(PaymentRule.PaymentType == PaymentType.Balance)" @bind-Value="PaymentRule.Value" Label="Value" For="@(() => PaymentRule.Value)" Variant="Variant.Outlined" />
+            </MudItem>
+           
+        </MudGrid>
+       
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Warning" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">Create</MudButton>
+    </DialogActions>
+</MudDialog>

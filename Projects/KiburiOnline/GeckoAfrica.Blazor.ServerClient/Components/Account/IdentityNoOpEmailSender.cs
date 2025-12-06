@@ -1,4 +1,4 @@
-using GeckoAfrica.Blazor.ServerClient.Data;
+using IdentityModule.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 

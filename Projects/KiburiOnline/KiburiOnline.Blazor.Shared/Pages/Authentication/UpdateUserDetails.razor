@@ -1,0 +1,33 @@
+﻿@page "/registrations/users/myaccount"
+@page "/registrations/users/{id}"
+
+@attribute [Authorize]
+@using IdentityModule.Domain.Constants
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<DefaultTitle Title="Account" Caption="Manage your account." />
+
+<MudTabs Elevation="25" Color="Color.Transparent" Rounded="true" PanelClass="mt-6">
+    @if (User.IsInRole(RoleConstants.SuperUser))
+    {
+        <MudTabPanel Text="Step 1: Profile" >
+            <Profile User="@_accountHolder" OnSubmit="@(() => ToTab(_socialSettingsTab))" OnCancel="@(() => ToTab(_socialSettingsTab))" />
+        </MudTabPanel>
+        @* <MudTabPanel Text="Step 2: Social Media" @ref="_socialSettingsTab">
+            <SocialMediaSettingsEditForm SocialMediaSettings="_accountHolder.SocialMedia" OnValidSubmit="@(() => ToTab(_addressTab))" OnBack="@(() => ToTab(_detailsTab))" OnCancel="Cancel" />
+            </MudTabPanel>
+            <MudTabPanel Text="Step 3: Address" @ref="_addressTab">
+            <AddressEditForm OnValidSubmit="() => ToTab(_settingsTab)" Address="_accountHolder.Address" OnBack="@(() => ToTab(_socialSettingsTab))" OnCancel="Cancel" />
+            </MudTabPanel>
+            <MudTabPanel Text="Step 4: Settings" @ref="_settingsTab">
+            <UserSettingsEditForm UserInfo="_accountHolder" OnValidSubmit="Save" OnBack="() => ToTab(_addressTab)" OnCancel="Cancel" />
+            </MudTabPanel> *@
+    }
+    
+</MudTabs>

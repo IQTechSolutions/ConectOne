@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Progolf.Blazor.ServerClient.Components.Account.Pages;
 using Progolf.Blazor.ServerClient.Components.Account.Pages.Manage;
-using Progolf.Blazor.ServerClient.Data;
 using System.Security.Claims;
 using System.Text.Json;
+using IdentityModule.Domain.Entities;
 
 namespace Microsoft.AspNetCore.Routing
 {

@@ -1,0 +1,134 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using MudBlazor
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+<MudNavMenu>
+    <MudNavLink Match="NavLinkMatch.All" Href="/" Icon="@Icons.Material.Outlined.Home">Dashboard</MudNavLink>
+
+    @if (_canViewVacationHosts && Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+    {
+        <MudNavLink Href="/vacationhosts" Icon="@Icons.Material.Outlined.HolidayVillage">Groups</MudNavLink>
+    }
+    
+    @if (_canViewDestinations)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.Group" Title="Packages" Expanded="false">
+            <MudNavLink Href="/packages">All</MudNavLink>
+            <MudNavLink Href="/packages/create">Create</MudNavLink>
+        </MudNavGroup>
+    }
+
+    @if (_canViewLodgings || _canCreateLodgings)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.Hotel" Title="Accomodation" Expanded="false">
+            @if (_canViewLodgings || _canCreateLodgings)
+            {
+                <MudNavLink Href="/lodgings">Hotel Index</MudNavLink>
+            }
+            @if (_canViewLodgingTypes)
+            {
+                <MudNavLink Href="/lodgingTypes">Types</MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+    @if (_canViewDestinations)
+    {
+        <MudNavLink Href="/destinations" Icon="@Icons.Material.Outlined.Map">Destinations</MudNavLink>
+    }
+    
+    @if (_canViewGolfCourses && Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+    {
+        <MudNavLink Href="/golfcourses" Icon="@Icons.Material.Outlined.GolfCourse">Golf Courses</MudNavLink>
+    }
+
+    @if (_canViewContacts)
+    {
+        <MudNavLink Href="/contacts" Icon="@Icons.Material.Outlined.Contacts">Teams</MudNavLink>
+    }
+    
+    @if (_canViewGallery)
+    {
+        <MudNavLink Href="/gallery" Icon="@Icons.Material.Outlined.BrowseGallery">Gallery</MudNavLink>
+    }
+
+    @if (_canViewBookings && _canViewVacationHosts && Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+    {
+        <MudNavLink Href="/bookings" Icon="@Icons.Material.Outlined.BookOnline">Bookings</MudNavLink>
+    }
+    
+    @if (_canViewTemplates || _canViewSettings)
+    {
+        <MudNavGroup Icon="@Icons.Material.Outlined.Settings" Title="Settings" Expanded="false">
+            @if (_canViewTemplates)
+            {
+                <MudNavGroup Icon="@Icons.Material.Outlined.TextSnippet" Title="Templates" Expanded="false">
+                    <MudNavLink Href="/vacation-title-templates">Package Titles</MudNavLink>
+                    <MudNavLink Href="/short-description-templates">Short Descriptions</MudNavLink>
+                    <MudNavLink Href="/general-information-templates">General Information</MudNavLink>
+                    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                    {
+                        <MudNavLink Href="/day-tour-activity-templates">Day Tour Activities</MudNavLink>
+                        <MudNavLink Href="/meet-and-greet-templates">Meet & Greets</MudNavLink>
+                        <MudNavLink Href="/gifts">Gifts</MudNavLink>
+                    }
+                </MudNavGroup>
+                @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                {
+                    <MudNavGroup Icon="@Icons.Material.Outlined.SetMeal" Title="Meals" Expanded="false">
+                        <MudNavLink Href="/meal-addition-templates">Meal Additions</MudNavLink>
+                        <MudNavLink Href="/restaurants">Restaurants</MudNavLink>
+                    </MudNavGroup>
+                    
+                    <MudNavGroup Icon="@Icons.Material.Outlined.Payment" Title="Payment" Expanded="false">
+                        <MudNavLink Href="/booking-terms-description-templates">Booking Terms</MudNavLink>
+                        <MudNavLink Href="/payment-exclusion-templates">Payment Exclusions</MudNavLink>
+                        <MudNavLink Href="/cancellation-terms-templates">Cancellation Rules</MudNavLink>
+                        <MudNavLink Href="/terms-and-conditions-templates">Terms & Conditions</MudNavLink>
+                    </MudNavGroup>
+                }
+
+                <MudNavGroup Icon="@Icons.Material.Outlined.LocationCity" Title="Location" Expanded="false">
+                    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                    {
+                        <MudNavLink Href="/areas">Areas</MudNavLink>                        
+                    }
+                    <MudNavLink Href="/countries">Countries</MudNavLink>
+                    <MudNavLink Href="/cities">Cities</MudNavLink>
+                    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                    {
+                        <MudNavLink Href="/airports">Airports</MudNavLink>
+                    }
+                </MudNavGroup>
+            }
+            @if (_canViewSettings && Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+            {
+                <MudNavGroup Icon="@Icons.Material.Outlined.MiscellaneousServices" Title="Other" Expanded="false">
+                    <MudNavLink Href="/reviews">Reviews</MudNavLink>
+                    <MudNavLink Href="/custom-variable-tags">Custom Tags</MudNavLink>
+                </MudNavGroup>
+            }
+        </MudNavGroup>
+    }
+    
+    <MudNavLink Href="/customerQueries" Icon="@Icons.Material.Outlined.Map">Customer Queries</MudNavLink>
+    
+    @if (_canViewBookings && _canViewVacationHosts && Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+    {
+        if (_canViewUsers || _canViewRoles)
+        {
+            <MudNavGroup Icon="@Icons.Material.Outlined.VerifiedUser" Title="Manage Users" Expanded="false">
+                @if (_canViewUsers)
+                {
+                    <MudNavLink Href="/registrations/users">Users</MudNavLink>
+                }
+                @if (_canViewRoles)
+                {
+                    <MudNavLink Href="@($"/security/roles")">Roles</MudNavLink>
+                }
+            </MudNavGroup>
+        }
+    }
+</MudNavMenu>

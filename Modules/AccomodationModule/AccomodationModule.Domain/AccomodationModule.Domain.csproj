@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\FeedbackModule\FeedbackModule.Domain\FeedbackModule.Domain.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Domain\FilingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\GroupingModule\GroupingModule.Domain\GroupingModule.Domain.csproj" />
+    <ProjectReference Include="..\..\LocationModule\LocationModule.Domain\LocationModule.Domain.csproj" />
+    <ProjectReference Include="..\..\ProductsModule\ProductsModule.Domain\ProductsModule.Domain.csproj" />
+    <ProjectReference Include="..\..\ShoppingModule\ShoppingModule.Domain\ShoppingModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

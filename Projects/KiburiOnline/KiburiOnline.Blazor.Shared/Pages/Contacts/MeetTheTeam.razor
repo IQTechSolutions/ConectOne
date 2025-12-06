@@ -1,0 +1,53 @@
+﻿@page "/meet-the-team"
+
+@layout WebsiteLayout
+
+<PageTitle>Contact ProGolf Africa Safaris | Plan Your Golf & Safari Trip</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Get in touch with ProGolf Africa Safaris. Call +27 21 913 9281 or email enquiries@progolfsafaris.com to start planning a tailor-made golf-and-safari itinerary." />
+    <link rel="canonical" href="/meet-the-team" />
+</HeadContent>
+
+@using ConectOne.Domain.Extensions
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Vacations
+
+<section class="section novi-bg novi-bg-img bg-default section-xl text-center">
+    <div class="container">
+        <h3>Our Team</h3>
+        <hr>
+        <div class="row row-fix row-60">
+
+            <div class="col-sm-12 text-center group-event">
+            
+            @foreach (var contact in _contacts.OrderBy(c => c.Order))
+            {
+                    <span id="contactid-@contact.Name-@contact.Surname" style="scroll-margin-top:110px;"></span>
+                    @if (contact.ContactId != _contacts.OrderBy(c => c.Order).First().ContactId)
+                {
+                    <hr style="margin-top:40px;">
+                }
+                <div class="row row-fix row-30 post-event">
+
+                        <div class="col-md-3"><img src="@(@contact.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover) is not null ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}/{contact.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}" : "_content/Accomodation.Blazor/images/profileImage128x128.png")" alt="@contact.DisplayName Profile Image" width="652" height="491" /></div>
+
+                    <div class="col-md-9 text-md-start post-event-body">
+                        <h4>@contact.DisplayName</h4>
+                        <p style="margin-top:0px; font-style:italic; font-size:14px; color:#F90; font-weight:bold;">@contact.ContactType.GetDescription()</p>
+                        <p style="font-size:13px !important;">@((MarkupString)contact.Bio)</p>
+                    </div>
+                </div>
+            }
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<MostRequestedComponent/>

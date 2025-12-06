@@ -1,0 +1,71 @@
+﻿@page "/sign-up"
+
+@using ConectOne.Blazor.Layouts
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using Variant = MudBlazor.Variant
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout CleanLayout
+@attribute [AllowAnonymous]
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<section id="content">
+<div class="container">
+<div id="main">
+    <div class="d-flex justify-center" style="padding-bottom:15px;">
+        <a href="/" title="Kwagga Travel - Home">
+            <MudImage Src="images/logo-default-347x65.png" Style="width: 100%;"/>
+        </a>
+    </div>
+
+    <div class="text-center yellow-color box" style="font-size: 4em; font-weight: 300; line-height: 1em;">Register</div>
+
+    <p class="light-blue-color block" style="font-size: 1.3333em; text-align:center;">Please complete to your register for an account.</p>
+    <div class="col-sm-12 col-md-12 col-lg-12 no-float no-padding center-block">
+        @if (Errors != null && Errors.Any())
+        {
+            <MudGrid>
+                <MudItem xs="12">
+                    @foreach (var item in Errors)
+                    {
+                        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Style="width:100%" Class="mb-3" Icon="Icons.Material.Filled.Error"> @item </MudAlert>
+                    }
+                </MudItem>
+            </MudGrid>
+            
+        }
+        <EditForm Model="_userRegistration" OnValidSubmit="RegisterAsync">
+            <AntiforgeryToken />
+            <div class="form-group">
+                <MudTextField Class="mt-3" Style="width:100%; background-color:white" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.FirstName" Label="Name" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.AccountCircle"/>
+            </div>
+            <div class="form-group">
+                <MudTextField Class="mt-3" Style="width:100%; background-color:white" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.LastName" Label="Surname" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.AccountBox"/>
+            </div>
+            <div class="form-group">
+                <MudTextField Class="mt-3" Style="width:100%; background-color:white" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.PhoneNumber" Label="Phone Nr" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.Phone"/>
+            </div>
+            <div class="form-group">
+                <MudTextField Class="mt-3" Style="width:100%; background-color:white" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userRegistration.Email" Label="Email" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.AlternateEmail"/>
+            </div>
+            <div class="form-group">
+                <MudTextField OnKeyUp="OnKeyUpEvent" Style="width:100%; background-color:white" InputType="@_passwordInput" @bind-Value="_userRegistration.Password" For="@(() => _userRegistration.Password)" Class="mt-3" Label="Password" Variant="Variant.Filled" Margin="Margin.Dense" T="string" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility"/>
+            </div>
+            <div class="form-group">
+                <MudTextField OnKeyUp="OnKeyUpEvent" Style="width:100%; background-color:white" InputType="@_passwordConformationInput" @bind-Value="_userRegistration.ConfirmPassword" For="@(() => _userRegistration.ConfirmPassword)" Class="mt-3" Label="Password" Variant="Variant.Filled" Margin="Margin.Dense" T="string" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@_passwordConformationInputIcon" OnAdornmentClick="TogglePasswordConformationVisibility"/>
+            </div>
+            <MudButton Style="background-color:#fdb714; color:black;" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true">REGISTER YOUR ACCOUNT</MudButton>
+
+            <p style="padding-top:25px; text-align:center;"><MudLink Href="/sign-in" Style="text-align:center">I have an account, LOGIN NOW?</MudLink></p>
+            <p style="text-align:center;"><MudLink Href="/forgot-password" Style="text-align:center">Forgot password?</MudLink></p>
+
+        </EditForm>
+    </div>
+</div>
+</div>
+</section>

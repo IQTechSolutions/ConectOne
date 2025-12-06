@@ -1,0 +1,225 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using AccomodationModule.Domain.Enums
+@using ConectOne.Blazor.Components.SortableItems
+@using ConectOne.Domain.Extensions
+@using MudBlazor
+@using Radzen.Blazor
+
+<MudGrid Style="padding-left:20px;">
+    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+    {
+        <MudItem xs="12">
+            <MudCard Style="width:100%; padding-left:20px;">
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12" md="12">
+                            <MudText Typo="Typo.h5">Inclusion Display Settings</MudText>
+                        </MudItem>
+                        @foreach (var dropboxItems in _vacationInclusionDisplaySectionsDropBoxItems)
+                        {
+                            <MudItem xs="6">
+                                <SortableList2 T="VacationInclusionDisplayTypeInformationDto" Group="sharedInclusionLists" Id="@dropboxItems.Selector" Items="dropboxItems.Items" OnStart="VacationInclusionDisplaySectionDragStart" Context="context" OnUpdate="@SortVacationInclusionDisplaySectionList" OnRemove="VacationInclusionDisplaySectionRemovedFromSortableList" OnAdd="VacationInclusionDisplaySectionUpdatedOnSortableList">
+                                    <SortableItemTemplate>
+
+                                        @if (context.VacationInclusionDisplayType == VacationInclusionDisplayTypes.General && !string.IsNullOrWhiteSpace(Vacation.GeneralInclusionsSummaryInformation))
+                                        {
+                                            <MudCard Style="width:100%; padding-left:20px; margin-bottom:10px;">
+                                                <MudCardHeader>
+                                                    <MudText Typo="Typo.h6">@context.VacationInclusionDisplayType.GetDescription()</MudText>
+                                                </MudCardHeader>
+                                                <MudCardContent>
+                                                    @((MarkupString)Vacation?.GeneralInclusionsSummaryInformation)
+                                                </MudCardContent>
+                                                <MudCardActions>
+                                                    <MudGrid>
+                                                        <MudItem xs="6">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary"
+                                                                       StartIcon="@Icons.Material.Filled.Edit" OnClick="@(() => UpdateVacationInclusionDisplaySection(context))">
+                                                                Edit
+                                                            </MudButton>
+                                                        </MudItem>
+                                                        <MudItem xs="6">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Error"
+                                                                       StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => RemoveVacationInclusionDisplaySection(@context.VacationInclusionDisplayTypeInformationId!))">
+                                                                Remove
+                                                            </MudButton>
+                                                        </MudItem>
+                                                    </MudGrid>
+                                                </MudCardActions>
+                                            </MudCard>
+                                        }
+                                        else if (context.VacationInclusionDisplayType == VacationInclusionDisplayTypes.Accommodation)
+                                        {
+                                            <MudCard Style="width:100%; padding-left:20px; margin-bottom:10px;">
+                                                <MudCardHeader>
+                                                    <MudText Typo="Typo.h6">@context.VacationInclusionDisplayType.GetDescription()</MudText>
+                                                </MudCardHeader>
+                                                <MudCardContent>
+                                                    <ul>
+                                                        @foreach (var item in Vacation.VacationIntervals)
+                                                        {
+                                                            <li>
+                                                                @item.NightCount Nights at @item.Lodging.Name
+                                                                @* @if (item.Destination != null)
+                                                            {
+                                                                <span> @item.Destination.Name</span>
+                                                            } *@
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </MudCardContent>
+                                                <MudCardActions>
+                                                    <MudGrid>
+                                                        <MudItem xs="12">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Error"
+                                                                       StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => RemoveVacationInclusionDisplaySection(@context.VacationInclusionDisplayTypeInformationId!))">
+                                                                Remove
+                                                            </MudButton>
+                                                        </MudItem>
+                                                    </MudGrid>
+                                                </MudCardActions>
+                                            </MudCard>
+                                        }
+                                        else if (context.VacationInclusionDisplayType is VacationInclusionDisplayTypes.GolfRounds)
+                                        {
+                                            <MudCard Style="width:100%; padding-left:20px; margin-bottom:10px;">
+                                                <MudCardHeader>
+                                                    <MudText Typo="Typo.h6">@context.VacationInclusionDisplayType.GetDescription()</MudText>
+                                                </MudCardHeader>
+                                                <MudCardContent>
+                                                    <ul>
+                            @foreach (var item in Vacation.GolferPackages)
+                                                        {
+                                                            <li>
+                                                                1 Round at @item.GolfCourse.Name @if (item.Carts)
+                                                                {
+                                                                    <span>including golf carts</span>
+                                                                }
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </MudCardContent>
+                                                <MudCardActions>
+                                                    <MudGrid>
+                                                        <MudItem xs="12">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Error"
+                                                                       StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => RemoveVacationInclusionDisplaySection(@context.VacationInclusionDisplayTypeInformationId!))">
+                                                                Remove
+                                                            </MudButton>
+                                                        </MudItem>
+                                                    </MudGrid>
+                                                </MudCardActions>
+                                            </MudCard>
+                                        }
+                                        else if (context.VacationInclusionDisplayType == VacationInclusionDisplayTypes.MealsAndActivities && !string.IsNullOrWhiteSpace(Vacation.MealsAndActivitiesInclusionsSummaryInformation))
+                                        {
+                                            <MudCard Style="width:100%; padding-left:20px; margin-bottom:10px;">
+                                                <MudCardHeader>
+                                                    <MudText Typo="Typo.h6">@context.VacationInclusionDisplayType.GetDescription()</MudText>
+                                                </MudCardHeader>
+                                                <MudCardContent>
+                                                    @((MarkupString)Vacation?.MealsAndActivitiesInclusionsSummaryInformation)
+                                                </MudCardContent>
+                                                <MudCardActions>
+                                                    <MudGrid>
+                                                        <MudItem xs="6">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary"
+                                                                       StartIcon="@Icons.Material.Filled.Edit" OnClick="@(() => UpdateVacationInclusionDisplaySection(context))">
+                                                                Edit
+                                                            </MudButton>
+                                                        </MudItem>
+                                                        <MudItem xs="6">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Error"
+                                                                       StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => RemoveVacationInclusionDisplaySection(@context.VacationInclusionDisplayTypeInformationId!))">
+                                                                Remove
+                                                            </MudButton>
+                                                        </MudItem>
+                                                    </MudGrid>
+                                                </MudCardActions>
+                                            </MudCard>
+                                        }
+                                        else if (context.VacationInclusionDisplayType == VacationInclusionDisplayTypes.TransportAndFlights && !string.IsNullOrWhiteSpace(Vacation.TransportAndFlightsInclusionsSummaryInformation))
+                                        {
+                                            <MudCard Style="width:100%; padding-left:20px; margin-bottom:10px;">
+                                                <MudCardHeader>
+                                                    <MudText Typo="Typo.h6">@context.VacationInclusionDisplayType.GetDescription()</MudText>
+                                                </MudCardHeader>
+                                                <MudCardContent>
+                                                    @((MarkupString)Vacation?.TransportAndFlightsInclusionsSummaryInformation)
+                                                </MudCardContent>
+                                                <MudCardActions>
+                                                    <MudGrid>
+                                                        <MudItem xs="6">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary"
+                                                                       StartIcon="@Icons.Material.Filled.Edit" OnClick="@(() => UpdateVacationInclusionDisplaySection(context))">
+                                                                Edit
+                                                            </MudButton>
+                                                        </MudItem>
+                                                        <MudItem xs="6">
+                                                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Error"
+                                                                       StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => RemoveVacationInclusionDisplaySection(@context.VacationInclusionDisplayTypeInformationId!))">
+                                                                Remove
+                                                            </MudButton>
+                                                        </MudItem>
+                                                    </MudGrid>
+                                                </MudCardActions>
+                                            </MudCard>
+                                        }
+
+                                    </SortableItemTemplate>
+                                </SortableList2>
+                            </MudItem>
+                        }
+                        <MudItem md="12">
+                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" OnClick="CreateVacationInclusionDisplaySection">
+                                Add Package Inclusion Display Section
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    }
+    else
+    {
+        <MudItem xs="12">
+            <label style="padding-left:20px;">Accommodation Summary</label>
+            <RadzenHtmlEditor @bind-Value=@Vacation.AccommodationInclusionSummaryInformation style="height: 450px;" />
+        </MudItem>
+        <MudItem xs="12">
+            <label style="padding-left:20px;">Golfer Inclusions Summary</label>
+            <RadzenHtmlEditor @bind-Value=@Vacation.GolfRoundSummaryInclusionInformation style="height: 450px;" />
+        </MudItem>
+    }
+    <MudItem xs="12">
+        <label style="padding-left:20px;">Meals & Activities Summary</label>
+        <RadzenHtmlEditor @bind-Value=Vacation.MealsAndActivitiesInclusionsSummaryInformation style="height: 450px;" />
+    </MudItem>
+    <MudItem xs="12">
+        <label style="padding-left:20px;">Transport & Flights Summary</label>
+        <RadzenHtmlEditor @bind-Value=Vacation.TransportAndFlightsInclusionsSummaryInformation style="height: 450px;" />
+    </MudItem>
+    <MudItem xs="12">
+        <label style="padding-left:20px;">Package Inclusion General Summary</label>
+        <RadzenHtmlEditor @bind-Value=Vacation.GeneralInclusionsSummaryInformation style="height: 450px;" />
+    </MudItem>
+    
+    @if (Update.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    @if(NextTab.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>@( Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko" ? "Next" : "Save")</MudButton>
+        </MudItem>
+    }
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnPreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+    </MudItem>
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+    </MudItem>
+</MudGrid>

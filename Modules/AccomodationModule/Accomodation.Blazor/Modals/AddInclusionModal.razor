@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using Radzen.Blazor
+
+<EditForm Model="@VacationInclusion" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>        
+                
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => VacationInclusion.Name)" @bind-Value="VacationInclusion.Name" Label="Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <label style="padding-left:20px;">Descriptions</label>
+                    <RadzenHtmlEditor @bind-Value=@VacationInclusion.Description style="height: 450px;" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

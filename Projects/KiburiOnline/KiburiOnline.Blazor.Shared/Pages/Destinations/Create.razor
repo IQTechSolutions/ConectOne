@@ -1,0 +1,82 @@
+﻿@page "/destinations/create"
+@using AccomodationModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+@using Radzen.Blazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<EditForm Model="_destination" OnValidSubmit="CreateAsync" class="card card-body bg-light mt-5" FormName="VacationHostCreationForm">
+
+    <DefaultTitle Title="Create new Destination" Caption="Please complete the following information to create a new destination" />
+
+    <DataAnnotationsValidator />
+
+    <MudGrid>
+
+        <MudItem xs="12" sm="12" md="4" lg="3">
+            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_destination.Name" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Destination)" ParentId="@_destination.DestinationId" />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="8" lg="9">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudTextField Label="Name" Class="mt-3" @bind-Value="_destination.Name" For="@(() => _destination.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField Label="Address" Class="mt-3" @bind-Value="_destination.Address" For="@(() => _destination.Address)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudTextField Label="Latitude" Class="mt-3" @bind-Value="_destination.Lat" For="@(() => _destination.Lat)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="4">
+                                    <MudTextField Label="Longitude" Class="mt-3" @bind-Value="_destination.Lng" For="@(() => _destination.Lng)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="4">
+                                </MudItem>
+                                <MudItem xs="12" md="12">
+                                    <label style="padding-left:20px;">Proposal Descriptions</label>
+                                    <RadzenHtmlEditor @bind-Value=@_destination.Description style="height: 300px;" />
+                                </MudItem>
+                                <MudItem xs="12" md="12">
+                                    <label style="padding-left:20px;">Online Descriptions</label>
+                                    <RadzenHtmlEditor @bind-Value=@_destination.OnlineDescription style="height: 300px;" />
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudItem>
+                                <MudTextField T="string" @ref="_autoCompleteBox" Value="_destination.Address" Margin="Margin.Dense" Variant="Variant.Text" />
+                            </MudItem>
+                            <MudItem>
+                                <GoogleMapsComponents.GoogleMap Width="100%" Height="400px" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+                            </MudItem>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+    
+</EditForm>

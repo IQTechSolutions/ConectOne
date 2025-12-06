@@ -1,0 +1,39 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-3 mb-n1" />
+                Set featured image for vacation
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+        @if (!_loaded)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        }
+        else
+        {
+            <MudSelect ToStringFunc="@vacationConverter" T="VacationDto" Label="Roles" @bind-Value="_model.Vacation" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var state in _availableVacations)
+                {
+                    <MudSelectItem T="VacationDto" Value="@state">@state.VacationTitle?.VacationTitle</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect Label="Image Types" @bind-Value="_model.ImageType" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var state in _imageTypes)
+                {
+                    <MudSelectItem Value="@state">@state</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="SubmitAsync" Color="Color.Success">Add Role</MudButton>
+    </DialogActions>
+</MudDialog>

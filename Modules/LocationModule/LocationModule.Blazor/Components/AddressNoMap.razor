@@ -1,0 +1,41 @@
+﻿@using MudBlazor
+<MudCard>
+    <MudCardHeader>
+        <MudText Align="Align.Center" Typo="Typo.h6">@Header</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField T="string" @ref="autoCompleteField" Label="Please enter your address here" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="3">
+                <MudTextField Disabled="otherFieldsDisabled" Label="Unit" Class="mt-3" @bind-Value="Address.UnitNumber" For="@(() => Address.UnitNumber)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudTextField Label="Complex" Class="mt-3" @bind-Value="Address.Complex" For="@(() => Address.Complex)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="3" Class="mt-0">
+                <MudTextField Label="Nr" Class="mt-3" @bind-Value="Address.StreetNumber" For="@(() => Address.StreetNumber)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudTextField Label="Street" Class="mt-3" @bind-Value="Address.StreetName" For="@(() => Address.StreetName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="8">
+                <MudTextField Label="Suburb" Class="mt-3" @bind-Value="Address.Suburb" For="@(() => Address.Suburb)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudTextField Label="Code" Class="mt-3" @bind-Value="Address.PostalCode" For="@(() => Address.PostalCode)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Label="City" Class="mt-3" @bind-Value="Address.City" For="@(() => Address.City)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Label="Province" Class="mt-3" @bind-Value="Address.Province" For="@(() => Address.Province)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField Label="Country" Class="mt-3" @bind-Value="Address.Country" For="@(() => Address.Country)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+            </MudItem>
+            <GoogleMapsComponents.GoogleMap Height="0%" @ref="@(this.map1)" Id="map1" Options="@(this.mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>

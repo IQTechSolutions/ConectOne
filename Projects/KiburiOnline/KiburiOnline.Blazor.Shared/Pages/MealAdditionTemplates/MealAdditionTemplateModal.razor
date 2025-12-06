@@ -1,0 +1,45 @@
+@using AccomodationModule.Domain.DataTransferObjects
+@using AccomodationModule.Domain.Enums
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@Template" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" md="12">
+                    <MudSelect ToStringFunc="@_restaurantDtoConverter" T="RestaurantDto" Label="Restaurant" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined" @bind-Value="Template.Restaurant">
+                        @foreach (var r in Restaurants)
+                        {
+                            <MudSelectItem T="RestaurantDto" Value="@r">@r.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudSelect T="GuestType" Label="Guest Type" @bind-Value="Template.GuestType" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                        @foreach (GuestType type in Enum.GetValues(typeof(GuestType)))
+                        {
+                            <MudSelectItem T="GuestType" Value="@type">@type</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudSelect T="MealType" Label="Meal Type" @bind-Value="Template.MealType" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                        @foreach (MealType type in Enum.GetValues(typeof(MealType)))
+                        {
+                            <MudSelectItem T="MealType" Value="@type">@type</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="3" For="@(() => Template.Notes)" @bind-Value="Template.Notes" Label="Notes" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

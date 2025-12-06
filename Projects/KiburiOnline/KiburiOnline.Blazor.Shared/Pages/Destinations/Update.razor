@@ -1,0 +1,146 @@
+﻿@page "/destinations/update/{DestinationId}"
+@using AccomodationModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+@using Radzen.Blazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<EditForm Model="_destination" OnValidSubmit="UpdateAsync" class="card card-body bg-light mt-5">
+
+    <DefaultTitle Title="Update Destination" Caption="Please complete the following information to update the current destination" />
+
+    <DataAnnotationsValidator />
+
+    <MudGrid>
+
+        <MudItem xs="12" sm="12" md="4" lg="3">
+            <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_destination.Name" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(VacationHost)" ParentId="@_destination.DestinationId" />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="8" lg="9">
+            <MudTabs>
+                <MudTabPanel Text="Details" Style="padding-left:20px;">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem xs="6">
+                                    <MudGrid>
+                                        <MudItem xs="12">
+                                            <MudTextField Label="Name" Class="mt-3" @bind-Value="_destination.Name" For="@(() => _destination.Name)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem xs="12">
+                                            <MudTextField Label="Address" Class="mt-3" @bind-Value="_destination.Address" For="@(() => _destination.Address)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="4">
+                                            <MudTextField Label="Latitude" Class="mt-3" @bind-Value="_destination.Lat" For="@(() => _destination.Lat)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem xs="4">
+                                            <MudTextField Label="Longitude" Class="mt-3" @bind-Value="_destination.Lng" For="@(() => _destination.Lng)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem xs="4">
+                                        </MudItem>
+                                        <MudItem xs="12" md="12">
+                                            <label style="padding-left:20px;">Proposal Descriptions</label>
+                                            <RadzenHtmlEditor @bind-Value=@_destination.Description style="height: 300px;"/>
+                                        </MudItem>
+                                        <MudItem xs="12" md="12">
+                                            <label style="padding-left:20px;">Online Descriptions</label>
+                                            <RadzenHtmlEditor @bind-Value=@_destination.OnlineDescription style="height: 300px;"/>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudItem>
+                                        <MudTextField T="string" @ref="_autoCompleteBox" Value="_destination.Address" Margin="Margin.Dense" Variant="Variant.Text" />
+                                    </MudItem>
+                                    <MudItem>
+                                        <GoogleMapsComponents.GoogleMap Width="100%" Height="400px" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+                                    </MudItem>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudTabPanel>
+                <MudTabPanel Text="Images" Style="padding-left:20px;">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudButton Style="margin-top:15px;" Variant="Variant.Filled" OnClick="UploadImageAsync" Color="Color.Primary" FullWidth="true">Add Gallery Image</MudButton>
+                        </MudItem>
+                        @foreach (var item in _galleryImageToUpload)
+                        {
+                            <MudItem xs="12" sm="4" md="3">
+                                <MudGalleryImageCard Image="@(item.Contains("StaticFiles") ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Replace("\\", "/")}" : item)" OnRemoveImage="RemoveOnUploadedImage" />
+                            </MudItem>
+                        }
+                        @foreach (var item in _destination.Images?.Where(c => c.ImageType == UploadType.Image))
+                        {
+                            <MudItem xs="12" sm="4" md="3">
+                                <MudGalleryImageCard Image="@(item.RelativePath.Contains("StaticFiles") ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.RelativePath.Replace("\\", "/")}" : item.RelativePath)" OnRemoveImage="RemoveGalleryImage" />
+                            </MudItem>
+                        }
+                    </MudGrid>
+                </MudTabPanel>
+                <MudTabPanel Text="Videos" Style="padding-left:20px;">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudStack Style="width: 100%">
+                                <MudFileUpload T="IReadOnlyList<IBrowserFile>" @ref="@_fileUpload" OnFilesChanged="OnInputFileChanged" Hidden="@false"
+                                               InputClass="absolute mud-width-full mud-height-full overflow-hidden z-10" InputStyle="opacity:0" tabindex="-1"
+                                               @ondrop="@ClearDragClass" @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass">
+                                    <ActivatorContent>
+                                        <MudPaper Height="300px" Outlined="true" Class="@_dragClass">
+                                            <MudText Typo="Typo.h6">
+                                                Drag and drop files here or click
+                                            </MudText>
+                                            @foreach (var file in _videosToUpload)
+                                            {
+                                                <MudChip T="string" Color="Color.Dark" Text="@file.Name" tabindex="-1" />
+                                            }
+                                        </MudPaper>
+                                    </ActivatorContent>
+                                </MudFileUpload>
+                                @if (_filesBusyUploading.Any())
+                                {
+                                    foreach (var item in _filesBusyUploading)
+                                    {
+                                        <MudProgressLinear Color="Color.Primary" Value="@item.Progress" Class="my-7" />
+                                    }
+                                }
+                                <MudToolBar Gutters="@false" Class="relative d-flex justify-end gap-4">
+                                    <MudButton Color="Color.Primary" OnClick="@OpenFilePickerAsync" Variant="Variant.Filled">Open file picker</MudButton>
+                                    <MudButton Color="Color.Error" Disabled="@(!_videosToUpload.Any())" OnClick="@ClearAsync" Variant="Variant.Filled">Clear</MudButton>
+                                </MudToolBar>
+                            </MudStack>
+                        </MudItem>
+                        @foreach (var item in _destination.Videos)
+                        {
+                            <MudItem xs="12" sm="4" md="3">
+                                <VideoPlayer SourceUrl="@( $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Url.Replace("\\", "/")}")" StartAtSeconds="15" />
+                            </MudItem>
+                        }
+                    </MudGrid>
+                </MudTabPanel>
+            </MudTabs>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>

@@ -1,0 +1,15 @@
+﻿@page "/pdfProposals"
+@using MudBlazor
+<h3>OnlinePdfProposals</h3>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<MudStack>
+    @foreach (var item in entries)
+    {
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.PictureAsPdf" Label="" />
+    }
+</MudStack>

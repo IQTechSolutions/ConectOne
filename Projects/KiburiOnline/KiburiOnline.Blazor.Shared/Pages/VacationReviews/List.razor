@@ -1,0 +1,88 @@
+﻿@page "/reviews"
+
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Extensions
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Reviews" Caption="This is a paged list of all the current active reviews" />
+    <MudTable Elevation="25" ServerData="GetVacationReviewsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+
+        <ToolBarContent>
+            @if (_canSearchVacationReviews)
+            {
+                <div class="form-group" style="width:100%; padding-right:15px;">
+                    <input asp-for="Params.SearchText" class="form-control" placeholder="Type to Search"/>
+                </div>
+                <div style="padding-right:15px;">
+                    <MudButton Variant="Variant.Filled" OnClick="Search" StartIcon="@Icons.Material.Filled.Search" Color="Color.Tertiary" IconColor="Color.Surface">Search</MudButton>
+                </div>
+                <MudSpacer/>
+            }
+            
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" OnClick="ClearFiltersAsync" StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Secondary" IconColor="Color.Surface">Reload</MudButton>
+            </div>
+            
+            @if (_canCreateVacationReview)
+            {
+                <MudSpacer/>
+                <div style="padding-right:15px;">
+                    <MudButton Variant="Variant.Filled" Href="/reviews/create" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">Create</MudButton>
+                </div>
+            }
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh><strong>Name</strong></MudTh>
+            <MudTh><strong>Short Description</strong></MudTh>
+            @if (_canEditVacationReview || _canDeleteVacationReview)
+            {
+                <MudTh></MudTh>
+            }
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd><strong>@context.ReviewText.HtmlToPlainText().TruncateLongString(150)</strong></MudTd>
+            @if (_canEditVacationReview || _canDeleteVacationReview)
+            {
+                <MudTd DataLabel="Actions" Style="text-align: right">
+                    <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                    @if (_canEditVacationReview)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/reviews/update/{@context.Id}")">Edit</MudMenuItem>
+                    }
+                    @if (_canDeleteVacationReview)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => Delete(context.Id))">Delete</MudMenuItem>
+                    }
+                    </MudMenu>
+                </MudTd>
+            }
+        </RowTemplate>
+
+        <FooterContent>
+            <MudTd colspan="6">
+                <div class="d-flex">
+                    <MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+                    <MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                    <MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+                </div>
+            </MudTd>
+        </FooterContent>
+
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+
+    </MudTable>
+</div>

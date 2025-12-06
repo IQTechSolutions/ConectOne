@@ -1,0 +1,72 @@
+﻿@using ConectOne.Domain.Extensions
+@using MudBlazor
+
+<MudCard Style="width:100%; padding-left:20px;">
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTable Items="Vacation.VacationIntervals.OrderBy(c => c.SortOrderNr)" Elevation="25">
+                    <HeaderContent>
+                        <MudTh>Start Date</MudTh>
+                        <MudTh>End Date</MudTh>
+                        <MudTh>Destination</MudTh>
+                        <MudTh>Lodging</MudTh>
+                        <MudTh>Room Type</MudTh>
+                        <MudTh>Meal Plan</MudTh>
+                        <MudTh>Nights</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.StartDateString(Vacation.ToDto())</MudTd>
+                        <MudTd>@context.EndDateString(Vacation.ToDto())</MudTd>
+                        <MudTd>@context.Destination?.Name</MudTd>
+                        <MudTd>@context.Lodging.Name</MudTd>
+                        <MudTd>@context.RoomType</MudTd>
+                        <MudTd>@context.MealPlan.GetDescription()</MudTd>
+                        <MudTd>@context.NightCount</MudTd>
+                        <MudTd>
+                            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                                <MudMenuItem OnClick="@(() => UpdateVacationInterval(context))" Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                                <MudMenuItem OnClick="@(() => RemoveVacationInterval(context.VacationIntervalId))" Icon="@Icons.Material.Filled.Delete">Delete</MudMenuItem>
+                            </MudMenu>
+                        </MudTd>
+                    </RowTemplate>
+                    <FooterContent>
+                        <MudTd><strong>TOTALS</strong></MudTd>
+                        <MudTd></MudTd>
+                        <MudTd></MudTd>
+                        <MudTd></MudTd>
+                        <MudTd></MudTd>
+                        <MudTd></MudTd>
+                        <MudTd><strong>@(Vacation.VacationIntervals.Sum(c => c.NightCount))</strong></MudTd>
+                        <MudTd></MudTd>
+                    </FooterContent>
+                </MudTable>
+            </MudItem>
+            <MudItem md="12">
+                <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" OnClick="CreateVacationInterval">
+                    New Interval
+                </MudButton>
+            </MudItem>
+            
+            @if (Update.HasDelegate)
+            {
+                <MudItem xs="4" sm="4" md="4" lg="4">
+                    <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+                </MudItem>
+            }
+            @if (NextTab.HasDelegate)
+            {
+                <MudItem xs="4" sm="4" md="4" lg="4">
+                    <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+                </MudItem>
+            }
+            <MudItem xs="4" sm="4" md="4" lg="4">
+                <MudButton OnClick="OnPreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+            </MudItem>
+            <MudItem xs="4" sm="4" md="4" lg="4">
+                <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>

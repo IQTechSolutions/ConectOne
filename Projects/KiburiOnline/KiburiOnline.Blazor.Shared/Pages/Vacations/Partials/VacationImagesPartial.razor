@@ -1,0 +1,165 @@
+﻿@using FilingModule.Domain.Enums
+@using MudBlazor
+<MudGrid Style="padding-left:20px;">
+    <MudItem xs="12" sm="12" md="12" lg="12">
+        <MudTabs>
+
+            <MudTabPanel Text="Slider Images">
+                <MudGrid Style="padding-top:20px; padding-left:20px;">
+                    <MudItem xs="3"></MudItem>
+                    <MudItem md="6">
+                        <label style="padding-left:23px; color:#FF9900;"><strong>Main Slider Image</strong></label>
+                        <MudDivider/>
+                        <MudImage Style="width:100%" Src="@Vacation.MainSliderImageUrl(Configuration)"></MudImage>
+                        @if (Vacation.Images.Any(c => c.ImageType == UploadType.Slider && c.Selector == "Main"))
+                        {
+                            <MudButton OnClick="@(() => RemoveMainSliderImage(Vacation.Images.FirstOrDefault(c => c.ImageType == UploadType.Slider && c.Selector == "Main")))" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Remove</MudButton>
+                        }
+                    </MudItem>
+                    <MudItem xs="3"></MudItem>
+                    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+                    {
+                        <MudItem xs="6">
+                            <label style="padding-left:23px; color:#FF9900;"><strong>Summary Slider Image</strong></label>
+                            <MudDivider/>
+                            <MudImage Style="width:100%" Src="@Vacation.SummarySliderImageUrl(Configuration)"></MudImage>
+                            @if (Vacation.Images.Any(c => c.ImageType == UploadType.Slider && c.Selector == "Summary"))
+                            {
+                                <MudButton OnClick="@(() => RemoveSummarySliderImage(Vacation.Images.FirstOrDefault(c => c.ImageType == UploadType.Slider && c.Selector == "Summary")))" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Remove</MudButton>
+                            }
+                        </MudItem>
+                    }
+
+                    <VacationGalleryGrid LoadImages="LoadAllVacationImages" ImageType="UploadType.Slider" xs="12" md="4" lg="4" xl="4">
+                        <ActionMenu Context="context">
+                            <MudMenu FullWidth="true" Style="z-index:1000; width:100%;" Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                <ActivatorContent>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Default" FullWidth="true">Set As</MudButton>
+                                </ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem Style="z-index:1000; width:100%;" OnClick="() => SetAsMainSliderImage(context)">Main Slider</MudMenuItem>
+                                    <MudMenuItem Style="z-index:1000; width:100%;" OnClick="() => SetAsSummarySliderImage(context)">Summary Slider</MudMenuItem>
+                                </ChildContent>
+                            </MudMenu>
+                        </ActionMenu>
+                    </VacationGalleryGrid>
+
+                </MudGrid>
+            </MudTabPanel>
+            
+            @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+            {
+
+                <MudTabPanel Text="Banner Images">
+                    <MudGrid Style="padding-top:20px; padding-left:20px;">
+                        <MudItem md="6">
+                            <label style="padding-left:23px; color:#FF9900;"><strong>Banner Image 1</strong></label>
+                            <MudDivider/>
+                            <MudImage Style="width:100%" Src="@Vacation.Banner1ImageUrl(Configuration)"></MudImage>
+                            @if (Vacation.Images.Any(c => c.ImageType == UploadType.Banner && c.Order == 1))
+                            {
+                                <MudButton OnClick="@(() => RemoveBanner1Image(Vacation.Images.FirstOrDefault(c => c.ImageType == UploadType.Banner && c.Order == 1)))" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Remove</MudButton>
+                            }
+                        </MudItem>
+                        <MudItem md="6">
+                            <label style="padding-left:23px; color:#FF9900;"><strong>Banner Image 2</strong></label>
+                            <MudDivider/>
+                            <MudImage Style="width:100%" Src="@Vacation.Banner2ImageUrl(Configuration)"></MudImage>
+                            @if (Vacation.Images.Any(c => c.ImageType == UploadType.Banner && c.Order == 2))
+                            {
+                                <MudButton OnClick="@(() => RemoveBanner2Image(Vacation.Images.FirstOrDefault(c => c.ImageType == UploadType.Banner && c.Order == 2)))" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Remove</MudButton>
+                            }
+                        </MudItem>
+                        <MudItem md="6">
+                            <label style="padding-left:23px; color:#FF9900;"><strong>Banner Image 3</strong></label>
+                            <MudDivider/>
+                            <MudImage Style="width:100%" Src="@Vacation.Banner3ImageUrl(Configuration)"></MudImage>
+                            @if (Vacation.Images.Any(c => c.ImageType == UploadType.Banner && c.Order == 3))
+                            {
+                                <MudButton OnClick="@(() => RemoveBanner3Image(Vacation.Images.FirstOrDefault(c => c.ImageType == UploadType.Banner && c.Order == 3)))" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Remove</MudButton>
+                            }
+                        </MudItem>
+                        <MudItem md="6">
+                            <label style="padding-left:23px; color:#FF9900;"><strong>Banner Image 4</strong></label>
+                            <MudDivider/>
+                            <MudImage Style="width:100%" Src="@Vacation.Banner4ImageUrl(Configuration)"></MudImage>
+                            @if (Vacation.Images.Any(c => c.ImageType == UploadType.Banner && c.Order == 4))
+                            {
+                                <MudButton OnClick="@(() => RemoveBanner4Image(Vacation.Images.FirstOrDefault(c => c.ImageType == UploadType.Banner && c.Order == 4)))" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Remove</MudButton>
+                            }
+                        </MudItem>
+                        <MudItem xs="12" Class="text-center">
+                            <label style="padding-left:23px; color:#FF9900;"><strong>Gallery Banner Images</strong></label>
+                        </MudItem>
+
+                        <VacationGalleryGrid LoadImages="LoadAllVacationImages" ImageType="UploadType.Banner" xs="12" md="4" lg="4" xl="4">
+                            <ActionMenu Context="context">
+                                <MudMenu FullWidth="true" Style="z-index:1000; width:100%;" Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                    <ActivatorContent>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Default" FullWidth="true">Set As</MudButton>
+                                    </ActivatorContent>
+                                    <ChildContent>
+                                        <MudMenuItem Style="z-index:1000; width:100%;" OnClick="() => SetAsBanner1Image(context)">Banner Image 1</MudMenuItem>
+                                        <MudMenuItem Style="z-index:1000; width:100%;" OnClick="() => SetAsBanner2Image(context)">Banner Image 2</MudMenuItem>
+                                        <MudMenuItem Style="z-index:1000; width:100%;" OnClick="() => SetAsBanner3Image(context)">Banner Image 3</MudMenuItem>
+                                        <MudMenuItem Style="z-index:1000; width:100%;" OnClick="() => SetAsBanner4Image(context)">Banner Image 4</MudMenuItem>
+                                    </ChildContent>
+                                </MudMenu>
+                            </ActionMenu>
+                        </VacationGalleryGrid>
+
+                    </MudGrid>
+                </MudTabPanel>
+            }
+
+            <MudTabPanel Text="Map Images">
+                <MudGrid Style="padding-top:20px;">
+                    <MudItem md="6">
+                        <label style="padding-left:23px; color:#FF9900;"><strong>Featured Map</strong></label>
+                        <MudDivider/>
+                        <MudImage Style="width:100%" Src="@Vacation.MapImageUrl(Configuration)"></MudImage>
+                        @if (Vacation.Images.Any(c => c.ImageType == UploadType.Banner && c.Order == 4))
+                        {
+                            <MudButton OnClick="@(() => RemoveMapImage(Vacation.Images.FirstOrDefault(c => c.ImageType == UploadType.Map)))" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Remove</MudButton>
+                        }
+                    </MudItem>
+                    <MudItem md="6">
+                    </MudItem>
+                    <VacationGalleryGrid LoadImages="LoadAllVacationImages" ImageType="UploadType.Map" xs="12" md="4" lg="4" xl="4">
+                        <ActionMenu Context="context">
+                            <MudMenu FullWidth="true" Style="z-index:1000; width:100%;" Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                <ActivatorContent>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Default" FullWidth="true">Set As</MudButton>
+                                </ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem Style="z-index:1000; width:100%;" OnClick="() => SetAsMapImage(context)">Set As Map</MudMenuItem>
+                                </ChildContent>
+                            </MudMenu>
+                        </ActionMenu>
+                    </VacationGalleryGrid>
+                </MudGrid>
+            </MudTabPanel>
+
+        </MudTabs>
+    </MudItem>
+    
+    @if (Update.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    @if (NextTab.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnPreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+    </MudItem>
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+    </MudItem>
+    
+</MudGrid>

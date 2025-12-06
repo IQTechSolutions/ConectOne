@@ -1,0 +1,94 @@
+﻿@using MudBlazor
+
+<MudTable Elevation="25" ServerData="GetVacationHostsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+		
+    <ToolBarContent>
+        @if (_canSearchVacationHosts)
+        {
+            <div class="form-group" style="width:100%; padding-right:15px;">
+                <input asp-for="Params.SearchText" class="form-control" placeholder="Type to Search"/>
+            </div>
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" OnClick="Search" StartIcon="@Icons.Material.Filled.Search" Color="Color.Tertiary" IconColor="Color.Surface">Search</MudButton>
+            </div>
+            <MudSpacer/>
+        }
+        
+        <div style="padding-right:15px;">
+            <MudButton Variant="Variant.Filled" OnClick="ClearFiltersAsync" StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Secondary" IconColor="Color.Surface">Reload</MudButton>
+        </div>
+        
+        @if (_canCreateVacationHost)
+        {
+            <MudSpacer/>
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" Href="/vacationhosts/create" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">Create</MudButton>
+            </div>
+        }
+    </ToolBarContent>
+
+    <HeaderContent>
+
+        @if (!_dense)
+        {
+            <MudTh><strong>Image</strong></MudTh>
+        }
+
+        <MudTh><strong>Name</strong></MudTh>
+        <MudTh><strong>Representative</strong></MudTh>
+        <MudTh><strong>Cell Nr</strong></MudTh>
+        <MudTh><strong>Email Nr</strong></MudTh>
+
+        <MudTh>
+            <div style="float:right">
+                <MudMenu Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft">
+                    <MudMenuItem><MudSwitch @bind-Value="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch></MudMenuItem>
+                    <MudMenuItem><MudSwitch @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch></MudMenuItem>
+                    <MudMenuItem><MudSwitch @bind-Value="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">Bordered</MudSwitch></MudMenuItem>
+                </MudMenu>
+            </div>
+        </MudTh>
+
+    </HeaderContent>
+
+	<RowTemplate>
+	
+		@if (!_dense)
+		{
+		    <MudTd><MudImage Width="50" Height="50" Src="@(context.ImgPath!.Contains("StaticFiles") ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{context.ImgPath.Replace("\\","/")}" : context.ImgPath)" /> </MudTd>
+		}
+
+		<MudTd>@context.Name</MudTd>
+        <MudTd><strong>@context.RepresentativeName</strong> <strong>@context.RepresentativeSurname</strong></MudTd>
+        <MudTd>@context.RepresentativePhone</MudTd>
+        <MudTd>@context.RepresentativeEmail</MudTd>
+        
+		@if (_canEditVacationHost || _canRemoveVacationHost)
+        {
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+                    @if (_canCreateVacation)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.AddCircleOutline" Href="@($"/vacations/create/{context.VacationHostId}")">Create Proposal</MudMenuItem>
+                    }
+                    @if (_canEditVacationHost)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/vacationhosts/update/{@context.VacationHostId}")">Edit</MudMenuItem>
+                    }
+
+                    @if (_canRemoveVacationHost)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCategory(context.VacationHostId))">Delete</MudMenuItem>
+                    }
+                    
+                </MudMenu>
+            </MudTd>
+        }
+	
+	</RowTemplate>
+
+	<PagerContent>
+        <MudTablePager/>
+	</PagerContent>
+	
+</MudTable>

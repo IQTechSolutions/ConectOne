@@ -1,0 +1,229 @@
+﻿
+@page "/lodgings/create"
+@page "/lodgings/create/{UniquePartnerId}"
+
+@using AccomodationModule.Domain.DataTransferObjects
+@using AccomodationModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using FilingModule.Blazor.Components
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using LocationModule.Domain.DataTransferObjects
+@using MudBlazor
+@using Radzen.Blazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+
+    <DefaultTitle Title="Create New Hotel" Caption="Complete the required information to create a new hotel"/>
+
+    @if (_lodging is null)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+    }
+    else
+    {
+        <EditForm Model="_lodging.Details" Context="details" OnSubmit="CreateAsync">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTabs Elevation="0" Color="Color.Transparent" Rounded="true" PanelClass="mt-6" Position="Position.Top">
+
+                        @* Details *@
+                        <MudTabPanel Text="Details" Style="padding-left:20px;">
+
+                            <DataAnnotationsValidator/>
+                            <MudGrid Style="padding-left:12px;">
+
+                                <MudItem xs="12" sm="4" md="3">
+                                    <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" Caption="@_lodging.Details.Name" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(Lodging)" ParentId="@_lodging.Details.LodgingId"/>
+                                </MudItem>
+
+                                <MudItem xs="12" sm="8" md="9">
+                                    <MudCard Elevation="25">
+
+                                        <MudCardContent>
+                                            <MudGrid>
+                                                <MudItem xs="12">
+                                                    <MudTextField @bind-Value="_lodging.Details.Name" Label="Name" For="@(() => _lodging.Details.Name)" Variant="Variant.Outlined"/>
+                                                </MudItem>
+                                                <MudItem xs="12">
+                                                    <MudSelect ToStringFunc="@_lodgingTypeConverter" T="LodgingTypeDto" Label="Lodging Type" @bind-Value="_lodging.LodgingType" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                                        @foreach (var state in _availableLodgingTyoes)
+                                                        {
+                                                            <MudSelectItem T="LodgingTypeDto" Value="@state">@state.Name</MudSelectItem>
+                                                        }
+                                                    </MudSelect>
+                                                </MudItem>
+                                                <MudItem xs="12">
+                                                    <MudSelect ToStringFunc="@_countryConverter" T="CountryDto" Label="Country" @bind-Value="_lodging.Country" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                                        @foreach (var state in _availableCountries)
+                                                        {
+                                                            <MudSelectItem T="CountryDto" Value="@state">@state.Name</MudSelectItem>
+                                                        }
+                                                    </MudSelect>
+                                                </MudItem>
+                                                <MudItem xs="12">
+                                                    <MudSelect MultiSelection="true" @bind-SelectedValues="_lodging.SelectedDestinations" ToStringFunc="@_destinationConverter" T="DestinationDto" Label="Destination" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                                        @foreach (var state in _availableDestinations)
+                                                        {
+                                                            <MudSelectItem T="DestinationDto" Value="@state">@state.Name</MudSelectItem>
+                                                        }
+                                                    </MudSelect>
+                                                </MudItem>
+                                                
+                                                <MudItem xs="12">
+                                                    <label style="padding-left:20px;">Proposal Descriptions</label>
+                                                    <RadzenHtmlEditor @bind-Value=@_lodging.Details.Description style="height: 300px;" />
+                                                </MudItem>
+                                                <MudItem xs="12">
+                                                    <label style="padding-left:20px;">Website Descriptions</label>
+                                                    <RadzenHtmlEditor @bind-Value=@_lodging.Details.OnlineDescription style="height: 300px;" />
+                                                </MudItem>
+                                            </MudGrid>
+                                        </MudCardContent>
+
+                                    </MudCard>
+                                </MudItem>
+
+                            </MudGrid>
+
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="Information" Style="padding-left:20px;">
+                            
+                            <MudGrid>
+                                <MudItem xs="7">
+                                    <MudGrid>
+                                        <MudItem xs="6">
+                                            <label style="padding-left:20px;">Grading</label>
+                                            <MudRating @bind-SelectedValue="@_lodging.Details.Grading" MaxValue="10"/>
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                            <label style="padding-left:20px;">Rating</label>
+                                            <MudRating @bind-SelectedValue="@_lodging.Details.Rating" MaxValue="10"/>
+                                        </MudItem>
+                                            
+                                        <MudItem xs="6">
+                                            <MudSelect ToStringFunc="@_lodgingTypeConverter" T="LodgingTypeDto" Label="Lodging Type" @bind-Value="_lodging.LodgingType" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                                @foreach (var state in _availableLodgingTyoes)
+                                                {
+                                                    <MudSelectItem T="LodgingTypeDto" Value="@state">@state.Name</MudSelectItem>
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                            <MudSelect MultiSelection="true" @bind-SelectedValues="_lodging.SelectedDestinations" ToStringFunc="@_destinationConverter" T="DestinationDto" Label="Destination" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                                @foreach (var state in _availableDestinations)
+                                                {
+                                                    <MudSelectItem T="DestinationDto" Value="@state">@state.Name</MudSelectItem>
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                        <MudItem xs="12">
+                                            <MudTextField Label="Address" Class="mt-3" @bind-Value="_lodging.Address.Address" For="@(() => _lodging.Address.Address)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudTextField Label="Latitude" Class="mt-3" @bind-Value="_lodging.Address.Lat" For="@(() => _lodging.Address.Lat)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudTextField Label="Longitude" Class="mt-3" @bind-Value="_lodging.Address.Lng" For="@(() => _lodging.Address.Lng)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudItem>
+                                <MudItem xs="5">
+                                    <MudItem>
+                                        <MudTextField T="string" @ref="_autoCompleteBox" Value="_lodging.Address.Address" Margin="Margin.Dense" Variant="Variant.Text"/>
+                                    </MudItem>
+                                    <MudItem>
+                                        <GoogleMapsComponents.GoogleMap Width="100%" Height="400px" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+                                    </MudItem>
+                                </MudItem>
+                            </MudGrid>
+
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="Policies" Style="padding-left:20px;">
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudTextField @bind-Value="_lodging.Policies.ChildPolicy" T="string" Label="Child Policy" Variant="Variant.Outlined" Lines="4" For="@(() => _lodging.Details.Attractions!)" HelperText="Attractions available for this lodging" />
+                                </MudItem>
+                            </MudGrid>
+                        </MudTabPanel>
+
+                        @* Images *@
+                        <MudTabPanel Text="Images" Style="padding-left:20px;">
+                            <MudGrid Style="padding:10px;">
+                                <MudItem xs="12">
+                                    <MudButton Variant="Variant.Filled" OnClick="UploadImageAsync" Color="Color.Primary" FullWidth="true">Add Gallery Image</MudButton>
+                                </MudItem>
+
+                                @foreach (var item in _galleryImageToUpload)
+                                {
+                                    <MudItem xs="12" sm="4" md="3">
+                                        <MudGalleryImageCard Image="@item" OnRemoveImage="RemoveOnUploadedImage"></MudGalleryImageCard>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudTabPanel>
+                        <MudTabPanel Text="Videos" Style="padding-left:20px;">
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudStack Style="width: 100%">
+                                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" @ref="@_fileUpload" OnFilesChanged="OnInputFileChanged" Hidden="@false"
+                                                       InputClass="absolute mud-width-full mud-height-full overflow-hidden z-10" InputStyle="opacity:0" tabindex="-1"
+                                                       @ondrop="@ClearDragClass" @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass">
+                                            <ActivatorContent>
+                                                <MudPaper Height="300px" Outlined="true" Class="@_dragClass">
+                                                    <MudText Typo="Typo.h6">
+                                                        Drag and drop files here or click
+                                                    </MudText>
+                                                    @foreach (var file in _videosToUpload)
+                                                    {
+                                                        <MudChip T="string" Color="Color.Dark" Text="@file.Name" tabindex="-1" />
+                                                    }
+                                                </MudPaper>
+                                            </ActivatorContent>
+                                        </MudFileUpload>
+                                        @if (_filesBusyUploading.Any())
+                                        {
+                                            foreach (var item in _filesBusyUploading)
+                                            {
+                                                <MudProgressLinear Color="Color.Primary" Value="@item.Progress" Class="my-7" />
+                                            }
+                                        }
+                                        <MudToolBar Gutters="@false" Class="relative d-flex justify-end gap-4">
+                                            <MudButton Color="Color.Primary" OnClick="@OpenFilePickerAsync" Variant="Variant.Filled">Open file picker</MudButton>
+                                            <MudButton Color="Color.Error" Disabled="@(!_videosToUpload.Any())" OnClick="@ClearAsync" Variant="Variant.Filled">Clear</MudButton>
+                                        </MudToolBar>
+                                    </MudStack>
+                                </MudItem>
+                                @foreach (var item in _lodging.Details.Videos)
+                                {
+                                    <MudItem xs="12" sm="4" md="3">
+                                        <VideoPlayer SourceUrl="@( $"{Configuration["ApiConfiguration:BaseApiAddress"]}\\{item.Url.Replace("\\", "/")}")" StartAtSeconds="15" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudTabPanel>
+                    </MudTabs>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" FullWidth>Cancel</MudButton>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    }
+</div>

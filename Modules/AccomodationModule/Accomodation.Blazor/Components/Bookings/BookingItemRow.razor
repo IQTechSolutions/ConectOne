@@ -1,0 +1,57 @@
+﻿@using AccomodationModule.Domain.Enums
+@using FilingModule.Domain.Enums
+@using IdentityModule.Domain.Constants
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+@inject IConfiguration Configuration
+
+ <MudTd data-title="Product Image" style="width:200px">
+    <a href="#" class="r_corners d_inline_b wrapper">
+        <img src="@($"{Configuration["ApiConfiguration:BaseApiAddress"]}/{_lodging.Images.FirstOrDefault(c => c.ImageType == UploadType.Image).RelativePath}")" alt="" style="width:200px; height:120px;">
+    </a>
+</MudTd>
+
+<MudTd data-title="Description">
+    <MudGrid>
+        <MudItem md="8">
+            <h4 style="margin:0px;">
+                <a href="@($"/availability/{_lodging?.ProductId}")" class="color_dark tr_all"><strong>@_lodging?.Name</strong></a>
+            </h4>
+            <p class="fw_light"><small>@_lodging?.Address</small></p>
+        </MudItem>
+        <MudItem md="4">
+            <p style="float:right">
+                <strong>Confirmation Nr :</strong> @Item.BookingReferenceId
+            </p>
+        </MudItem>
+    </MudGrid>
+   
+    <p>
+        <strong>Dates: </strong> @Item.StartDate.ToLongDateString() to @Item.EndDate.AddDays(1).ToLongDateString()
+    </p>
+    <p class="fw_light">
+        <strong>Guests: </strong> @Item.Adults Adults, @Item.Children Children
+    </p>
+    <p class="fw_light">
+        <strong>Room Type: </strong> @_room?.Name
+    </p>
+    <p class="fw_light">
+        <strong>Status: </strong> @Item.BookingStatus
+    </p>
+    
+    <MudGrid>
+        <MudItem xs="12">
+            @if (Item.BookingStatus == BookingStatus.Pending)
+            {
+                <MudButton FullWidth="true" OnClick="@(() => CancelBooking(Item.BookingId))" Variant="Variant.Filled" Color="Color.Error">Cancel Booking</MudButton>
+            }
+            @if (Item.BookingStatus == BookingStatus.ManualConformation && _user.IsInRole(RoleConstants.SuperUser) || Item.BookingStatus == BookingStatus.ManualConformation && _user.IsInRole(RoleConstants.Administrator))
+            {
+                <MudButton OnClick="@(() => ConfirmManualBooking(Item.BookingId))" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary">Confirm Manual Booking</MudButton>
+            }
+        </MudItem>
+    </MudGrid>
+
+    
+    
+</MudTd>

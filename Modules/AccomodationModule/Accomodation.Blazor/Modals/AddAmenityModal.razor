@@ -1,0 +1,152 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+<EditForm Model="@Amenity" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>        
+                <MudItem xs="12" md="12">
+                    <MudSelect @bind-Value="@Amenity.Icon" Label="Icon" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("soap-icon-fireplace")"><i class="soap-icon-fireplace"></i> FirePlace</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-television")"><i class="soap-icon-television"></i> Television</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-aircon")"><i class="soap-icon-aircon"></i>  Aircon</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-fridge")"><i class="soap-icon-fridge"></i> Television</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-fmstereo")"><i class="soap-icon-fmstereo"></i> FM-Stereo</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-beach")"><i class="soap-icon-beach"></i> Beach</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-juice")"><i class="soap-icon-juice"></i> Juice</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-food")"><i class="soap-icon-food"></i> Food</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-fueltank")"><i class="soap-icon-fueltank"></i> Feultank</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-breakfast")"><i class="soap-icon-breakfast"></i> Breakfast</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-coffee")"><i class="soap-icon-coffee"></i> Coffee</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-party")"><i class="soap-icon-party"></i> Party</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-savings")"><i class="soap-icon-savings"></i> Savings</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-address")"><i class="soap-icon-address"></i> Address</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-horn")"><i class="soap-icon-horn"></i> Horn</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-conference")"><i class="soap-icon-conference"></i> Conference</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-support")"><i class="soap-icon-support"></i> Support</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-tree")"><i class="soap-icon-tree"></i> Tree</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-friends")"><i class="soap-icon-friends"></i> Friends</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-winebar")"><i class="soap-icon-winebar"></i> Winebar</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-plans")"><i class="soap-icon-plans"></i> Plans</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-guideline")"><i class="soap-icon-guideline"></i> Guidlines</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-wifi")"><i class="soap-icon-wifi"></i> Wifi</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-binoculars")"><i class="soap-icon-binoculars"></i> Binoculars</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-key")"><i class="soap-icon-key"></i> Key</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-fork")"><i class="soap-icon-fork"></i> Fork</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-locations")"><i class="soap-icon-locations"></i> Locations</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-couples")"><i class="soap-icon-couples"></i> Couples</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-card")"><i class="soap-icon-card"></i> Card</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-fitnessfacility")"><i class="soap-icon-fitnessfacility"></i> Fitness Facility</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-flexible")"><i class="soap-icon-flexible"></i> Flexible</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-phone")"><i class="soap-icon-phone"></i> Phone</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-cruise")"><i class="soap-icon-cruise"></i> Cruise</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-joystick")"><i class="soap-icon-joystick"></i> Joystick</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-lost-found")"><i class="soap-icon-lost-found"></i> Lost Found</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-securevault")"><i class="soap-icon-securevault"></i> Secure Vault</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-cruise-1")"><i class="soap-icon-cruise-1"></i> Cruise 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-cruise-3")"><i class="soap-icon-cruise-3"></i> Cruise 3</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-anchor")"><i class="soap-icon-anchor"></i> Anchor</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-cruise-2")"><i class="soap-icon-cruise-2"></i> Cruise 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-car-2")"><i class="soap-icon-car-2"></i> Car 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-pickanddrop")"><i class="soap-icon-pickanddrop"></i> Pick & Drop</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-car")"><i class="soap-icon-car"></i> Car</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-car-1")"><i class="soap-icon-car-1"></i> Car 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-hotel-2")"><i class="soap-icon-hotel-2"></i> Hotel 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-hotel-1")"><i class="soap-icon-hotel-1"></i> Hotel 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-plane")"><i class="soap-icon-plane"></i> Plane</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-plane-left")"><i class="soap-icon-plane-left"></i> Plain Left</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-plane-right")"><i class="soap-icon-plane-right"></i> Plane Right</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-carryon")"><i class="soap-icon-carryon"></i> Carry-on</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-businessbag")"><i class="soap-icon-businessbag"></i> Business Bag</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-baggage")"><i class="soap-icon-baggage"></i> Baggage</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-bag")"><i class="soap-icon-bag"></i> Bag</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-suitcase")"><i class="soap-icon-suitcase"></i> Suitcase</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-hotel-3")"><i class="soap-icon-hotel-3"></i> Hotel 3</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-trunk-2")"><i class="soap-icon-trunk-2"></i> Trunk 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-hotel")"><i class="soap-icon-hotel"></i> Hotel</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-trunk-1")"><i class="soap-icon-trunk-1"></i> Trunk 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-trunk-3")"><i class="soap-icon-trunk-3"></i> Trunk 3</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-baggage-3")"><i class="soap-icon-baggage-3"></i> Baggage 3</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-baggage-2")"><i class="soap-icon-baggage-2"></i> Baggage 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-baggage-1")"><i class="soap-icon-baggage-1"></i> Baggage 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-magazine-1")"><i class="soap-icon-magazine-1"></i> Magazine 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-baggage-status")"><i class="soap-icon-baggage-status"></i> Baggage Status</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-magazine")"><i class="soap-icon-magazine"></i> Magazine</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-slider-1")"><i class="soap-icon-slider-1"></i> Slider 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-slider")"><i class="soap-icon-slider"></i> Slider</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-camera-2")"><i class="soap-icon-camera-2"></i> Camara 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-photogallery")"><i class="soap-icon-photogallery"></i> Photo Gallery</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-camera-3")"><i class="soap-icon-camera-3"></i> Camara 3</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-baggage-4")"><i class="soap-icon-baggage-4"></i> Baggage 4</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-baggage-5")"><i class="soap-icon-baggage-5"></i> Baggage 5</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-shopping")"><i class="soap-icon-shopping"></i> Shopping</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-shopping-1")"><i class="soap-icon-shopping-1"></i> Shopping 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-shopping-2")"><i class="soap-icon-shopping-2"></i> Shopping 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-shopping-3")"><i class="soap-icon-shopping-3"></i> Shopping 3</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-camera-1")"><i class="soap-icon-camera-1"></i> Camara 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-settings-1")"><i class="soap-icon-settings-1"></i> Settings 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-recommend")"><i class="soap-icon-recommend"></i> Recommend</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-entertainment")"><i class="soap-icon-entertainment"></i> Entertainment</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-balloon")"><i class="soap-icon-balloon"></i> Balloon</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-globe")"><i class="soap-icon-globe"></i> Globe</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-places")"><i class="soap-icon-places"></i> Places</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-clock-1")"><i class="soap-icon-clock-1"></i> Clock 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-clock")"><i class="soap-icon-clock"></i> Clock</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-settings")"><i class="soap-icon-settings"></i> Settings</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-automatic")"><i class="soap-icon-automatic"></i> Automatic</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-parking")"><i class="soap-icon-parking"></i> Parking</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-status")"><i class="soap-icon-status"></i> Status</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-departure")"><i class="soap-icon-departure"></i> Departure</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-letter")"><i class="soap-icon-letter"></i> Letter</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-message")"><i class="soap-icon-message"></i> Message</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-search-plus")"><i class="soap-icon-search-plus"></i> Search Plus</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-search-minus")"><i class="soap-icon-search-minus"></i> Search Minus</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-search")"><i class="soap-icon-search"></i> Search</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-calendar")"><i class="soap-icon-calendar"></i> Calendar</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-stories")"><i class="soap-icon-stories"></i> Stories</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-liability")"><i class="soap-icon-liability"></i> Liability</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-insurance")"><i class="soap-icon-insurance"></i> Insurance</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-availability")"><i class="soap-icon-availability"></i> Availability</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-availability2")"><i class="soap-icon-availability2"></i> Availability 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-calendar-1")"><i class="soap-icon-calendar-1"></i> Calendar 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-calendar-check")"><i class="soap-icon-calendar-check"></i> Calendar Check</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-block")"><i class="soap-icon-block"></i> Block</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-star-1")"><i class="soap-icon-star-1"></i> Star 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-letter-1")"><i class="soap-icon-letter-1"></i> Letter 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-wishlist")"><i class="soap-icon-wishlist"></i> Wishlist</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-heart")"><i class="soap-icon-heart"></i> Heart</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-star")"><i class="soap-icon-star"></i> Star</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-handicapaccessiable")"><i class="soap-icon-handicapaccessiable"></i> Handicap Acc</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-passenger")"><i class="soap-icon-passenger"></i> Passenger</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-adventure")"><i class="soap-icon-adventure"></i> Adventure</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-man-2")"><i class="soap-icon-man-2"></i> Man 2</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-dog")"><i class="soap-icon-dog"></i> Dog</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-man-1")"><i class="soap-icon-man-1"></i> Man 1</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-swimming")"><i class="soap-icon-swimming"></i> Swimming</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-man-3")"><i class="soap-icon-man-3"></i> Man 3</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-comfort")"><i class="soap-icon-comfort"></i> Comfort</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-smoking")"><i class="soap-icon-smoking"></i> Smoking</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-playplace")"><i class="soap-icon-playplace"></i> Play Place</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-doorman")"><i class="soap-icon-doorman"></i> Doorman</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-elevator")"><i class="soap-icon-elevator"></i> Elevator</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-tub")"><i class="soap-icon-tub"></i> Tub</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-user")"><i class="soap-icon-user"></i> User</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-pets")"><i class="soap-icon-pets"></i> Pets</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-family")"><i class="soap-icon-family"></i> Family</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-notice")"><i class="soap-icon-notice"></i> Notice</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-generalmessage")"><i class="soap-icon-generalmessage"></i> General Message</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-flight-hotel")"><i class="soap-icon-flight-hotel"></i> Flight-Hotel</MudSelectItem>
+                        <MudSelectItem Value="@("soap-icon-comment")"><i class="soap-icon-comment"></i> Comment</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Amenity.Name)" @bind-Value="Amenity.Name" Label="Title" Variant="Variant.Outlined"/>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

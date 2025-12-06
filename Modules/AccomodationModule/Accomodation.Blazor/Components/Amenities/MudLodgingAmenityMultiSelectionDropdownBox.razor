@@ -1,0 +1,16 @@
+﻿@using AccomodationModule.Application.ViewModels
+@using MudBlazor
+
+@if (!_loaded)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudSelect ToStringFunc="@_lodgingAmenityConverter" T="LodgingAmenityViewModel" Label="Amenities" MultiSelection="true" SelectedValues="Amenities" SelectedValuesChanged="SelectedValuesChanged" AnchorOrigin="Origin.BottomLeft" Variant="Variant">
+        @foreach (var state in _amenities)
+        {
+            <MudSelectItem T="LodgingAmenityViewModel" Value="@state">@state.Name</MudSelectItem>
+        }
+    </MudSelect>
+}

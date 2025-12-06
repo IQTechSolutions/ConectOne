@@ -1,0 +1,55 @@
+﻿@page "/customerQueries"
+
+@using ConectOne.Blazor.Components
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Customer Queries" Caption="This is a paged list of all the customer queries submitted to website" />
+    <MudTable Elevation="25" ServerData="GetVacationContactUsInfosAsync" Dense="false" Bordered="false" Striped="false" Hover="true" @ref="_table">
+
+        <ToolBarContent>
+
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" OnClick="ClearFiltersAsync" StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Secondary" IconColor="Color.Surface">Reload</MudButton>
+            </div>
+
+            <MudSpacer />
+            <div style="padding-right:15px;">
+                <MudButton Variant="Variant.Filled" Href="/reviews/create" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">Create</MudButton>
+            </div>
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh><strong>Customer</strong></MudTh>
+            <MudTh><strong>Email</strong></MudTh>
+            <MudTh><strong>Subject</strong></MudTh>
+            <MudTh><strong>Date</strong></MudTh>
+            <MudTh><strong>Time</strong></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd><strong>@context.Email</strong></MudTd>
+            <MudTd><strong>@context.Subject</strong></MudTd>
+            <MudTd><strong>@context.CreatedOn?.ToLongDateString()</strong></MudTd>
+            <MudTd><strong>@context.CreatedOn?.ToLongTimeString()</strong></MudTd>
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => Delete(context.Id))">Delete</MudMenuItem>
+            </MudTd>
+        </RowTemplate>
+
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+
+    </MudTable>
+</div>

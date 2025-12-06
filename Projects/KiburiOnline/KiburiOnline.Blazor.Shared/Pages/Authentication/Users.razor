@@ -1,0 +1,36 @@
+﻿@using ConectOne.Blazor.Components
+@using IdentityModule.Blazor.Components
+@using IdentityModule.Domain.Constants
+@using KiburiOnline.Blazor.Shared.Layouts
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+@page "/registrations/users"
+
+@attribute [Authorize(Roles = RoleConstants.SuperUser)] 
+
+<DefaultTitle Title="Approved Registrations" Caption="A list of all the approved registrations by role." />
+
+<MudTabs>
+    
+    @if (!_loaded)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    }
+    else
+    {
+        @foreach (var role in _roles)
+        {
+            <MudTabPanel Text="@role.Name">
+                <UsersList Role="@role.Name"></UsersList>
+            </MudTabPanel>
+        }
+    }
+</MudTabs>

@@ -1,0 +1,63 @@
+﻿@using MudBlazor
+
+<MudItem xs="12" sm="12" md="12" lg="12">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.body1" Class="no-margin skin-color">Location Details for @Lodging.Details.Name</MudText>
+                <MudText Typo="Typo.subtitle2">Please complete the location information of the product!</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid>
+                @* <MudItem xs="12">
+                    <MudTextField T="string" @ref="_autoCompleteBox" @bind-Value="Lodging.Address.Address" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem> *@
+                @* <MudItem xs="12" sm="3">
+                    <MudTextField Label="Unit" Class="mt-3" @bind-Value="Lodging.Address.UnitNumber" For="@(() => Lodging.Address.UnitNumber)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="9">
+                    <MudTextField Label="Complex" Class="mt-3" @bind-Value="Lodging.Address.Complex" For="@(() => Lodging.Address.Complex)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="3" Class="mt-0">
+                    <MudTextField Label="Nr" Class="mt-3" @bind-Value="Lodging.Address.StreetNumber" For="@(() => Lodging.Address.StreetNumber)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="9">
+                    <MudTextField Label="Street" Class="mt-3" @bind-Value="Lodging.Address.StreetName" For="@(() => Lodging.Address.StreetName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem> *@
+                @* <MudItem xs="12" sm="8">
+                    <MudTextField Label="Suburb" Class="mt-3" @bind-Value="Lodging.Address.Suburb" For="@(() => Lodging.Address.Suburb)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem> *@
+                @* <MudItem xs="12" sm="4">
+                    <MudTextField Label="Code" Class="mt-3" @bind-Value="Lodging.Address.PostalCode" For="@(() => Lodging.Address.PostalCode)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem>*@
+                <MudItem xs="12">
+                    <MudTextField Label="City" Class="mt-3" @bind-Value="@Lodging.Address.City" For="@(() => Lodging.Address.City)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem> 
+                @* <MudItem xs="12">
+                    <MudSelect ToStringFunc="@provinceConverter" T="ProvinceViewModel" Label="Provinces" @bind-Value="Lodging.Address.Province" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined">
+                        @foreach (var state in AvailableProvinces)
+                        {
+                            <MudSelectItem T="ProvinceViewModel" Value="@state">@state.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem> *@
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="Lodging.Address.LocationDescription" Label="Location Description" Variant="Variant.Outlined" Lines="4" For="@(() => Lodging.Address.LocationDescription)" HelperText="Brief description of the lodging location" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="Lodging.Address.AreaInfo" T="string" Label="Area Information" Variant="Variant.Outlined" Lines="4" For="@(() => Lodging.Address.AreaInfo)" HelperText="Brief description of the location area" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="Lodging.Address.Directions" T="string" Label="Directions" Variant="Variant.Outlined" Lines="4" For="@(() => Lodging.Address.Directions)" HelperText="Directions to the lodging premises" />
+                </MudItem>
+                @* <MudItem xs="12">
+                    <MudTextField Label="Country" Class="mt-3" @bind-Value="Lodging.Address.Country" For="@(() => Lodging.Address.Country)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                </MudItem> *@
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+</MudItem>
+@* <MudItem xs="12" sm="12" md="5" lg="5">
+    <GoogleMapsComponents.GoogleMap Height="100%" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+</MudItem> *@

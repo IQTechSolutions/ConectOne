@@ -1,0 +1,48 @@
+﻿@using Accomodation.Blazor.Components.Lodgings
+@using FilingModule.Domain.Enums
+@using MudBlazor
+
+@if (Lodgings.Any())
+{
+    <div class="row">
+        <div class="col-md-9">
+            <h1><strong>@Title</strong></h1>
+        </div>
+
+        <div class="col-md-3">
+            <button @onclick="MoveToPrevious" style="float:right" class="yellow" ><i class="fa fa-arrow-right"></i></button>
+            <button @onclick="MoveToPrevious" style="float:right" class="yellow"><i class="fa fa-arrow-left"></i></button>
+            <button @onclick="ViewAll" style="float:right;" class="yellow">View All</button>
+        </div>
+    </div>
+    
+    <div class="image-carousel style2" data-animation="slide" data-item-width="270" data-item-margin="30">
+        <div class="row image-box style3">
+            <MudCarousel Class="mud-width-full" Style="height:295px;" ShowArrows="false" @bind-SelectedIndex="_selectedIndex" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="true" TData="object" AutoCycleTime="TimeSpan.FromSeconds(AutoCycleTime)">
+                
+                @if(Lodgings.Take(4).Any())
+                {
+                    <MudCarouselItem Transition="Transition.Slide" Color="@MudBlazor.Color.Transparent">
+                        @foreach (var lodging in Lodgings.Take(4))
+                        {
+                            <LodgingBlockTile Url="@($"/availability/{lodging.Details.LodgingId}")" Name="@lodging.Details.Name" ImageSrc="@lodging.Details.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath"
+                                              Rate="@lodging.Pricing.CostExcl" Lat="@lodging.Address.Lat" Lng="@lodging.Address.Lng" />
+                        }
+                    </MudCarouselItem>
+                }
+
+                @if (Lodgings.Skip(4).Take(4).Any())
+                {
+                    <MudCarouselItem Transition="Transition.Slide" Color="@MudBlazor.Color.Transparent">
+                        @foreach (var lodging in Lodgings.Skip(4).Take(4))
+                        {
+                            <LodgingBlockTile Url="@($"/availability/{lodging.Details.LodgingId}")" Name="@lodging.Details.Name" ImageSrc="@lodging.Details.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath"
+                                              Rate="@lodging.Pricing.PriceIncl" Lat="@lodging.Address.Lat" Lng="@lodging.Address.Lng" />
+                        }
+                    </MudCarouselItem>
+                }
+
+            </MudCarousel>
+        </div>
+    </div>
+}

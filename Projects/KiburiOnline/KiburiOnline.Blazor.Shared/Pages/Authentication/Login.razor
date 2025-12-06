@@ -1,0 +1,65 @@
+﻿@page "/login"
+@using ConectOne.Blazor.Layouts
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Configuration
+
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout CleanLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+@inject IConfiguration Configuration
+@attribute [AllowAnonymous]
+
+<section id="content">
+    <div class="container">
+        <div id="main">
+            <div class="d-flex justify-center" style="padding-bottom:15px;">
+                <a href="/" title="Kwagga Travel - Home">
+                    <MudImage Src="images/logo-default-347x65.png" Style="width: 100%;" />
+                </a>
+            </div>
+
+            <div class="text-center yellow-color box" style="font-size: 4em; font-weight: 300; line-height: 1em;">Welcome back</div>
+
+            <p class="light-blue-color block" style="font-size: 1.3333em; text-align:center;">Please login to your account.</p>
+            <div class="col-sm-12 col-md-12 col-lg-12 no-float no-padding center-block">
+    
+                <EditForm Model="@_userAuthentication" OnSubmit="LoginNowAsync">
+                    <AntiforgeryToken />
+                    @if (!string.IsNullOrEmpty(_errorMessage))
+                    {
+                        <MudItem xs="12">
+                            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Style="width:100%" Class="mb-3" Icon="Icons.Material.Filled.Error"> @_errorMessage </MudAlert>
+                        </MudItem>
+                    }
+                    
+                    <MudItem xs="12">
+                        <div class="form-group">
+                            <MudTextField Class="mt-3" Style="width:100%; background-color:white" OnKeyUp="OnKeyUpEvent" T="string" @bind-Value="_userAuthentication.Email" Label="Email" Variant="Variant.Filled" Margin="Margin.Dense" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.TwoTone.AlternateEmail"/>
+                        </div>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <div class="form-group">
+                            <MudTextField OnKeyUp="OnKeyUpEvent" Style="width:100%; background-color:white" InputType="@_passwordInput" @bind-Value="_userAuthentication.Password" For="@(() => _userAuthentication.Password)" Class="mt-3" Label="Password" Variant="Variant.Filled" Margin="Margin.Dense" T="string" AdornmentColor="Color.Primary" Adornment="Adornment.Start" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility"/>
+                        </div>
+                    </MudItem>
+
+                    <MudDivider></MudDivider>
+
+                    <MudButton Style="background-color:#f79340; color:black;" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true">LOGIN TO YOUR ACCOUNT</MudButton>
+
+                    <p style="padding-top:25px; text-align:center;"><MudLink Href="/sign-up" Style="text-align:center">Don't have an account, REGISTER HERE?</MudLink></p>
+                    <p style="text-align:center;"><MudLink Href="/forgot-password" Style="text-align:center">Forgot password?</MudLink></p>
+
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</section>

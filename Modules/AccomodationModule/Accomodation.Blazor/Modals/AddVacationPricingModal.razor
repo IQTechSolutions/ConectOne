@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@VacationPricingItem" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog DefaultFocus="DefaultFocus.None">
+        <DialogContent>
+            <MudGrid>        
+                
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => VacationPricingItem.Name)" @bind-Value="VacationPricingItem.Name" Label="Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => VacationPricingItem.Description)" @bind-Value="VacationPricingItem.Description" Label="Description" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    @if (PriceCategories != null)
+                    {
+                        <MudSelect @bind-Value="VacationPricingItem.Selector"
+                                   Variant="Variant.Outlined"
+                                   Label="Price Type">
+                            @foreach (var category in PriceCategories)
+                            {
+                                <MudSelectItem Value="category">@category</MudSelectItem>
+                            }
+                        </MudSelect>
+                    }
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => VacationPricingItem.Price)" @bind-Value="VacationPricingItem.Price" Label="Price" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

@@ -1,0 +1,65 @@
+﻿@page "/destinations/namibia"
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Contacts
+@using KiburiOnline.Blazor.Shared.Pages.Destinations.Partials
+
+@layout WebsiteLayout
+
+<PageTitle>Namibia Safaris | ProGolf Africa Safaris</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Explore Namibia’s contrasts—Sossusvlei’s towering dunes, the Namib Desert and Fish River Canyon—plus rhino tracking, hot-air balloon sunrises and Himba cultural encounters." />
+    <link rel="canonical" href="/destinations/namibia" />
+</HeadContent>
+
+@* Destination Section *@
+<section class="section parallax-container text-center context-dark" style="background-image: url('Assets/images/parallax-namibia.jpg'); background-size: cover; background-position: center;">
+    <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <div class="row row-50" style="margin-bottom:-80px !important;">
+                
+                <div class="col-md-6 col-xl-6">
+
+                    <h4>Namibia</h4>
+                    <p>
+                        <InnerMenu PageName="namibia"/>
+                    </p>
+                    <hr>
+                    <p style="font-size:14px; font-style:italic;">
+                        Namibia – a land of diversity and contrast. Certainly one of our favorite destinations. This is a vast country with ever-changing scenery and colors. From the Fish River Canyon in the south, to experiencing great game viewing in the north, Namibia should find a place somewhere on your bucket list. The most visited areas are the dunes of Sossusvlei and the Namib desert.
+                    </p>
+                    <hr>
+                    <p>
+                        <ul style="font-size:14px !important; font-style:italic; list-style-type:circle !important;">
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Experience the Dead Valley in Sossusvlei and climb the highest sand dune in Namibia</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Safari in the Namib Dessert</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Embark on a Rhino tracking adventure</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Experience a Namibian Sunrise from a Hot Air Balloon</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Fascinating interaction with the Nomadic Himba people</li>
+
+                        </ul>
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 col-xl-6">
+                    <AfricaMap Country="Namibia" />
+                </div>
+
+            </div>
+        </div>
+        <span id="packages" style="padding-top:70px;"></span>
+    </div>
+</section>
+
+<DestinationVacationsControl CountryName="Namibia" Vacations="_vacations"/>
+
+<ContactsBanner/>
+
+<script type="text/javascript" language="javascript">
+    window.location.hash = "namibia";
+</script>

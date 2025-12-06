@@ -212,7 +212,18 @@ namespace SchoolsModule.Blazor.Components.ActivityCategories
         public async Task<TableData<CategoryDto>> GetCategoriesAsync(TableState state, CancellationToken token)
         {
             if (ServerData is not null)
-                return await ServerData.Invoke(state, token);
+            {
+                var bb = await ServerData.Invoke(state, token);
+
+                foreach (var item in bb.Items.Where(c => EventStateManager.SchoolEvent!.SelectedActivityCategories.Any(g => g.CategoryId == c.CategoryId)))
+                {
+                    EventStateManager.SchoolEvent!.SelectedActivityCategories.Remove(EventStateManager.SchoolEvent!.SelectedActivityCategories.FirstOrDefault(c => c.CategoryId == item.CategoryId)!);
+                    EventStateManager.SchoolEvent!.SelectedActivityCategories.Add(item);
+                }
+                SelectedPagedCategories = EventStateManager.SchoolEvent!.SelectedActivityCategories.ToHashSet();
+                return bb;
+            }
+
 
             SetPageParameters(state);
 
@@ -232,6 +243,7 @@ namespace SchoolsModule.Blazor.Components.ActivityCategories
                     EventStateManager.SchoolEvent!.SelectedActivityCategories.Remove(EventStateManager.SchoolEvent!.SelectedActivityCategories.FirstOrDefault(c => c.CategoryId == item.CategoryId)!);
                     EventStateManager.SchoolEvent!.SelectedActivityCategories.Add(item);
                 }
+                SelectedPagedCategories = EventStateManager.SchoolEvent!.SelectedActivityCategories.ToHashSet();
             }
 
             return new TableData<CategoryDto>() { TotalItems = pagingResponse.TotalCount, Items = _categories };

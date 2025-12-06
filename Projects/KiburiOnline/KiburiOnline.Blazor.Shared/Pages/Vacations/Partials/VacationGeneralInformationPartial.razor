@@ -1,0 +1,46 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using MudBlazor
+
+<MudCard Style="width:100%">
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudCard>
+                    <MudCardHeader>
+                        <MudSelect ToStringFunc="@_generalInformationTemplateConverter" T="GeneralInformationTemplateDto" Label="Package" Value="Vacation.GeneralInformation" ValueChanged="OnGeneralInformationTemplateSelectionChanged" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                            @foreach (var state in _availableGeneralInformationTemplates)
+                            {
+                                <MudSelectItem T="GeneralInformationTemplateDto" Value="@state">@state.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudPaper Style="padding:10px 20px 20px 20px; margin-top:-20px;">
+                            @_generalInformationText
+                        </MudPaper>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            
+            @if (Update.HasDelegate)
+            {
+                <MudItem xs="4" sm="4" md="4" lg="4">
+                    <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+                </MudItem>
+            }
+            @if(NextTab.HasDelegate)
+            {
+                <MudItem xs="4" sm="4" md="4" lg="4">
+                    <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+                </MudItem>
+            }
+            <MudItem xs="4" sm="4" md="4" lg="4">
+                <MudButton OnClick="PreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+            </MudItem>
+            <MudItem xs="4" sm="4" md="4" lg="4">
+                <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+            </MudItem>
+            
+        </MudGrid>
+    </MudCardContent>
+</MudCard>

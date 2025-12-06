@@ -1,0 +1,32 @@
+﻿@using ConectOne.Domain.Extensions
+
+@using FilingModule.Domain.Enums
+@using MudBlazor
+
+<section class="section novi-bg novi-bg-img section-xl bg-default text-center" style="padding-top:80px; padding-bottom:80px;">
+    <div class="container">
+        <div class="row row-30 justify-content-lg-center">
+            <div class="col-lg-11 col-xl-9">
+                <h3>Meet the owners</h3>
+            </div>
+        </div>
+        <div class="row row-50 offset-top-1">
+            
+            @foreach (var contact in _contacts.OrderBy(c => c.Order))
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="thumb thumb-corporate" style="box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); border-radius:5px; padding:10px;">
+                        <div class="thumb-corporate__main"><img src="@Configuration["ApiConfiguration:BaseApiAddress"]/@contact.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover).RelativePath" alt="@contact.DisplayName Profile Image" width="480" height="362" /></div>
+                        <div class="thumb-corporate__caption">
+                            <p class="thumb__title"><a href="/meet-the-team#contactid-@contact.Name-@contact.Surname">@contact.DisplayName</a></p>
+                            <p class="thumb__subtitle">@contact.ContactType.GetDescription()</p>
+                            <div class="post-minimal-footer" style="display:block !important;"><a class="button button-link" href="/meet-the-team#contactid-@contact.Name-@contact.Surname" style="color:#F79340">more about @contact.Name</a></div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="group-lg group-middle"><MudLink class="button button-gray-light-outline" OnClick="@(() => NavigationManager.NavigateTo("/meet-the-team", true))">Meet our Team</MudLink></div>
+</section>

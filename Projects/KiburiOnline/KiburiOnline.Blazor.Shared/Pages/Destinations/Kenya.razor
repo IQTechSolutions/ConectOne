@@ -1,0 +1,66 @@
+﻿@page "/destinations/kenya"
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Contacts
+@using KiburiOnline.Blazor.Shared.Pages.Destinations.Partials
+
+@layout WebsiteLayout
+
+<PageTitle>Kenya Maasai Mara Safaris | ProGolf Africa Safaris</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Witness classic savannah wildlife and seasonal migrations with hand-picked lodges and private guiding—designed to match your golf-and-safari schedule." />
+    <link rel="canonical" href="/destinations/kenya" />
+</HeadContent>
+
+@* Destination Section *@
+<section class="section parallax-container text-center context-dark" style="background-image: url('Assets/images/parallax-kenya.jpg'); background-size: cover; background-position: center;">
+    <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <div class="row row-50" style="margin-bottom:-80px !important;">
+
+
+
+                <div class="col-md-6 col-xl-6">
+                    <h4>Kenya</h4>
+                    <p>
+                        <InnerMenu PageName="kenya" />
+                    </p>
+                    <hr>
+                    <p style="font-size:14px; font-style:italic;">
+                        Most of our clients will imagine the vast open plains of the Masai Mara when thinking of Africa. Kenya is considered to be a world in one country, with snow-capped mountains, beautiful forests, deserts, lakes and that bucket list Safari experience, 'The Great Migration.' If you are planning to visit the Masai Mara, the best time would be between July and October when hundreds of thousands of wildebeest, zebra and gazelle migrate south through the predator-rich open plains and the crocodile infested Mara River.
+                    </p>
+                    <hr>
+                    <p>
+                        <ul style="font-size:14px !important; font-style:italic; list-style-type:circle !important;">
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Home to the "Great Migration"</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit Nairobi and the world-famous Giraffe House</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Adopt an animal at the David Sheldrick Elephant and Rhino Sanctuary</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit Lake Victoria – Largest Africa and tropical lake in the world</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Experience thousands of Flamingos on Lake Nakuru</li>
+
+                        </ul>
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 col-xl-6">
+                    <AfricaMap Country="Kenya" />
+                </div>
+
+            </div>
+        </div>
+        <span id="packages" style="padding-top:70px;"></span>
+    </div>
+</section>
+
+<DestinationVacationsControl CountryName="Kenya" Vacations="_vacations"/>
+
+<ContactsBanner/>
+
+<script type="text/javascript" language="javascript">
+    window.location.hash = "kenya";
+</script>

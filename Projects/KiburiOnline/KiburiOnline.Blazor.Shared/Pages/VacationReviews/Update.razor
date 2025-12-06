@@ -1,0 +1,81 @@
+﻿@page "/reviews/update/{ReviewId}"
+
+@layout WebsiteLayout
+@using AccomodationModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using FeedbackModule.Domain.Entities
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+@using Radzen.Blazor
+@using Microsoft.AspNetCore.Components.Forms
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<EditForm Model="_review" OnValidSubmit="UpdateAsync" class="card card-body bg-light mt-5">
+
+    <DefaultTitle Title="Update Reference" Caption="Please complete the following information to change a review" />
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <MudGrid>
+        <MudItem xs="2">
+            <div style="padding-bottom=10px;">
+                <MudSingleImageCropperUpload ButtonText="Change Profile Image" OnFileAccepted="ProfileImageChanged" Src="@_profileImageUrl" ImageType="UploadType.Profile" Entity="typeof(Review<Vacation>)" ParentId="@_review.Id" AspectRatio="1" />
+            </div>
+            <hr/>
+            <div style="padding-bottom=10px;">
+                <MudSingleImageCropperUpload ButtonText="Change Company Logo" OnFileAccepted="CompanyLogoChanged" Src="@_companyLogoUrl" ImageType="UploadType.Logo" Entity="typeof(Review<Vacation>)" ParentId="@_review.Id" AspectRatio="1" />
+            </div>
+            </MudItem>
+        <MudItem xs="10">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudTextField Label="Job Title" Class="mt-3" @bind-Value="_review.JobTitle" For="@(() => _review.JobTitle)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField Label="Name" Class="mt-3" @bind-Value="_review.Name" For="@(() => _review.Name)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField Label="Location" Class="mt-3" @bind-Value="_review.Location" For="@(() => _review.Location)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField Label="Company Name" Class="mt-3" @bind-Value="_review.CompanyName" For="@(() => _review.CompanyName)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudDivider />
+                        <MudItem xs="12" md="12">
+                            <MudSelect Label="Vacation" @bind-Value="_review.EntityId" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined">
+                                @foreach (var state in _availableVacations)
+                                {
+                                    <MudSelectItem Value="@state.VacationId">@state.VacationTitle?.VacationTitle</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <label style="padding-left:20px;">Review</label>
+                            <RadzenHtmlEditor @bind-Value=@_review.ReviewText style="height: 450px;" />
+                        </MudItem>
+
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6" lg="6">
+            <MudButton OnClick="CancelAsync" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>

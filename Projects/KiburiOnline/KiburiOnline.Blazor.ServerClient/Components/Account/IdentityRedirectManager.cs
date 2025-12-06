@@ -1,4 +1,4 @@
-using KiburiOnline.Blazor.ServerClient.Data;
+using IdentityModule.Domain.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 

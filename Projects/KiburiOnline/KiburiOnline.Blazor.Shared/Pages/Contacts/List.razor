@@ -1,0 +1,81 @@
+﻿@page "/contacts"
+
+@attribute [Authorize]
+
+@inject IJSRuntime JSRuntime;
+@inject IConfiguration Configuration;
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+@using AccomodationModule.Domain.DataTransferObjects
+@using ConectOne.Blazor.Components
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Configuration
+@using Microsoft.JSInterop
+@using MudBlazor
+@using Variant = MudBlazor.Variant
+@using Radzen
+@using Radzen.Blazor
+
+<style>
+    .my-class td {
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+</style>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Contacts" Caption="All contact details of different departments" />
+    
+    @if (!_loaded)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <MudGrid>
+            <MudItem md="12">
+                <MudButton Color="Color.Primary" Href="/contacts/create" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
+            </MudItem>
+            <MudItem md="12">
+                <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="false"
+                                Data="@_contacts" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedContacts RowRender="@RowRender" Style="width:100%">
+                    <Columns>
+                        <RadzenDataGridColumn Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
+                            <Template Context="data">
+                                <RadzenImage Path="@(data.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover) is not null ? $"{Configuration["ApiConfiguration:BaseApiAddress"]}/{data.Images.FirstOrDefault(c => c.ImageType == UploadType.Cover)?.RelativePath}" : "_content/Accomodation.Blazor/images/profileImage128x128.png")" class="rz-gravatar" AlternateText="@(data.DisplayName)" />
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Property="@nameof(ContactDto.Name)" Title="First Name" Frozen="true" />
+                        <RadzenDataGridColumn Property="@nameof(ContactDto.Surname)" Title="Last Name" Frozen="true" />
+                        <RadzenDataGridColumn Property="@nameof(ContactDto.Email)" Title="Email" />
+                        <RadzenDataGridColumn Property="@nameof(ContactDto.Phone)" Title="Phone Nr" />
+                        <RadzenDataGridColumn Property="@nameof(ContactDto.ContactTypeDescription)" Title="Title" />
+                        <RadzenDataGridColumn Title="Employee" Sortable="false" Filterable="false" UniqueID="Actions">
+                            <Template Context="data">
+                                <MudMenu Label="Actions" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomLeft">
+                                    @if (_canEditContact)
+                                    {
+                                        <MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/contacts/update/{@data.ContactId}")">Edit</MudMenuItem>
+                                    }
+                                    @if (_canDeleteContact)
+                                    {
+                                        <MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteGuide(data.ContactId))">Delete</MudMenuItem>
+                                    }
+                                </MudMenu>
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </MudItem>
+        </MudGrid>
+        
+    }
+</div>

@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+
+<MudToolBar>
+	<div class="col-md-9">
+		<MudTextField @bind-Value="_pageParameters.SearchText" Placeholder="Search here by name or description" Variant="Variant.Outlined" />
+	</div>
+	<div class="col-md-3">
+		<MudButton OnClick="Search" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Large">Search</MudButton>
+	</div>
+	<MudSpacer />
+	<MudSwitch @bind-Value:get="@_pageParameters.Active" @bind-Value:set="CheckedChanged" Color="Color.Success">Active</MudSwitch>
+</MudToolBar>
+
+<MudTable RowsPerPage="100" Elevation="25" ServerData="GetBookingsAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+	<RowTemplate>
+        <BookingItemRow Item="@context"/>
+	</RowTemplate>
+
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+</MudTable>

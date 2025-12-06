@@ -1,0 +1,54 @@
+﻿@using MudBlazor
+
+<MudTable RowsPerPage="25" Elevation="25" ServerData="GetVouchersAsync" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Hover="true" @ref="_table">
+		
+	<ToolBarContent>
+		<div class="col-md-10">
+			<div class="form-group">
+				<input asp-for="Params.SearchText" class="form-control" placeholder="Type to Search" />
+			</div>
+		</div>
+		<div class="col-md-2">
+			<button type="submit" class="btn btn-primary">Search</button>
+		</div>
+		<MudSpacer />
+	    <MudButton DisableElevation Variant="Variant.Filled" Href="/lodgings/vouchers/create" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" IconColor="Color.Surface">New</MudButton>
+	</ToolBarContent>
+
+	<HeaderContent>
+		<MudTh><strong>Ttile</strong></MudTh>
+		<MudTh><strong>Rate</strong></MudTh>
+		<MudTh><strong>Mark-up</strong></MudTh>
+		<MudTh><strong>Commission</strong></MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+
+	<RowTemplate>
+		<MudTd>@context.Title</MudTd>
+		<MudTd>@context.Rate</MudTd>
+		<MudTd>@context.MarkupPercentage</MudTd>
+		<MudTd>@context.Commission</MudTd>
+		<MudTd DataLabel="Actions" Style="text-align: right">
+			<MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.TopLeft">
+				<MudMenuItem Icon="@Icons.Material.Filled.Edit" Href="@($"/lodgings/vouchers/update/{@context.VoucherId}")">Edit</MudMenuItem>
+				<MudMenuItem Icon="@Icons.Material.Filled.Delete" @onclick="@(() => DeleteCategory(context.VoucherId))">Delete</MudMenuItem>
+			</MudMenu>
+		</MudTd>
+	
+	</RowTemplate>
+
+	<FooterContent>
+		<MudTd colspan="6">
+			<div class="d-flex">
+			<MudSwitch T="bool" @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>
+			<MudSwitch T="bool" @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+			<MudSwitch T="bool" @bind-Value="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">Striped</MudSwitch>
+			</div>
+		</MudTd>		
+	</FooterContent>
+
+	<PagerContent>
+        <MudTablePager PageSizeOptions="new[] { 10, 25, 50, 100 }"/>
+	</PagerContent>
+	
+</MudTable>

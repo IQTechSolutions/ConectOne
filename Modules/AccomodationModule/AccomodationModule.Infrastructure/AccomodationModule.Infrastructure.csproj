@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\ConectOne.EntityFrameworkCore.Sql\ConectOne.EntityFrameworkCore.Sql.csproj" />
+    <ProjectReference Include="..\..\FilingModule\FilingModule.Infrastucture\FilingModule.Infrastucture.csproj" />
+    <ProjectReference Include="..\..\GroupingModule\GroupingModule.Infrastructure\GroupingModule.Infrastructure.csproj" />
+    <ProjectReference Include="..\AccomodationModule.Domain\AccomodationModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

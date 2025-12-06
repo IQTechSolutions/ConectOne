@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm  Model="Address" OnValidSubmit="DoValidSubmit" @ref="AddressFromReference">
+   @* <DataAnnotationsValidator /> *@
+   <MudGrid>
+       <MudItem xs="12" sm="12" md="7" lg="8">
+           <MudCard>
+               <MudCardContent>
+                   <MudGrid>
+                       <MudItem xs="12">
+                           <MudTextField T="string" @ref="_autoCompleteBox" Label="Please enter your address here" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12" sm="3">
+                           <MudTextField Label="Unit" Class="mt-3" @bind-Value="Address.UnitNumber" For="@(() => Address.UnitNumber)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12" sm="9">
+                           <MudTextField Label="Complex" Class="mt-3" @bind-Value="Address.Complex" For="@(() => Address.Complex)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12" sm="3" Class="mt-0">
+                           <MudTextField Label="Nr" Class="mt-3" @bind-Value="Address.StreetNumber" For="@(() => Address.StreetNumber)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12" sm="9">
+                           <MudTextField Label="Street" Class="mt-3" @bind-Value="Address.StreetName" For="@(() => Address.StreetName)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12" sm="8">
+                           <MudTextField Label="Suburb" Class="mt-3" @bind-Value="Address.Suburb" For="@(() => Address.Suburb)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12" sm="4">
+                           <MudTextField Label="Code" Class="mt-3" @bind-Value="Address.PostalCode" For="@(() => Address.PostalCode)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12">
+                           <MudTextField Label="City" Class="mt-3" @bind-Value="Address.City" For="@(() => Address.City)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12">
+                           <MudTextField Label="Province" Class="mt-3" @bind-Value="Address.Province" For="@(() => Address.Province)" Margin="Margin.Dense" />
+                       </MudItem>
+                       <MudItem xs="12">
+                           <MudTextField Label="Country" Class="mt-3" @bind-Value="Address.Country" For="@(() => Address.Country)" Margin="Margin.Dense" />
+                       </MudItem>
+                   </MudGrid>
+               </MudCardContent>
+           </MudCard>
+       </MudItem>
+       <MudItem xs="12" sm="12" md="5" lg="4">
+           <GoogleMapsComponents.GoogleMap Height="100%" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+       </MudItem>
+
+       <MudDivider />
+
+       <MudItem xs="4" sm="4" md="4" lg="4">
+           <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+       </MudItem>
+       <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="DoOnBack" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Back</MudButton>
+       </MudItem>
+       <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="DoOnCancel" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" FullWidth>Cancel</MudButton>
+       </MudItem>
+   </MudGrid>
+</EditForm> 

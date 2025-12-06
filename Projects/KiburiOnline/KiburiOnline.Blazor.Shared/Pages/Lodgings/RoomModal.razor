@@ -1,0 +1,41 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        @{
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
+                Create New Lodging Room
+            </MudText>
+        }
+    </TitleContent>
+    <DialogContent>
+         <MudGrid>
+    
+                <MudItem xs="12" sm="12" md="12">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.body1" Class="no-margin skin-color">Room Details for @Room.Name</MudText>
+                                <MudText Typo="Typo.subtitle2">Please complete the following product details information!</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudTextField @bind-Value="Room.Name" Label="Name" For="@(() => Room.Name)" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField @bind-Value="Room.Description" T="string" Label="Description" Variant="Variant.Outlined" Lines="4" HelperText="Brief description of product" />
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="Submit" Color="Color.Success">Add Room</MudButton>
+    </DialogActions>
+</MudDialog>

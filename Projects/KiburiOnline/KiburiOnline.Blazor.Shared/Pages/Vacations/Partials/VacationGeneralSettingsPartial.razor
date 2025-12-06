@@ -1,0 +1,81 @@
+﻿@using AccomodationModule.Domain.DataTransferObjects
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+
+<MudGrid Style="padding-left:20px;">
+    <MudItem xs="4">
+        <MudTextField Label="Reference Nr" Class="mt-3" @bind-Value="Vacation.ReferenceNr" For="@(() => Vacation.ReferenceNr)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+    </MudItem>
+    <MudItem xs="4">
+        <MudTextField Label="Room Count" Class="mt-3" @bind-Value="Vacation.RoomCount" For="@(() => Vacation.RoomCount)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+    </MudItem>
+    <MudItem xs="4">
+        <MudTextField Label="Room Count (Free)" Class="mt-3" @bind-Value="Vacation.RoomCountFOC" For="@(() => Vacation.RoomCountFOC)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+    </MudItem>
+    <MudItem xs="4">
+        <MudTextField Label="Currency Symbol" Class="mt-3" @bind-Value="Vacation.CurrencySymbol" For="@(() => Vacation.CurrencySymbol)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+    </MudItem>
+    <MudItem xs="4" Style="padding-top:30px;">
+        @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+        {
+            <label class="sq-radio" style="padding-right:20px !important; padding-top:4px;">
+                <span style="color:#F90; font-size:13px !important; font-weight:bold;">This is an extension</span>
+                <InputCheckbox @bind-Value="Vacation.IsExtension"></InputCheckbox>
+                <span class="checkmark" style="margin-top:10px;"></span>
+            </label>
+        }
+    </MudItem>
+
+    <MudItem xs="4">
+
+    </MudItem>
+
+    @if (Configuration["ApplicationConfiguration:AppliactionName"] != "Pro Golf" && Configuration["ApplicationConfiguration:AppliactionName"] != "Gecko")
+    {
+        <MudItem xs="12">
+            <MudSelect ToStringFunc="@_contactConverter" T="ContactDto" Label="Consultant" @bind-Value="Vacation.Consultant" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                @foreach (var state in _availableConsultants)
+                {
+                    <MudSelectItem T="ContactDto" Value="@state">@state.Name @state.Surname</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudSelect ToStringFunc="@_contactConverter" T="ContactDto" Label="Coordinator" @bind-Value="Vacation.Coordinator" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                @foreach (var state in _availableCoordinators)
+                {
+                    <MudSelectItem T="ContactDto" Value="@state">@state.Name @state.Surname</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudSelect ToStringFunc="@_contactConverter" T="ContactDto" Label="Tour Director" @bind-Value="Vacation.TourDirector" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                @foreach (var state in _availableTourDirectors)
+                {
+                    <MudSelectItem T="ContactDto" Value="@state">@state.Name @state.Surname</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+    }
+    
+    @if (Update.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnUpdate" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    @if(NextTab.HasDelegate)
+    {
+        <MudItem xs="4" sm="4" md="4" lg="4">
+            <MudButton OnClick="OnNextTab" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Next</MudButton>
+        </MudItem>
+    }
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnPreviousTab" Variant="Variant.Filled" Color="Color.Info" Class="ml-auto" FullWidth>Back</MudButton>
+    </MudItem>
+    <MudItem xs="4" sm="4" md="4" lg="4">
+        <MudButton OnClick="OnCancel" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>Cancel</MudButton>
+    </MudItem>
+</MudGrid>

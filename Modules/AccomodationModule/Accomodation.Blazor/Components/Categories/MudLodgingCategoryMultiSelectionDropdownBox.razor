@@ -1,0 +1,22 @@
+﻿@using GroupingModule.Application.ViewModels
+@using MudBlazor
+
+@if (!_loaded)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudSelect ToStringFunc="@categoryConverter" T="CategoryViewModel" Label="Categories" MultiSelection="true" @bind-SelectedValues="Lodging.Categories" AnchorOrigin="Origin.BottomLeft" Variant="Variant">
+        @foreach (var state in _categories)
+        {
+            <MudSelectItem T="CategoryViewModel" Value="@state">@state.Name</MudSelectItem>
+        }
+    </MudSelect>
+}
+
+@code {
+
+   
+
+}

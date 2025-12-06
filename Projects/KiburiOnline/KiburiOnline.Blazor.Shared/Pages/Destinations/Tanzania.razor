@@ -1,0 +1,68 @@
+﻿@page "/destinations/tanzania"
+
+@using KiburiOnline.Blazor.Shared.Layouts
+@using KiburiOnline.Blazor.Shared.Pages.Contacts
+@using KiburiOnline.Blazor.Shared.Pages.Destinations.Partials
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@rendermode InteractiveServer
+
+@layout WebsiteLayout
+
+<PageTitle>Tanzania Serengeti & Ngorongoro Safaris | ProGolf Africa Safaris</PageTitle>
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- (Optional) Other SEO/meta -->
+    <meta name="description" content="Custom East Africa itineraries with epic game viewing and optional beach time—crafted to pair seamlessly with your golf plans and preferred travel style." />
+    <link rel="canonical" href="/destinations/tanzania" />
+</HeadContent>
+
+@* Destination Section *@
+<section class="section parallax-container text-center context-dark" style="background-image: url('Assets/images/parallax-tanzania.jpg'); background-size: cover; background-position: center;">
+    <div class="parallax-content" style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,#000000 100%); padding-top: 80px !important; padding-bottom: 80px !important;">
+        <div class="container">
+            <div class="row row-50" style="margin-bottom:-80px !important;">
+
+
+
+                <div class="col-md-6 col-xl-6">
+                    <h4>Tanzania</h4>
+                    <p>
+                        <InnerMenu PageName="tanzania" />
+                    </p>
+                    <hr>
+                    <p style="font-size:14px; font-style:italic;">
+                        Tanzania is most famous for the vast Serengeti plains in the North, and the spectacular Lake Manyara and Ngorongoro Crater National Park in the South. Combined with a visit to Mount Kilimanjaro or a sun-soaked beach holiday on one of the Zanzibar Islands, Tanzania really does have it all There are various safari options to choose from, with an abundance of quality game viewing in private game reserves. If you are fortunate enough, you might witness the 'Great Migration' of zebra and wildebeest through the Serengeti as part of your vacation.
+                    </p>
+                    <hr>
+                    <p>
+                        <ul style="font-size:14px !important; font-style:italic; list-style-type:circle !important;">
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Experience the Wildebeest and Zebra migration through the Serengeti</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Embark on a hot air balloon Safari</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit Masai Village and experience daily way of life</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Game Drives in the Ngorongoro Crater</li>
+                            <li><span style="color:#F90; font-weight:bold;">- </span>Visit the pristine Islands of Zanzibar</li>
+
+                        </ul>
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-xl-6">
+                    <AfricaMap Country="Tanzania" />
+                </div>
+
+            </div>
+        </div>
+        <span id="packages" style="padding-top:70px;"></span>
+    </div>
+</section>
+
+<DestinationVacationsControl CountryName="Tanzania" Vacations="_vacations"/>
+
+<ContactsBanner/>
+
+<script type="text/javascript" language="javascript">
+    window.location.hash = "tanzania";
+</script>

@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@GolferPackage" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>        
+                <MudItem xs="3" md="3">
+                    <MudTextField Label="Day Nr" @bind-Value="@GolferPackage.DayNr" ShowToolbar="false" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="9" md="9">
+                    <MudTimePicker Label="Tea Off Time" @bind-Time="GolferPackage.StartTime" ShowToolbar="false" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <p style="text-align:left !important; font-size:13px; font-weight:bold;">Golf Course</p>
+                    <div class="form-wrap">
+                        <label class="form-label" for="contact-captcha-options1" style="font-size:13px !important;"></label>
+                        <InputSelect TValue="string" @bind-Value="_golfCourseId" class="form-control">
+                            <option value="">--Please Select--</option>
+                            @foreach (var cnt in _availableGolfCourses)
+                            {
+                                <option value="@cnt.GolfCourseId">@cnt.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudItem xs="12">
+                        <MudTextField Label="Notes" Class="mt-3" @bind-Value="GolferPackage.Notes" For="@(() => GolferPackage.Notes)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                    </MudItem>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

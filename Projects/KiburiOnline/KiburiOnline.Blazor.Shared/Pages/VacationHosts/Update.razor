@@ -1,0 +1,169 @@
+﻿@page "/vacationhosts/update/{VacationHostId}"
+
+@using Accomodation.Blazor.Components.Vacations
+@using Accomodation.Blazor.Components.TourGuideScheduleObjects
+@using AccomodationModule.Domain.DataTransferObjects
+@using AccomodationModule.Domain.Entities
+@using ConectOne.Blazor.Components
+@using ConectOne.Domain.Enums
+@using FilingModule.Blazor.Modals
+@using FilingModule.Domain.Enums
+@using KiburiOnline.Blazor.Shared.Layouts
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+
+@layout WebsiteLayout
+
+<HeadContent>
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow" />
+</HeadContent>
+
+<div id="hotel-main-content" class="card card-body bg-light mt-5">
+    <DefaultTitle Title="Update Group" Caption="Please complete the following information to update the current group" />
+    
+    <MudTabs>
+        
+        @* Details *@
+        <MudTabPanel Text="Group Details">
+            <EditForm Model="_vacationHost" OnValidSubmit="UpdateAsync" class="card card-body bg-light mt-5">
+
+                <DataAnnotationsValidator/>
+
+                <MudGrid>
+                    <MudItem xs="12" sm="12" md="3" lg="3">
+                        <MudSingleImageCropperUpload OnFileAccepted="CoverImageChanged" CanEditImage="@_canEditVacationHostImage" Caption="@_vacationHost.Name" Src="@_imageSource" ImageType="UploadType.Cover" Entity="typeof(VacationHost)" ParentId="@_vacationHost.VacationHostId" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="12" md="9" lg="9">
+                        <MudTabs Elevation="0" Color="Color.Transparent" Rounded="true" PanelClass="mt-6" Position="Position.Top">
+                            <MudTabPanel Text="Details" Style="padding-left:20px;">
+                                <MudCard>
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem xs="6">
+                                                <MudGrid>
+                                                    <MudItem xs="12">
+                                                        <MudTextField Label="Category Name" Class="mt-3" @bind-Value="_vacationHost.Name" For="@(() => _vacationHost.Name)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                                    </MudItem>
+                                                    <MudItem xs="12">
+                                                        <MudTextField Label="Address" Class="mt-3" @bind-Value="_vacationHost.Address" For="@(() => _vacationHost.Address)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                                    </MudItem>
+                                                    <MudItem xs="12">
+                                                        <MudTextField Label="Suburb" Class="mt-3" @bind-Value="_vacationHost.Suburb" For="@(() => _vacationHost.Suburb)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                                    </MudItem>
+                                                    <MudItem xs="12">
+                                                        <MudSelect ToStringFunc="@_areaConverter" T="AreaDto" Label="Area" @bind-Value="_vacationHost.Area" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                                                            @foreach (var state in _availableAreas)
+                                                            {
+                                                                    <MudSelectItem T="AreaDto" Value="@state">@state.Name</MudSelectItem>
+                                                            }
+                                                        </MudSelect>
+                                                    </MudItem>
+                                                    <MudItem xs="3">
+                                                        <MudTextField Label="Latitude" Class="mt-3" @bind-Value="_vacationHost.Lat" For="@(() => _vacationHost.Lat)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                                    </MudItem>
+                                                    <MudItem xs="3">
+                                                        <MudTextField Label="Longitude" Class="mt-3" @bind-Value="_vacationHost.Lng" For="@(() => _vacationHost.Lng)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                                    </MudItem>
+                                                    <MudItem xs="6">
+                                                    </MudItem>
+                                                </MudGrid>
+                                            </MudItem>
+                                            <MudItem xs="6">
+                                                <MudItem>
+                                                    <MudTextField T="string" @ref="_autoCompleteBox" Value="_vacationHost.Address" Margin="Margin.Dense" Variant="Variant.Text"/>
+                                                </MudItem>
+                                                <MudItem>
+                                                    <GoogleMapsComponents.GoogleMap Width="100%" Height="400px" @ref="@(this._map1)" Id="map1" Options="@(this._mapOptions)" OnAfterInit="async () => await OnAfterMapInit()"></GoogleMapsComponents.GoogleMap>
+                                                </MudItem>
+                                            </MudItem>
+                                        </MudGrid>
+                                        
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudTabPanel>
+                            <MudTabPanel Text="Representative" Style="padding-left:20px;">
+                                <MudCard>
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem md="2">
+                                                <MudSelect T="Title" Label="Service Partner" @bind-Value="_vacationHost.RepresentativeTitle"  AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                                    @foreach (Title partner in Enum.GetValues(typeof(Title)))
+                                                    {
+                                                        <MudSelectItem T="Title" Value="@partner">@partner</MudSelectItem>
+                                                    }
+                                                </MudSelect>
+                                            </MudItem>
+                                            <MudItem md="5">
+                                                <MudTextField Label="First Name" Class="mt-3" @bind-Value="_vacationHost.RepresentativeName" For="@(() => _vacationHost.RepresentativeName)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                            </MudItem>
+                                            <MudItem md="5">
+                                                <MudTextField Label="Last Name" Class="mt-3" @bind-Value="_vacationHost.RepresentativeSurname" For="@(() => _vacationHost.RepresentativeSurname)" Margin="Margin.Dense" Variant="Variant.Outlined"/>
+                                            </MudItem>
+                                            <MudItem md="6">
+                                                <MudTextField Label="Phone Nr" Class="mt-3" @bind-Value="_vacationHost.RepresentativePhone" For="@(() => _vacationHost.RepresentativePhone)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                            </MudItem>
+                                            <MudItem md="6">
+                                                <MudTextField Label="Email Address" Class="mt-3" @bind-Value="_vacationHost.RepresentativeEmail" For="@(() => _vacationHost.RepresentativeEmail)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                            </MudItem>
+                                            <MudItem md="12">
+                                                <MudTextField Lines="3" Label="Bio" Class="mt-3" @bind-Value="_vacationHost.RepresentativeBio" For="@(() => _vacationHost.RepresentativeBio)" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudTabPanel>
+                        </MudTabs>
+                    </MudItem>
+
+                    <MudItem xs="6" sm="6" md="6" lg="6">
+                        @if (_canEditVacationHost)
+                        {
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" FullWidth>Save</MudButton>
+                        }
+                    </MudItem>
+
+                    <MudItem xs="6" sm="6" md="6" lg="6">
+                        <MudButton OnClick="CancelCreation" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" FullWidth>@(_canEditVacationHost ? "Cancel" : "Back")Cancel</MudButton>
+                    </MudItem>
+                </MudGrid>
+
+            </EditForm>
+        </MudTabPanel>
+        
+        @if(_canViewVacations)
+        {
+            @* Proposals *@
+            <MudTabPanel Text="Online Proposals">
+                <VacationsTable VacationHostId="@_vacationHost.VacationHostId" />
+            </MudTabPanel>
+
+            @* Summaries *@
+            <MudTabPanel Text="Online Summary">
+                <VacationsTable VacationHostId="@_vacationHost.VacationHostId" StartUrl="vacations/summaries" />
+            </MudTabPanel>
+
+            @* Print Summaries *@
+            <MudTabPanel Text="Print Summary">
+                <VacationsTable VacationHostId="@_vacationHost.VacationHostId" StartUrl="vacations/printSummary" />
+            </MudTabPanel>
+        }
+        
+        @if(_canViewExtensions)
+        {
+            @* Extensions *@
+            <MudTabPanel Text="Extensions">
+                <VacationsTable VacationHostId="@_vacationHost.VacationHostId" />
+            </MudTabPanel>
+        }
+        
+        @if(_canViewTourGuideSchedules)
+        {
+            @* Tour Guide Schedules *@
+            <MudTabPanel Text="Tour Guide Schedules">
+                <TourGuideSchedulesTable VacationHostId="@_vacationHost.VacationHostId" />
+            </MudTabPanel>
+        }
+    </MudTabs>
+</div>

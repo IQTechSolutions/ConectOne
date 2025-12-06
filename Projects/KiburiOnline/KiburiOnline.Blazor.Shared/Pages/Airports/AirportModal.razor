@@ -1,0 +1,34 @@
+@using LocationModule.Domain.DataTransferObjects
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<EditForm Model="@Airport" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator/>
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Airport.Name)" @bind-Value="Airport.Name" Label="Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => Airport.Code)" @bind-Value="Airport.Code" Label="Code" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudSelect ToStringFunc="@_cityConverter" T="CityDto" Label="City" @bind-Value="Airport.City" AnchorOrigin="Origin.BottomLeft" Variant="Variant.Outlined">
+                        @foreach (var state in Cities)
+                        {
+                            <MudSelectItem T="CityDto" Value="@state">@state.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Lines="3" For="@(() => Airport.Description)" @bind-Value="Airport.Description" Label="Description" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="SaveAsync" ButtonType="MudBlazor.ButtonType.Submit" Color="Color.Success">Save</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>

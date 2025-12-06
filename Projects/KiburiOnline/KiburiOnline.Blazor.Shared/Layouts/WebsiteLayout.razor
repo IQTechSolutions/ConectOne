@@ -1,0 +1,86 @@
+﻿@using IdentityModule.Domain.Constants
+@using Microsoft.Extensions.Configuration
+@using MudBlazor
+
+@inject IConfiguration Configuration
+@inherits LayoutComponentBase
+@implements IDisposable
+
+@layout CleanLayout
+
+<style>
+    .horizontal-nav {
+        display: flex;
+        justify-content: center; /* Center the menu items */
+        align-items: center;
+        background-color: #f5f5f5; /* Optional: Set background color */
+        padding: 10px; /* Optional: Add padding */
+    }
+
+        .horizontal-nav .mud-navmenu {
+            display: flex;
+            flex-direction: row;
+            Set spacing between items */
+        }
+
+    .mud-menu-item-text {
+        font-size: 12px;
+        line-height: 1.28;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+</style>
+
+<MudLayout>
+    <TopBar></TopBar>
+
+    @if (_user?.Identity is not null && _user.IsInRole(RoleConstants.SuperUser))
+    {
+        <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Left" Class="rounded-t-l-lg rounded-b-l-lg" ClipMode="_themeManager.DrawerClipMode" Elevation="_themeManager.DrawerElevation" Variant="@DrawerVariant.Persistent">
+            <MudDrawerContainer Style="position:absolute">
+                <div class="rd-navbar-brand" style="float:left; padding-left:20px; padding-top:10px;">
+                    <a class="brand" href="/"><img class="brand-logo-dark" src="images/logo-default-347x65.png" alt="" width="173" height="32" /><img class="brand-logo-light" src="images/logo-inverse-347x65.png" alt="" width="173" height="32" /></a>
+                </div>
+                <MudDivider></MudDivider>
+                <AdminNavMenu/>
+            </MudDrawerContainer>
+        </MudDrawer>
+    }
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.False" Style="padding-left:0px; padding-right:0px;">
+        @if (Configuration["ApplicationConfiguration:AppliactionName"] == "Pro Golf" || Configuration["ApplicationConfiguration:AppliactionName"] == "Gecko")
+        {
+            <MudPaper Elevation="0">
+                <div style="@_menuStyle">
+                    <hr/>
+
+                    <div class="container">
+                        <div class="rd-navbar-brand" style="float:left; padding-left:20px;">
+                            <a class="brand" href="/"><img class="brand-logo-dark" src="images/logo-inverse-347x65.png" alt="" width="173" height="32"/></a>
+                        </div>
+
+
+                        <MainMenu vacationId="@vacationId" displayBookNowButton="@displayBookNowButton"></MainMenu>
+
+                    </div>
+
+
+                </div>
+            </MudPaper>
+        }
+        <div style="padding-top:78px;">
+                @Body
+            </div>
+            
+            @if (Configuration["ApplicationConfiguration:AppliactionName"] == "Pro Golf" || Configuration["ApplicationConfiguration:AppliactionName"] == "Gecko")
+            {
+                <DefaultFooter></DefaultFooter>
+            }
+
+        </MudContainer>
+    </MudMainContent>
+
+</MudLayout>
