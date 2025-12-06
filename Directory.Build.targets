@@ -1,0 +1,9 @@
+<Project>
+  <!-- Deduplicate discovered precompressed assets to avoid duplicate-key failures in DiscoverPrecompressedAssets -->
+  <Target Name="DeduplicatePrecompressedAssets" BeforeTargets="DiscoverPrecompressedAssets" Condition="'@(PrecompressedStaticWebAsset)' != ''">
+    <ItemGroup>
+      <PrecompressedStaticWebAsset Remove="@(PrecompressedStaticWebAsset)" />
+      <PrecompressedStaticWebAsset Include="@(PrecompressedStaticWebAsset->Distinct())" />
+    </ItemGroup>
+  </Target>
+</Project>
